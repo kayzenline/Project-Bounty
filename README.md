@@ -1,6 +1,6 @@
 # DPST1093 Major Project
 
-**✨ 📡🚀 Mission Control 🚀👩‍🚀 ✨**
+**✨ 👨‍🚀 Mission Control 👩‍🚀 ✨**
 
 ## Contents
 
@@ -29,12 +29,12 @@ We have already specified a **common interface** for the frontend and backend to
 
 The specific capabilities that need to be built for this project are described in the interface at the bottom. This is clearly a lot of features, but not all of them are to be implemented at once.
 
-## 🐭 2. Iteration 0: Getting Started
+## 🛰️ 2. Iteration 0: Getting Started
 
 [You can watch the iteration 0 introductory video.](empty) This video is not required watching (the specification is clear by itself) though many students find it useful as a starting point.
 
 
-### 🐭 2.1. Task
+### 🛰️ 2.1. Task
 
 This iteration is designed as a warm-up to help you setup your project, learn Git and project management practises (see Marking Criteria), and understand how your team works together. In this task you will be introduced to two main pieces of information you will need to represent for this system:
  - `Mission Control User` - a `user` who can log onto this system and plan future missions
@@ -79,7 +79,7 @@ function adminAuthLogin(email, password) {
     * **1 merge request per function** must be made (13 in total).
     * Check out the lab on Git from week 1 to get familiar with using Git.
 
-### 🐭 2.2. Functions to stub
+### 🛰️ 2.2. Functions to stub
 
 The following are strings: `email`, `password`, `nameFirst`, `nameLast`, `name`, `description`, `target`.
 
@@ -314,7 +314,7 @@ In terms of file structure:
   </tr>
 </table>
 
-### 🐭 2.3 Marking Criteria
+### 🛰️ 2.3 Marking Criteria
 <table>
   <tr>
     <th>Section</th>
@@ -356,3 +356,96 @@ In terms of file structure:
     </ul></td>
   </tr>
 </table>
+
+### 🛰️ 2.4. Dryrun
+
+We have provided a dryrun for iteration 0 consisting of one test for each function. Passing these tests means you have a correct implementation for your stubs, and have earned the marks for the automarking component iteration 0.**NOTE** This will only be applicable to Iteration 0 - from Iteration 1 onwards the dryrun will not guarantee the automarking marks, just a sanity check for the presence of all the required functions.
+
+To run the dryrun, you should on a CSE machine (i.e. using `VLAB` or `ssh`'ed into CSE) be in the root directory of your project (e.g. `/project-backend`) and use the command:
+
+```bash
+~dp1093/bin/xecaps/dryrun 0
+```
+
+### 🛰️ 2.5. Submission
+
+Please see section 6 for information on **due date** and on how you will **demonstrate this iteration**.
+
+## 🚀 3. Iteration 1: Basic Functionality and Tests
+
+Coming Soon
+
+## 📡 4. Iteration 2: Building a Web Server
+
+Coming Soon
+
+## 🛸 5. Iteration 3: Completing the Lifecycle
+
+Coming Soon
+
+
+## 🌸 6. Due Dates and Weightings
+
+| Iteration | Due date                            | Demonstration to tutor(s)      | Assessment weighting (%) |
+| --------- | ----------------------------------- | ------------------------------ | ------------------------ |
+| 0         | 9am Mon 3rd Feb (**week  3**)  | No demonstration               | 10% of Project Stage 1 ( 3% overall)  |
+| 1         | 9am Friday 14th Feb (**week  4**)  | In YOUR **week  5** tutorial or lab | 90% of Project Stage 1 mark (27% overall)  |
+| 2         | 9am Friday 14th Mar (**week  8**)  | In YOUR **week  9** tutorial or lab | 100% of Project Stage 1 mark (30% overall)  |
+| 3         | 9am Friday 4th Apr (**week 11**)  | In YOUR **week 12** tutorial | 100% of Project Stage 1 mark (30% overall)  |
+
+### 🌸 6.1. Submission & Late Penalties
+
+To submit your work, simply have your master branch on the gitlab website contain your groups most recent copy of your code. I.E. "Pushing to master" is equivalent to submitting. When marking, we take the most recent submission on your master branch that is prior to the specified deadline for each iteration.
+
+The following late penalties apply depending on the iteration:
+ * Iteration 0: No late submissions at all
+ * Iteration 1: Can submit up to 72 hours late, with 5% penalty applied every time a 24 hour window passes, starting from the due date 
+ * Iteration 2: Can submit up to 72 hours late, with 5% penalty applied every time a 24 hour window passes, starting from the due date 
+ * Iteration 3: Can submit up to 72 hours late, with 5% penalty applied every time a 24 hour window passes, starting from the due date 
+
+We will not mark commits pushed to master after the final submission time for a given iteration.
+
+If the deadline is approaching and you have features that are either untested or failing their tests, **DO NOT MERGE IN THOSE MERGE REQUESTS**. In some rare cases, your tutor will look at unmerged branches and may allocate some reduced marks for incomplete functionality, but `master` should only contain working code.
+
+Minor isolated fixes after the due date are allowed but may carry a penalty to the automark. If the isolated fixes result in a higher automark result (minus the penalty), then we will update your mark. E.g. imagine that your initial automark is 20%, on re-run you get a raw automark of 86%, and your fixes attract a 30% penalty: since the 30% penalty will reduce the mark of 86% to 60%, your final **automark** will be 60%.
+
+If the re-run automark after penalty is lower than your initial mark, we will keep your initial mark. E.g. imagine that your initial automark is 50%, on re-run you get a raw automark of 70%, and your fixes attract a 30% penalty: since the 30% penalty will reduce the mark of 70% to 49%, your final **automark** will still be 50% (i.e. your initial mark).Minor isolated fixes after the due date are allowed but carry a penalty to the automark, if the automark after re-running the autotests is greater than your initial automark. This penalty can be up to 30% of the automarking component for that iteration, depending on the number and nature of your fixes. Note that if the re-run automark after penalty is lower than your initial mark, we will keep your initial mark, meaning your automark cannot decrease after a re-run. E.g. imagine that your initial automark is 50%, on re-run you get a raw automark of 70%, and your fixes attract a 30% penalty: since the 30% penalty will reduce the mark of 70% to 49%, your final automark will still be 50% (i.e. your initial mark).
+
+#### How to request a re-run
+
+* Create a branch, e.g. `iter[X]-fix`, based off the submission commit.
+* Make the minimal number of necessary changes (i.e. only fix the trivial bugs that cost you many automarks).
+* Create a merge request for this branch, and take note of merge request ID in the URL
+  * It is the number at the end of the URL
+  * "https://nw-syd-gitlab.cseunsw.tech/DPST1093/25T1/groups/T15A_DESSERT/project-backend/-/merge_requests/**67**"
+* Request a re-run on the 're-run request' channel of MS-TEAMS for this course
+* Once you request it, it may take up to 72 hours for you to receive the results of the rerun.
+  
+
+Please note: The current limit on reruns is **once each week per group**.
+
+##### What constitutes a "trivial fix”?
+* Fixing spelling/capitalisation/naming issues with values specified in spec documentation
+* Swapping a variable type e.g. token from 'number' to 'string'
+* Changing the return value type e.g. returning {} rather than null, to match spec documentation
+* Changing route versions e.g. v1 to v2 to match spec documentation
+* Fixing import values
+* Fixing a regex/logical equality check e.g. num === 0 to num === 1
+* Fixing constant variable values e.g. loginAttempts = 1 to loginAttempts = 0
+* As a general rule, any change that is < 3 lines of code
+
+### 🌸 6.2. Demonstration
+
+The demonstrations in weeks 5,9 and 12 will take place during your tutorial or lab sessions. All team members **must** attend these demonstrations. Team members who do not attend a demonstration may receive a mark of 0 for that iteration. If you are unable to attend a demonstration due to circumstances beyond your control, you must apply for special consideration.
+
+Demonstrations consist of a 15-20 minute Question and Answer session in front of your tutor. Each team member will be asked to explain their code.
+
+## 👌 7. Individual Assessment
+
+Coming in Iteration 1
+
+
+## 💻 8. Automarking & Leaderboard
+
+Coming in Iteration 1
+
