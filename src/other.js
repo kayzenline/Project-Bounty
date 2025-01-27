@@ -1,2 +1,2 @@
 // This file should contain your functions relating to:
-// - adminMission*
+// - clear
