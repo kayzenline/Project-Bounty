@@ -8,6 +8,8 @@
 
 ## Change Log
 
+    - 2025-01-27 Initial specification for Iteration 1 completed - missing intro video and dryrun.
+
 ## 🫡 0. Aims:
 
 1. Demonstrate effective use of software development tools to build full-stack end-user applications.
