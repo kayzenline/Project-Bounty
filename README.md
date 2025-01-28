@@ -33,7 +33,9 @@ The specific capabilities that need to be built for this project are described i
 
 ## 🛰️ 2. Iteration 0: Getting Started
 
-[You can watch the iteration 0 introductory video.](empty) This video is not required watching (the specification is clear by itself) though many students find it useful as a starting point.
+**NOTE** We will update this area with an introductionary video soon
+
+<!-- [You can watch the iteration 0 introductory video.](empty) This video is not required watching (the specification is clear by itself) though many students find it useful as a starting point. -->
 
 
 ### 🛰️ 2.1. Task
@@ -50,7 +52,7 @@ In this iteration, you are expected to:
     * Function stub locations should be inside files named a corresponding prefix e.g. `adminAuth` and `adminControl*` inside `auth.js`, `adminMission*` inside `mission.js`
     * Return values should match the interface table below (see example below).
 ```javascript
-// Sample stub for the adminControlLogin function
+// Sample stub for the adminAuthLogin function
 // Return stub value matches table below
 function adminAuthLogin(email, password) {
   return {
