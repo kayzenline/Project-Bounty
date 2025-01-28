@@ -8,7 +8,8 @@
 
 ## Change Log
 
-    - 2025-01-27 Initial specification for Iteration 1 completed - missing intro video and dryrun.
+  - 2025-01-27 Initial specification for Iteration 1 completed - missing intro video and dryrun.
+  - 2025-01-28 Aligned some file and property names
 
 ## 🫡 0. Aims:
 
@@ -61,7 +62,7 @@ function adminAuthLogin(email, password) {
 }
 ```
 1. Design a structure to store all the data needed for Xecaps, and place this in the [code block](https://www.markdownguide.org/extended-syntax/#fenced-code-blocks) inside the `sampledata.md` file. Specifically, you must consider how to store information about **mission control users** and **space missions** and populate ONE example `control user` and `space mission` in your data structure (any values are fine - see example below).
-    * Use the interface table (2.2) to help you decide what data might need to be stored. This will require making some educated guesses about what would be required to be stored in order to return the types of data you see. **Whilst the data structure you describe in data.md might be similar to the interface, it is a different thing to the interface.** If you're still confused, think of the interface like a restaurant menu, and `data.md` like where the food is stored in the back. It's all the same food, but the menu is about how it's packaged up and received from the kitchen, and `data.md` is describing the structure of how it's all stored behind the scenes. 
+    * Use the interface table (2.2) to help you decide what data might need to be stored. This will require making some educated guesses about what would be required to be stored in order to return the types of data you see. **Whilst the data structure you describe in data.md might be similar to the interface, it is a different thing to the interface.** If you're still confused, think of the interface like a restaurant menu, and `sampledata.md` like where the food is stored in the back. It's all the same food, but the menu is about how it's packaged up and received from the kitchen, and `sampledata.md` is describing the structure of how it's all stored behind the scenes. 
     * As functions are called, this structure would be populated with more mission control users and more space missions, so consider this in your solution.
     * Focus on the structure itself (object/list composition), rather than the example contents.
 ```javascript
@@ -145,7 +146,7 @@ In terms of file structure:
       <b>Return object:</b><br />
       <code>{ user:
   {
-    userId: 1,
+    controlUserId: 1,
     name: 'Bill Ryker ',
     email: 'strongbeard@starfleet.com.au',
     numSuccessfulLogins: 3,
