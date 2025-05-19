@@ -8,9 +8,6 @@
 
 ## Change Log
 
-  - 2025-01-27 Initial specification for Iteration 1 completed - missing intro video and dryrun.
-  - 2025-01-28 Aligned some file and property names
-
 ## 🫡 0. Aims:
 
 1. Demonstrate effective use of software development tools to build full-stack end-user applications.
@@ -24,7 +21,7 @@
 
 The students at UNSW College are always striving upwards and now have decided that teaching shouldn't be bound to just the seats in their class - they want to hold classes in Space! In order to get there, the students will need something to help plan and resource their trips to this exciting new frontier!
 
-The 25T1 cohort of DPST1093 students will build the **backend Javascript server** for a new mission control platform, **Xecaps**. We plan to task future COMP6080 students to build the frontend for Xecaps, something you won't have to worry about.
+The 25T2 cohort of DPST1093 students will build the **backend Javascript server** for a new mission control platform, **Xecaps**. We plan to task future COMP6080 students to build the frontend for Xecaps, something you won't have to worry about.
 
 **XecapS** is an organisation tool that lets students plan a space mission, add launch vehicles, payloads, mission controllers and astronauts. Then they can simulate how effective their space mission will be in dealing with the various challenges one encounters in a space mission.
 
@@ -36,7 +33,7 @@ The specific capabilities that need to be built for this project are described i
 
 **NOTE** We will update this area with an introductionary video soon
 
-<!-- [You can watch the iteration 0 introductory video.](empty) This video is not required watching (the specification is clear by itself) though many students find it useful as a starting point. -->
+[You can watch the iteration 0 introductory video.](https://echo360.net.au/lesson/f6dc0e32-8d9c-43e0-8e5a-cb9693796c5d/classroom) This video is not required watching (the specification is clear by itself) though many students find it useful as a starting point.
 
 
 ### 🛰️ 2.1. Task
@@ -61,7 +58,7 @@ function adminAuthLogin(email, password) {
   }
 }
 ```
-1. Design a structure to store all the data needed for Xecaps, and place this in the [code block](https://www.markdownguide.org/extended-syntax/#fenced-code-blocks) inside the `sampledata.md` file. Specifically, you must consider how to store information about **mission control users** and **space missions** and populate ONE example `control user` and `space mission` in your data structure (any values are fine - see example below).
+2. Design an object structure to store all the data needed for Xecaps, and place this in the [code block](https://www.markdownguide.org/extended-syntax/#fenced-code-blocks) inside the `sampledata.md` file. Specifically, you must consider how to store information about **mission control users** and **space missions** and populate ONE example `control user` and `space mission` in your data structure (any values are fine - see example below).
     * Use the interface table (2.2) to help you decide what data might need to be stored. This will require making some educated guesses about what would be required to be stored in order to return the types of data you see. **Whilst the data structure you describe in data.md might be similar to the interface, it is a different thing to the interface.** If you're still confused, think of the interface like a restaurant menu, and `sampledata.md` like where the food is stored in the back. It's all the same food, but the menu is about how it's packaged up and received from the kitchen, and `sampledata.md` is describing the structure of how it's all stored behind the scenes. 
     * As functions are called, this structure would be populated with more mission control users and more space missions, so consider this in your solution.
     * Focus on the structure itself (object/list composition), rather than the example contents.
@@ -77,12 +74,15 @@ function adminAuthLogin(email, password) {
   email: 'thisisntmyemail@gmail.com',
 }
 ```
-1. Follow best practices for git and teamwork as discussed in lectures.
+3. Follow best practices for git and teamwork as discussed in lectures.
     * Create a group contract by completing `contract.md` - you may add/edit this template as you see fit.
     * You are expected to have **at least 1 meeting** with your group, and document the meeting(s) in meeting minutes which should be stored at a timestamped location in your repo (e.g. uploading a word doc/pdf or writing in the GitLab repo Wiki after each meeting). We have provided you with a `minutes-template.md` which you may use if you choose.
     * For this iteration each team member will need to make a minimum of **1 merge request per person** in your group into the `master` branch.
     * **1 merge request per function** must be made (13 in total).
     * Check out the lab on Git from week 1 to get familiar with using Git.
+    * Create a Milestone for this Iteration
+    * Expand your Issue Board with `In-Progress` and `In-Review` stages
+    * Create Issues for your Iteration 0 tasks and assign them to the appropriate team members with deadlines.
 
 ### 🛰️ 2.2. Functions to stub
 
@@ -393,10 +393,10 @@ Coming Soon
 
 | Iteration | Due date                            | Demonstration to tutor(s)      | Assessment weighting (%) |
 | --------- | ----------------------------------- | ------------------------------ | ------------------------ |
-| 0         | 9am Mon 3rd Feb (**week  3**)  | No demonstration               | 10% of Project Stage 1 ( 3% overall)  |
-| 1         | 9am Friday 14th Feb (**week  4**)  | In YOUR **week  5** tutorial or lab | 90% of Project Stage 1 mark (27% overall)  |
-| 2         | 9am Friday 14th Mar (**week  8**)  | In YOUR **week  9** tutorial or lab | 100% of Project Stage 1 mark (30% overall)  |
-| 3         | 9am Friday 4th Apr (**week 11**)  | In YOUR **week 12** tutorial | 100% of Project Stage 1 mark (30% overall)  |
+| 0         | 9am Mon 26th May (**week  3**)  | No demonstration               | 10% of Project Stage 1 ( 3% overall)  |
+| 1         | 9am Friday 6th June (**week  4**)  | In YOUR **week  5** tutorial or lab | 90% of Project Stage 1 mark (27% overall)  |
+| 2         | 9am Friday 4th July (**week  8**)  | In YOUR **week  9** tutorial or lab | 100% of Project Stage 1 mark (30% overall)  |
+| 3         | 9am Wednesday 30th July (**week 12**)  | In YOUR **week 12** tutorial | 100% of Project Stage 1 mark (30% overall)  |
 
 ### 🌸 6.1. Submission & Late Penalties
 
@@ -404,9 +404,9 @@ To submit your work, simply have your master branch on the gitlab website contai
 
 The following late penalties apply depending on the iteration:
  * Iteration 0: No late submissions at all
- * Iteration 1: Can submit up to 72 hours late, with 5% penalty applied every time a 24 hour window passes, starting from the due date 
- * Iteration 2: Can submit up to 72 hours late, with 5% penalty applied every time a 24 hour window passes, starting from the due date 
- * Iteration 3: Can submit up to 72 hours late, with 5% penalty applied every time a 24 hour window passes, starting from the due date 
+ * Iteration 1: Can submit up to 5 days late, with 5% penalty applied every time a 24 hour window passes, starting from the due date 
+ * Iteration 2: Can submit up to 5 days late, with 5% penalty applied every time a 24 hour window passes, starting from the due date 
+ * Iteration 3: Can submit up to 5 days late, with 5% penalty applied every time a 24 hour window passes, starting from the due date 
 
 We will not mark commits pushed to master after the final submission time for a given iteration.
 
@@ -422,7 +422,7 @@ If the re-run automark after penalty is lower than your initial mark, we will ke
 * Make the minimal number of necessary changes (i.e. only fix the trivial bugs that cost you many automarks).
 * Create a merge request for this branch, and take note of merge request ID in the URL
   * It is the number at the end of the URL
-  * "https://nw-syd-gitlab.cseunsw.tech/DPST1093/25T1/groups/T15A_DESSERT/project-backend/-/merge_requests/**67**"
+  * "https://nw-syd-gitlab.cseunsw.tech/DPST1093/25T2/groups/T15A_DESSERT/project-backend/-/merge_requests/**67**"
 * Request a re-run on the 're-run request' channel of MS-TEAMS for this course
 * Once you request it, it may take up to 72 hours for you to receive the results of the rerun.
   
@@ -450,7 +450,13 @@ Demonstrations consist of a 15-20 minute Question and Answer session in front of
 Coming in Iteration 1
 
 
-## 💻 8. Automarking & Leaderboard
+## 💻 8. Automarking & Previews
 
 Coming in Iteration 1
 
+👀 9. Plagiarism
+
+The work you and your group submit must be your own work. Submission of work partially or completely derived from any other person or jointly written with any other person is not permitted. The penalties for such an offence may include negative marks, automatic failure of the course and possibly other academic discipline. Assignment submissions will be examined both automatically and manually for such submissions.
+Relevant scholarship authorities will be informed if students holding scholarships are involved in an incident of plagiarism or other misconduct.
+Do not provide or show your project work to any other person, except for your group and the teaching staff of DPST1093. If you knowingly provide or show your assignment work to another person for any reason, and work derived from it is submitted, you may be penalized, even if the work was submitted without your knowledge or consent. This may apply even if your work is submitted by a third party unknown to you.
+Note: you will not be penalized if your work has the potential to be taken without your consent or knowledge.
