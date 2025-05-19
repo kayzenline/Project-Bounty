@@ -3,8 +3,10 @@
 ## Example Data Store State
 ```javascript
 let data = {
-    // TODO: insert your data structure that contains 
-    // mission control users + space missions here
+    // TODO: insert your data structure example
+    // that contains 
+    //  a mission control users array 
+    //  a space missions array
 }
 ```
 
