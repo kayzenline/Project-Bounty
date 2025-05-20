@@ -77,7 +77,7 @@ function adminAuthLogin(email, password) {
 3. Follow best practices for git and teamwork as discussed in lectures.
     * Create a group contract by completing `contract.md` - you may add/edit this template as you see fit.
     * You are expected to have **at least 1 meeting** with your group, and document the meeting(s) in meeting minutes which should be stored at a timestamped location in your repo (e.g. uploading a word doc/pdf or writing in the GitLab repo Wiki after each meeting). We have provided you with a `minutes-template.md` which you may use if you choose.
-    * For this iteration each team member will need to make a minimum of **1 merge request per person** in your group into the `master` branch.
+    * For this iteration each team member will need to make a minimum of **1 merge request per person** in your group into the default (`master` or `main`) branch.
     * **1 merge request per function** must be made (13 in total).
     * Check out the lab on Git from week 1 to get familiar with using Git.
     * Create a Milestone for this Iteration
@@ -347,7 +347,7 @@ In terms of file structure:
     <td><ul>
       <li>Meaningful and informative git commit messages being used (see <a href="https://initialcommit.com/blog/git-commit-messages-best-practices#:~:text=commit%20message%20style.-,General%20Commit%20Message%20Guidelines,-As%20a%20general">examples</a>)</li>
       <li>Effective use of merge requests (from branches being made) across the team (as covered in lectures)</li>
-      <li>At least 1 merge request per person and 1 merge request per function (13 in total) made into the <code>master</code> branch</li>
+      <li>At least 1 merge request per person and 1 merge request per function (13 in total) made into the default (<code>master</code> or <code>main</code>) branch</li>
     </ul></td>
   </tr>
   <tr>
@@ -395,12 +395,12 @@ Coming Soon
 | --------- | ----------------------------------- | ------------------------------ | ------------------------ |
 | 0         | 9am Mon 26th May (**week  3**)  | No demonstration               | 10% of Project Stage 1 ( 3% overall)  |
 | 1         | 9am Friday 6th June (**week  4**)  | In YOUR **week  5** tutorial or lab | 90% of Project Stage 1 mark (27% overall)  |
-| 2         | 9am Friday 4th July (**week  8**)  | In YOUR **week  9** tutorial or lab | 100% of Project Stage 1 mark (30% overall)  |
-| 3         | 9am Wednesday 30th July (**week 12**)  | In YOUR **week 12** tutorial | 100% of Project Stage 1 mark (30% overall)  |
+| 2         | 9am Friday 4th July (**week  8**)  | In YOUR **week  9** tutorial or lab | 100% of Project Stage 2 mark (30% overall)  |
+| 3         | 9am Wednesday 30th July (**week 12**)  | In YOUR **week 12** tutorial | 100% of Project Stage 3 mark (30% overall)  |
 
 ### 🌸 6.1. Submission & Late Penalties
 
-To submit your work, simply have your master branch on the gitlab website contain your groups most recent copy of your code. I.E. "Pushing to master" is equivalent to submitting. When marking, we take the most recent submission on your master branch that is prior to the specified deadline for each iteration.
+To submit your work, simply have your default (`master` or `main`) branch on the gitlab website contain your groups most recent copy of your code. I.E. "Pushing to default (`master` or `main`)" is equivalent to submitting. When marking, we take the most recent submission on your default (`master` or `main`) branch that is prior to the specified deadline for each iteration.
 
 The following late penalties apply depending on the iteration:
  * Iteration 0: No late submissions at all
@@ -408,9 +408,9 @@ The following late penalties apply depending on the iteration:
  * Iteration 2: Can submit up to 5 days late, with 5% penalty applied every time a 24 hour window passes, starting from the due date 
  * Iteration 3: Can submit up to 5 days late, with 5% penalty applied every time a 24 hour window passes, starting from the due date 
 
-We will not mark commits pushed to master after the final submission time for a given iteration.
+We will not mark commits pushed to default (`master` or `main`) branch after the final submission time for a given iteration.
 
-If the deadline is approaching and you have features that are either untested or failing their tests, **DO NOT MERGE IN THOSE MERGE REQUESTS**. In some rare cases, your tutor will look at unmerged branches and may allocate some reduced marks for incomplete functionality, but `master` should only contain working code.
+If the deadline is approaching and you have features that are either untested or failing their tests, **DO NOT MERGE IN THOSE MERGE REQUESTS**. In some rare cases, your tutor will look at unmerged branches and may allocate some reduced marks for incomplete functionality, but the default branch (`master` or `main`) should only contain working code.
 
 Minor isolated fixes after the due date are allowed but may carry a penalty to the automark. If the isolated fixes result in a higher automark result (minus the penalty), then we will update your mark. E.g. imagine that your initial automark is 20%, on re-run you get a raw automark of 86%, and your fixes attract a 30% penalty: since the 30% penalty will reduce the mark of 86% to 60%, your final **automark** will be 60%.
 
@@ -454,7 +454,7 @@ Coming in Iteration 1
 
 Coming in Iteration 1
 
-👀 9. Plagiarism
+## 👀 9. Plagiarism
 
 The work you and your group submit must be your own work. Submission of work partially or completely derived from any other person or jointly written with any other person is not permitted. The penalties for such an offence may include negative marks, automatic failure of the course and possibly other academic discipline. Assignment submissions will be examined both automatically and manually for such submissions.
 Relevant scholarship authorities will be informed if students holding scholarships are involved in an incident of plagiarism or other misconduct.
