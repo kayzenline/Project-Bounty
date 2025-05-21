@@ -254,7 +254,7 @@ In terms of file structure:
   name: 'Mercury',
   timeCreated: 1683125870,
   timeLastEdited: 1683125871,
-  description: 'Place a manned spacecraft in orbital flight around the earth. Investigate man's performance capabilities and his ability to function in the environment of space. Recover the man and the spacecraft safely',
+  description: "Place a manned spacecraft in orbital flight around the earth. Investigate a persons performance capabilities and their ability to function in the environment of space. Recover the person and the spacecraft safely",
   target: 'Earth orbit'
 }</code>
     </td>
