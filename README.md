@@ -21,7 +21,7 @@
 
 The students at UNSW College are always striving upwards and now have decided that teaching shouldn't be bound to just the seats in their class - they want to hold classes in Space! In order to get there, the students will need something to help plan and resource their trips to this exciting new frontier!
 
-The 25T2 cohort of DPST1093 students will build the **backend Javascript server** for a new mission control platform, **Xecaps**. We plan to task future COMP6080 students to build the frontend for Xecaps, something you won't have to worry about.
+The 25T3 cohort of DPST1093 students will build the **backend Javascript server** for a new mission control platform, **Xecaps**. We plan to task future COMP6080 students to build the frontend for Xecaps, something you won't have to worry about.
 
 **XecapS** is an organisation tool that lets students plan a space mission, add launch vehicles, payloads, mission controllers and astronauts. Then they can simulate how effective their space mission will be in dealing with the various challenges one encounters in a space mission.
 
@@ -33,7 +33,7 @@ The specific capabilities that need to be built for this project are described i
 
 **NOTE** We will update this area with an introductionary video soon
 
-[You can watch the iteration 0 introductory video.](https://echo360.net.au/lesson/f6dc0e32-8d9c-43e0-8e5a-cb9693796c5d/classroom) This video is not required watching (the specification is clear by itself) though many students find it useful as a starting point.
+[You can watch the iteration 0 introductory video.](https://echo360.net.au/lesson/99c85f48-3e55-4115-a9dc-3fc02f445c77/classroom?focus=Video) This video is not required watching (the specification is clear by itself) though many students find it useful as a starting point.
 
 
 ### 🛰️ 2.1. Task
@@ -393,10 +393,10 @@ Coming Soon
 
 | Iteration | Due date                            | Demonstration to tutor(s)      | Assessment weighting (%) |
 | --------- | ----------------------------------- | ------------------------------ | ------------------------ |
-| 0         | 9am Mon 26th May (**week  3**)  | No demonstration               | 10% of Project Stage 1 ( 3% overall)  |
-| 1         | 9am Friday 6th June (**week  4**)  | In YOUR **week  5** tutorial or lab | 90% of Project Stage 1 mark (27% overall)  |
-| 2         | 9am Friday 4th July (**week  8**)  | In YOUR **week  9** tutorial or lab | 100% of Project Stage 2 mark (30% overall)  |
-| 3         | 9am Wednesday 30th July (**week 12**)  | In YOUR **week 12** tutorial | 100% of Project Stage 3 mark (30% overall)  |
+| 0         | 9am Mon 15th September (**week  3**)  | No demonstration               |  2% overall  |
+| 1         | 9am Friday 26th September (**week  4**)  | In YOUR **week  5** early tut-lab | 10% overall  |
+| 2         | 9am Friday 24th October (**week  8**)  | In YOUR **week  9** early tut-lab | 18% overall  |
+| 3         | 9am Tuesday 18th November (**week 12**)  | In YOUR **week 12** early tut-lab | 15% overall  |
 
 ### 🌸 6.1. Submission & Late Penalties
 
@@ -422,7 +422,7 @@ If the re-run automark after penalty is lower than your initial mark, we will ke
 * Make the minimal number of necessary changes (i.e. only fix the trivial bugs that cost you many automarks).
 * Create a merge request for this branch, and take note of merge request ID in the URL
   * It is the number at the end of the URL
-  * "https://nw-syd-gitlab.cseunsw.tech/DPST1093/25T2/groups/T15A_DESSERT/project-backend/-/merge_requests/**67**"
+  * "https://nw-syd-gitlab.cseunsw.tech/DPST1093/25T3/groups/T15A_DESSERT/project-backend/-/merge_requests/**67**"
 * Request a re-run on the 're-run request' channel of MS-TEAMS for this course
 * Once you request it, it may take up to 72 hours for you to receive the results of the rerun.
   
