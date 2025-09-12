@@ -36,3 +36,6 @@ function adminMissionInfo(controlUserId, missionId) {
 
   }
 }
+function adminMissionNameUpdate(controlUserId, missionId, name) {
+  return {}
+}
