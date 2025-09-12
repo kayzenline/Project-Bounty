@@ -1,6 +1,5 @@
 // This file should contain your functions relating to:
 // - adminMission*
-<<<<<<< src/mission.js
 function adminMissionList(controlUserId) {
   return {
     missions: [
