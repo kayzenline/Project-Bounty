@@ -12,3 +12,7 @@ function adminControlUserDetails(controlUserId){
     }
   }
 }
+function adminControlUserDetailsUpdate(controlUserId,email,nameFirst,nameLast){
+  return{}
+}
+
