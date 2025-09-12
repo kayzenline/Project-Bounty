@@ -1,4 +1,4 @@
-// Update mission description
-function adminMissionDescriptionUpdate(controlUserId, missionId, description) {
+// Update mission target
+function adminMissionTargetUpdate(controlUserId, missionId, target) {
   return {};
 }
