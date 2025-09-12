@@ -1,3 +1,13 @@
+
+
+function adminAuthLogin(email, password) {
+  return { controlUserId: 1 };
+}
+
+module.exports = {
+  adminAuthLogin,
+};
+
 // This file should contain your functions relating to:
 // - adminAuth*
 // - adminControlUser*
@@ -18,3 +28,4 @@ function adminControlUserDetailsUpdate(controlUserId,email,nameFirst,nameLast){
 function adminControlUserPasswordUpdate(controlUserId,oldPassword,newPassword){
   return{}
 }
+
