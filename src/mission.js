@@ -19,3 +19,10 @@ function adminMissionRemove(controlUserId, missionId) {
   return {};
 }
 
+
+function adminMissionCreate(controlUserId, name, description, target ) {
+    
+  return {
+    missionId: 2
+  };
+}
