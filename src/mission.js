@@ -18,6 +18,4 @@ function adminMissionList(controlUserId) {
 function adminMissionRemove(controlUserId, missionId) {
   return {};
 }
-=======
 
->>>>>>> src/mission.js
