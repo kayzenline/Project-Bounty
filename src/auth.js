@@ -1,3 +1,8 @@
-// This file should contain your functions relating to:
-// - adminAuth*
-// - adminControlUser*
+
+function adminAuthLogin(email, password) {
+  return { controlUserId: 1 };
+}
+
+module.exports = {
+  adminAuthLogin,
+};
