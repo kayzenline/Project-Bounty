@@ -15,4 +15,6 @@ function adminControlUserDetails(controlUserId){
 function adminControlUserDetailsUpdate(controlUserId,email,nameFirst,nameLast){
   return{}
 }
-
+function adminControlUserPasswordUpdate(controlUserId,oldPassword,newPassword){
+  return{}
+}
