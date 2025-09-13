@@ -42,5 +42,10 @@ function adminMissionNameUpdate(controlUserId, missionId, name) {
 
 // Update mission target
 function adminMissionTargetUpdate(controlUserId, missionId, target) {
-    return {};
+  return {};
+}
+
+// Update mission description
+function adminMissionDescriptionUpdate(controlUserId, missionId, description) {
+  return {};
 }
