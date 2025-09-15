@@ -6,7 +6,8 @@ let data = {
     missionControlUsers: [
     {
       controlUserId: 1,
-      name: 'Bill Ryker',
+      nameFirst: 'Bill',
+      nameLast: 'Ryker',
       email: 'strongbeard@starfleet.com.au',
       numSuccessfulLogins: 3,
       numFailedPasswordsSinceLastLogin: 1
