@@ -21,7 +21,7 @@
 
 The students at UNSW College are always striving upwards and now have decided that teaching shouldn't be bound to just the seats in their class - they want to hold classes in Space! In order to get there, the students will need something to help plan and resource their trips to this exciting new frontier!
 
-The 25T3 cohort of DPST1093 students will build the **backend Javascript server** for a new mission control platform, **Xecaps**. We plan to task future COMP6080 students to build the frontend for Xecaps, something you won't have to worry about.
+The 25T1 cohort of DPST1093 students will build the **backend Javascript server** for a new mission control platform, **Xecaps**. We plan to task future COMP6080 students to build the frontend for Xecaps, something you won't have to worry about.
 
 **XecapS** is an organisation tool that lets students plan a space mission, add launch vehicles, payloads, mission controllers and astronauts. Then they can simulate how effective their space mission will be in dealing with the various challenges one encounters in a space mission.
 
@@ -33,7 +33,7 @@ The specific capabilities that need to be built for this project are described i
 
 **NOTE** We will update this area with an introductionary video soon
 
-[You can watch the iteration 0 introductory video.](https://echo360.net.au/lesson/99c85f48-3e55-4115-a9dc-3fc02f445c77/classroom?focus=Video) This video is not required watching (the specification is clear by itself) though many students find it useful as a starting point.
+<!-- [You can watch the iteration 0 introductory video.](empty) This video is not required watching (the specification is clear by itself) though many students find it useful as a starting point. -->
 
 
 ### 🛰️ 2.1. Task
@@ -58,7 +58,7 @@ function adminAuthLogin(email, password) {
   }
 }
 ```
-2. Design an object structure to store all the data needed for Xecaps, and place this in the [code block](https://www.markdownguide.org/extended-syntax/#fenced-code-blocks) inside the `sampledata.md` file. Specifically, you must consider how to store information about **mission control users** and **space missions** and populate ONE example `control user` and `space mission` in your data structure (any values are fine - see example below).
+1. Design a structure to store all the data needed for Xecaps, and place this in the [code block](https://www.markdownguide.org/extended-syntax/#fenced-code-blocks) inside the `sampledata.md` file. Specifically, you must consider how to store information about **mission control users** and **space missions** and populate ONE example `control user` and `space mission` in your data structure (any values are fine - see example below).
     * Use the interface table (2.2) to help you decide what data might need to be stored. This will require making some educated guesses about what would be required to be stored in order to return the types of data you see. **Whilst the data structure you describe in data.md might be similar to the interface, it is a different thing to the interface.** If you're still confused, think of the interface like a restaurant menu, and `sampledata.md` like where the food is stored in the back. It's all the same food, but the menu is about how it's packaged up and received from the kitchen, and `sampledata.md` is describing the structure of how it's all stored behind the scenes. 
     * As functions are called, this structure would be populated with more mission control users and more space missions, so consider this in your solution.
     * Focus on the structure itself (object/list composition), rather than the example contents.
@@ -74,15 +74,12 @@ function adminAuthLogin(email, password) {
   email: 'thisisntmyemail@gmail.com',
 }
 ```
-3. Follow best practices for git and teamwork as discussed in lectures.
+1. Follow best practices for git and teamwork as discussed in lectures.
     * Create a group contract by completing `contract.md` - you may add/edit this template as you see fit.
     * You are expected to have **at least 1 meeting** with your group, and document the meeting(s) in meeting minutes which should be stored at a timestamped location in your repo (e.g. uploading a word doc/pdf or writing in the GitLab repo Wiki after each meeting). We have provided you with a `minutes-template.md` which you may use if you choose.
-    * For this iteration each team member will need to make a minimum of **1 merge request per person** in your group into the default (`master` or `main`) branch.
+    * For this iteration each team member will need to make a minimum of **1 merge request per person** in your group into the `master` or `main` branch.
     * **1 merge request per function** must be made (13 in total).
     * Check out the lab on Git from week 1 to get familiar with using Git.
-    * Create a Milestone for this Iteration
-    * Expand your Issue Board with `In-Progress` and `In-Review` stages
-    * Create Issues for your Iteration 0 tasks and assign them to the appropriate team members with deadlines.
 
 ### 🛰️ 2.2. Functions to stub
 
@@ -254,7 +251,7 @@ In terms of file structure:
   name: 'Mercury',
   timeCreated: 1683125870,
   timeLastEdited: 1683125871,
-  description: "Place a manned spacecraft in orbital flight around the earth. Investigate a persons performance capabilities and their ability to function in the environment of space. Recover the person and the spacecraft safely",
+  description: 'Place a manned spacecraft in orbital flight around the earth. Investigate man's performance capabilities and his ability to function in the environment of space. Recover the man and the spacecraft safely',
   target: 'Earth orbit'
 }</code>
     </td>
@@ -347,7 +344,7 @@ In terms of file structure:
     <td><ul>
       <li>Meaningful and informative git commit messages being used (see <a href="https://initialcommit.com/blog/git-commit-messages-best-practices#:~:text=commit%20message%20style.-,General%20Commit%20Message%20Guidelines,-As%20a%20general">examples</a>)</li>
       <li>Effective use of merge requests (from branches being made) across the team (as covered in lectures)</li>
-      <li>At least 1 merge request per person and 1 merge request per function (13 in total) made into the default (<code>master</code> or <code>main</code>) branch</li>
+      <li>At least 1 merge request per person and 1 merge request per function (13 in total) made into the <code>master</code> branch</li>
     </ul></td>
   </tr>
   <tr>
@@ -378,7 +375,678 @@ Please see section 6 for information on **due date** and on how you will **demon
 
 ## 🚀 3. Iteration 1: Basic Functionality and Tests
 
-Coming Soon
+### 🚀 3.1. Task
+
+In this iteration, you are expected to:
+
+1. Write tests for and implement the basic functionality of Xecaps. The basic functionality is defined as the `adminAuth*`,`adminControlUser*`, and `adminMission*` capabilities/functions, as per the interface section below.
+    * Test files you add should all be in the form `*.test.js`.
+    * Do NOT attempt to try and write or start a web server. Don't overthink how these functions are meant to connect to a frontend yet. That is for the next iteration. In this iteration you are just focusing on the basic backend functionality.
+
+2. Follow best practices for git, project management, and effective teamwork, as discussed in lectures.
+    * The marking will be heavily biased toward how well you follow good practices and work together as a team. Just having a "working" solution at the end is not, on its own, sufficient to even get a passing mark.
+
+    * You need to use the [**GitLab Issue Boards**](https://docs.gitlab.com/ee/user/project/issue_board.html) (or similar) for your task tracking and allocation. Spend some time getting to know how to use the taskboard. If you would like to use another collaborative task tracker e.g. Jira, Trello, Airtable, etc. you must first get approval from your tutor and grant them administrator access to your team board.
+
+    * You are expected to meet regularly with your group and document the meetings via meeting minutes, which should be stored at a timestamped location in your repo (e.g. uploading a word doc/pdf or writing in the GitLab repo Wiki after each meeting).
+
+    * You should have regular standups and be able to demonstrate evidence of this to your tutor.
+
+    * For this iteration, you will need to collectively make a minimum of **13 merge requests** into `master` or `main`.
+
+
+### 🚀 3.2. Storing data
+
+Nearly all of the functions will likely have to reference some "data source" to store information. E.g. If you register two control users, create two space missions, all of that information needs to be "stored" somewhere. The most important thing for iteration 1 is not to overthink this problem.
+
+Firstly, you should **not** use an SQL database, or something like firebase.
+
+Secondly, you don't need to make anything persist. What that means is that if you run all your tests, and then run them again later, it's OK for the data to be "fresh" each time you run the tests. We will cover persistence in another iteration.
+
+Inside `src/dataStore.js` we have provided you with an object called `data` which will contain the information that you will need to access across multiple functions. An explanation of how to `get` and `set` the data is in `dataStore.js`. You will need to determine the internal structure of the object. If you wish, you are allowed to modify this data structure.
+
+For example, you could define a structure in a file that is empty, and as functions are called, the structure populates and fills up like the one below:
+
+```javascript
+let data = {
+    users: [
+        {
+            controlUserId: 1,
+            nameFirst: 'user1',
+        },
+        {
+            controlUserId: 2,
+            nameFirst: 'user2',
+        },
+    ],
+    missions: [
+        {
+            missionId: 1,
+            name: 'Mercury',
+        },
+        {
+            missionId: 2,
+            name: 'Apollo',
+        },
+    ],
+}
+```
+### 🚀 3.3. Implementing and testing features
+
+You should first approach this project by considering its distinct "features". Each feature should add some meaningful functionality to the project, but still be as small as possible. You should aim to size features as the smallest amount of functionality that adds value without making the project more unstable. For each feature you should:
+
+1. Create a new branch.
+1. Write function stub/s for your feature. This may have been completed in iteration 0 for some functions.
+1. Write tests for that feature and commit them to the branch. These will fail as you have not yet implemented the feature.
+1. Implement that feature.
+1. Make any changes to the tests such that they pass with the given implementation. You should not have to do a lot here. If you find that you are, you're not spending enough time on your tests.
+1. Create a merge request for the branch.
+1. Get someone in your team who **did not** work on the feature to review the merge request.
+1. Fix any issues identified in the review.
+1. After merge request is **approved** by a different team member, that team member or the merge request author can merge the merge request into `master` or `main`.
+
+For this project, a feature is typically sized somewhere between a single function, and a whole file of functions (e.g. `auth.js`). It is up to you and your team to decide what each feature is.
+
+There is no requirement that each feature is implemented by only one person. In fact, we encourage you to work together closely on features, especially to help those who may still be coming to grips with Javascript.
+
+Please pay careful attention to the following:
+
+* We want to see **evidence that you wrote your tests before writing your implementation**. As noted above, the commits containing your initial tests should appear *before* your implementation for every feature branch. If we don't see this evidence, we will assume you did not write your tests first and your mark will be reduced.
+* Merging in merge requests with failing tests is **very bad practice**. Not only does this interfere with your team's ability to work on different features at the same time, and thus slow down development, it is something you will be **penalised** for in marking.
+* Similarly, merging in branches with untested features is also **bad practice**. We will assume, and you should too, that any code without tests does not work.
+* Pushing directly to `master` or `main` is not possible for this repo. The only way to get code into `master` or `main` is via a merge request. If you discover you have a bug in `master` or `main` that got through testing, create a bugfix branch and merge that in via a merge request.
+* As is the case with any system or functionality, there will be some things that you can test extensively, some things that you can test sparsely/fleetingly, and some things that you can't meaningfully test at all. You should aim to test as extensively as you can, and make judgements as to what things fall into what categories.
+
+### 🚀 3.4. Testing guidelines & advice
+
+#### 🚀 3.4.1. Test Structure
+The tests you write should be as small and independent as possible. This makes it easier to identify why a particular test may be failing. Similarly, try to make it clear what each test is testing for. Meaningful test names and documentation help with this. An example of how to structure tests has been done in:
+
+* `src/echo.js`
+* `src/echo.test.js`
+
+_The echo functionality is tested, both for correct behaviour and for failing behaviour. As echo is relatively simple functionality, only 2 tests are required. For the larger features, you will need many tests to account for many different behaviours._
+
+#### 🚀 3.4.2. Black Box Testing
+
+Your tests should be *black box* unit tests:
+  * Black box means they should not depend your specific implementation, but rather work with *any* faithful implementation of the project interface specification. I.e. you should design your tests such that if they were run against another group's backend they would still pass.
+  * For iteration 1, you should *not* be importing the `data` object itself or directly accessing it via the `get` or `set` functions from `src/dataStore.js` inside your tests.
+  * Unit tests mean the tests focus on testing particular functions, rather than the system as a whole. Certain unit tests will depend on other tests succeeding. It's OK to write tests that are only a valid test if other functions are correct (e.g. to test `mission` functions you can assume that `auth` is implemented correctly).
+
+This will mean you will use code like this to test login, for instance:
+
+```javascript
+let result = adminAuthRegister('validemail@gmail.com', '123abc!@#', 'James', 'Kirk')
+adminAuthLogin('validemail@gmail.com', '123abc!@#') // Expect to work since we registered
+```
+
+#### 🚀 3.4.3. Resetting state
+
+You should reset the state of the application (e.g. deleting all users, missions, etc.) at the start of every test. That way you know none of them are accidentally dependent on an earlier test. You can use a function for this that is run at the beginning of each test (hint: `clear`).
+
+#### 🚀 3.4.4. Other help
+
+* If you find yourself needing similar code at the start of a series of tests, consider using Jest's [**beforeEach**](https://jestjs.io/docs/api#beforeeachfn-timeout) to avoid repetition.
+
+Sometimes you may ask "What happens if X?". In cases where we don't specify behaviour, we call this **undefined behaviour**. When something has undefined behaviour, you can have it behave any reasonable way you want - because there is no expectation or assumption of how it should act.
+
+A common question asked throughout the project is usually "How can I test this?" or "Can I test this?". In any situation, most things can be tested thoroughly. However, some things can only be tested sparsely, and on some other rare occasions, some things can't be tested at all. A challenge of this project is for you to use your discretion to figure out what to test, and how much to test. Often, you can use the functions you've already written to test new functions in a black-box manner.
+
+#### 🚀 3.4.5 Pipelines
+
+For this iteration, we have provided a CI pipeline file which will work whenever a merge request or a push is made to the default (`master` or `main`) branch. You may use this pipeline as a sanity check for whether or not a merge should be approved.
+
+A pipeline that has failed will show a red ❌ symbol, while a pipeline has succeeded will show a ✅ symbol. If a pipeline fails, as an approver, you should not merge it and instead inform the merge author of the situation.
+
+If you are merging code that is failing because the tests rely on other functions that are not performing correctly, then you should *temporarily* change your tests to `test.skip()` or `describe.skip()` until the functions upon which your tests rely are completed and passing their pipelines. It is recommended that you create a new list in your issue board for `Awaiting testing` if you choose this option.
+
+### 🚀 3.5. Iteration 1 Interface
+
+The functions required for iteration 1 are described below.
+
+All error cases should return <code>{error: 'specific error message here', errorCategory: 'specific error category'}</code>, where the error message in quotation marks can be anything you like (this will not be marked). The error category can be one of four possible values: `['BAD_INPUT', 'INVALID_CREDENTIALS', 'INACCESSIBLE_VALUE', 'UNKNOWN']` (this will be marked).
+
+The following are strings: `email`, `password`, `nameFirst`, `nameLast`, `name`, `description`, `target`, `oldPassword`, `newPassword`.
+
+The following are integers: `controlUserId`, `missionId`, `numFailedPasswordsSinceLastLogin`, `numSuccessfulLogins`, `timeCreated` `timeLastEdited`.
+
+For timestamps, these are unix timestamps in seconds. You can find more information that here https://en.wikipedia.org/wiki/Unix_time
+
+<table>
+  <tr>
+    <th>Name & Description</th>
+    <th style="width:18%">Data Types</th>
+    <th style="width:32%">Error returns</th>
+  </tr>
+  <tr>
+    <td>
+      <code>adminAuthRegister</code>
+      <br /><br />
+      Register a mission control user with an email, password, and names, then returns their <code>controlUserId</code> value.
+    </td>
+    <td>
+      <b>Parameters:</b><br />
+      <code>( email, password, nameFirst, nameLast )</code>
+      <br /><br />
+      <b>Return type if no error:</b><br />
+      <code>{ controlUserId }</code>
+    </td>
+    <td>
+      <b>Return object <code>{error: 'specific error message here', errorCategory: 'specific error category'}</code></b> when any of:
+      <ul>
+        <li> BAD_INPUT errors:
+        <ul>
+          <li>Email address is used by another user.</li>
+          <li>Email does not satisfy this: https://www.npmjs.com/package/validator (validator.isEmail function).</li>
+          <li>NameFirst contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes.</li>
+          <li>NameFirst is less than 2 characters or more than 20 characters.</li>
+          <li>NameLast contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes.</li>
+          <li>NameLast is less than 2 characters or more than 20 characters.</li>
+          <li>Password is less than 8 characters.</li>
+          <li>Password does not contain at least one number and at least one letter.</li>
+        </ul>
+        </li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>adminAuthLogin</code>
+      <br /><br />
+      Given a registered mission control user's email and password returns their <code>controlUserId</code> value.
+    </td>
+    <td>
+      <b>Parameters:</b><br />
+      <code>( email, password )</code>
+      <br /><br />
+      <b>Return type if no error:</b><br />
+      <code>{ controlUserId }</code>
+    </td>
+    <td>
+      <b>Return object <code>{error: 'specific error message here', errorCategory: 'specific error category'}</code></b> when any of:
+      <ul>
+        <li> BAD_INPUT errors:
+        <ul>
+          <li>Email address does not exist.</li>
+          <li>Password is not correct for the given email.</li>
+        </li></ul>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>adminControlUserDetails</code>
+      <br /><br />
+      Given a mission control user's controlUserId, return details about the user.
+      <li>"name" is the first and last name concatenated with a single space between them.</li>
+      <li>numSuccessfulLogins includes logins direct via registration, and is counted from the moment of registration starting at 1.</li>
+      <li>numFailedPasswordsSinceLastLogin is reset every time they have a successful login, and simply counts the number of attempted logins that failed due to incorrect password, only since the last login.</li>
+    </td>
+    <td>
+      <b>Parameters:</b><br />
+      <code>( controlUserId )</code>
+      <br /><br />
+      <b>Return type if no error:</b><br />
+      <code>{ user:
+  {
+    controlUserId,
+    name,
+    email,
+    numSuccessfulLogins,
+    numFailedPasswordsSinceLastLogin,
+  }
+}</code>
+    </td>
+    <td>
+      <b>Return object <code>{error: 'specific error message here', errorCategory: 'specific error category'}</code></b> when any of:
+      <ul>
+        <li> INVALID_CREDENTIALS errors:
+        <ul>
+          <li>controlUserId is not a valid user.</li>
+        </ul>
+        </li>
+    </td>
+  </tr>
+  <tr>
+  <td>
+    <code>adminControlUserDetailsUpdate</code>
+    <br /><br />
+    Given a mission control user's controlUserId and a set of properties, update the properties of this logged in admin user. 
+  </td>
+  <td>
+    <b>Parameters:</b><br />
+    <code>( controlUserId, email, nameFirst, nameLast )</code>
+    <br /><br />
+    <b>Return type if no error:</b><br />
+    <code>{ }</code>
+  </td>
+  <td>
+    <b>Return object <code>{error: 'specific error message here', errorCategory: 'specific error category'}</code></b> when any of:
+    <ul>
+      <li> INVALID_CREDENTIALS errors:
+        <ul>
+          <li>controlUserId is not a valid user.</li>
+        </ul>
+      </li>
+      <li> BAD_INPUT errors:
+      <ul>
+        <li>Email is currently used by another user (excluding the current authorised user)</li>
+        <li>Email does not satisfy this: https://www.npmjs.com/package/validator (validator.isEmail)</li>
+        <li>NameFirst contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes</li>
+        <li>NameFirst is less than 2 characters or more than 20 characters</li>
+        <li>NameLast contains characters other than lowercase letters, uppercase letters, spaces, hyphens, or apostrophes</li>
+        <li>NameLast is less than 2 characters or more than 20 characters</li>
+      </ul>
+      </li>
+    </ul>
+  </td>
+  </tr>
+  <tr>
+  </td>
+    <td>
+      <code>adminControlUserPasswordUpdate</code>
+      <br /><br />
+      Given details relating to a password change, update the password of a logged in user.
+    </td>
+    <td>
+      <b>Parameters:</b><br />
+      <code>( controlUserId, oldPassword, newPassword )</code>
+      <br /><br />
+      <b>Return type if no error:</b><br />
+      <code>{ }</code>
+    </td>
+    <td>
+      <b>Return object <code>{error: 'specific error message here', errorCategory: 'specific error category'}</code></b> when any of:
+      <ul>
+        <li> INVALID_CREDENTIALS errors:
+        <ul>
+          <li>controlUserId is not a valid user.</li>
+        </ul>
+        </li>
+        <li> BAD_INPUT errors:
+        <ul>
+          <li>Old Password is not the correct old password</li>
+          <li>Old Password and New Password match exactly</li>
+          <li>New Password has already been used before by this user</li>
+          <li>New Password is less than 8 characters</li>
+          <li>New Password does not contain at least one number and at least one letter</li>
+        </ul>
+        </li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>adminMissionList</code>
+      <br /><br />
+      Provide a list of all space missions that are owned by the currently logged in mission control user.
+    </td>
+    <td>
+      <b>Parameters:</b><br />
+      <code>( controlUserId )</code>
+      <br /><br />
+      <b>Return type if no error:</b><br />
+      <code>{ missions: [
+    {
+      missionId,
+      name,
+    }
+  ]
+}</code>
+    </td>
+    <td>
+      <b>Return object <code>{error: 'specific error message here', errorCategory: 'specific error category'}</code></b> when any of:
+      <ul>
+        <li> INVALID_CREDENTIALS errors:
+        <ul>
+          <li>controlUserId is not a valid user.</li>
+        </ul>
+        </li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>adminMissionCreate</code>
+      <br /><br />
+      Given basic details about a new mission, create one for the logged in user.
+    </td>
+    <td>
+      <b>Parameters:</b><br />
+      <code>( controlUserId, name, description, target )</code>
+      <br /><br />
+      <b>Return type if no error:</b><br />
+      <code>{ missionId }</code>
+    </td>
+    <td>
+      <b>Return object <code>{error: 'specific error message here', errorCategory: 'specific error category'}</code></b> when any of:
+      <ul>
+        <li> INVALID_CREDENTIALS errors:
+        <ul>
+          <li>controlUserId is not a valid user.</li>
+        </ul>
+        </li>
+        <li> BAD_INPUT errors:
+        <ul>
+          <li>Name contains invalid characters. Valid characters are alphanumeric and spaces.</li>
+          <li>Name is either less than 3 characters long or more than 30 characters long.</li>
+          <li>Name is already used by the current logged in user for another mission.</li>
+          <li>Description is more than 400 characters in length (note: empty strings are OK).</li>
+          <li>Target is more than 100 characters in length (note: empty strings are OK).</li>
+        </ul>
+        </li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>adminMissionRemove</code>
+      <br /><br />
+      Given a particular space mission, permanently remove the space mission.
+    </td>
+    <td>
+      <b>Parameters:</b><br />
+      <code>( controlUserId, missionId )</code>
+      <br /><br />
+      <b>Return type if no error:</b><br />
+      <code>{ }</code>
+    </td>
+    <td>
+      <b>Return object <code>{error: 'specific error message here', errorCategory: 'specific error category'}</code></b> when any of:
+      <ul>
+        <li> INVALID_CREDENTIALS errors:
+        <ul>
+          <li>controlUserId is not a valid user.</li>
+        </ul>
+        </li>
+        <li> INACCESSIBLE_VALUE errors:
+        <ul>
+          <li>mission ID does not refer to a valid space mission.</li>
+          <li>mission ID does not refer to a space mission that this mission control user owns.</li>
+        </li>
+        </ul>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>adminMissionInfo</code>
+      <br /><br />
+      Get all of the relevant information about the current space mission.
+    </td>
+    <td>
+      <b>Parameters:</b><br />
+      <code>( controlUserId, missionId )</code>
+      <br /><br />
+      <b>Return type if no error:</b><br />
+      <code>{
+  missionId,
+  name,
+  timeCreated,
+  timeLastEdited,
+  description,
+  target,
+}</code>
+    </td>
+    <td>
+      <b>Return object <code>{error: 'specific error message here', errorCategory: 'specific error category'}</code></b> when any of:
+      <ul>
+        <li> INVALID_CREDENTIALS errors:
+        <ul>
+          <li>controlUserId is not a valid user.</li>
+        </ul>
+        </li>
+        <li> INACCESSIBLE_VALUE errors:
+        <ul>
+          <li>mission ID does not refer to a valid space mission.</li>
+          <li>mission ID does not refer to a space mission that this mission control user owns.</li>
+        </li>
+        </ul>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>adminMissionNameUpdate</code>
+      <br /><br />
+      Update the name of the relevant space mission.
+    </td>
+    <td>
+      <b>Parameters:</b><br />
+      <code>( controlUserId, missionId, name )</code>
+      <br /><br />
+      <b>Return type if no error:</b><br />
+      <code>{ }</code>
+    </td>
+    <td>
+      <b>Return object <code>{error: 'specific error message here', errorCategory: 'specific error category'}</code></b> when any of:
+      <ul>
+        <li> INVALID_CREDENTIALS errors:
+        <ul>
+          <li>controlUserId is not a valid user.</li>
+        </ul>
+        </li>
+        <li> INACCESSIBLE_VALUE errors:
+        <ul>
+          <li>mission ID does not refer to a valid space mission.</li>
+          <li>mission ID does not refer to a space mission that this mission control user owns.</li>
+        </li>
+        </ul>
+        <li> BAD_INPUT errors:
+        <ul>
+          <li>Name contains invalid characters. Valid characters are alphanumeric and spaces.</li>
+          <li>Name is either less than 3 characters long or more than 30 characters long.</li>
+          <li>Name is already used by the current logged in mission control user for another space mission.</li>
+        </ul>
+        </li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>adminMissionDescriptionUpdate</code>
+      <br /><br />
+      Update the description of the relevant space mission.
+    </td>
+    <td>
+      <b>Parameters:</b><br />
+      <code>( controlUserId, missionId, description )</code>
+      <br /><br />
+      <b>Return type if no error:</b><br />
+      <code>{ }</code>
+    </td>
+    <td>
+      <b>Return object <code>{error: 'specific error message here', errorCategory: 'specific error category'}</code></b> when any of:
+      <ul>
+        <li> INVALID_CREDENTIALS errors:
+        <ul>
+          <li>controlUserId is not a valid user.</li>
+        </ul>
+        </li>
+        <li> INACCESSIBLE_VALUE errors:
+        <ul>
+          <li>mission ID does not refer to a valid space mission.</li>
+          <li>mission ID does not refer to a space mission that this mission control user owns.</li>
+        </li>
+        </ul>
+        <li> BAD_INPUT errors:
+        <ul>
+          <li>Description is more than 400 characters in length (note: empty strings are OK).</li>
+        </ul>
+        </li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>adminMissionTargetUpdate</code>
+      <br /><br />
+      Update the target of the relevant space mission.
+    </td>
+    <td>
+      <b>Parameters:</b><br />
+      <code>( controlUserId, missionId, target )</code>
+      <br /><br />
+      <b>Return type if no error:</b><br />
+      <code>{ }</code>
+    </td>
+    <td>
+      <b>Return object <code>{error: 'specific error message here', errorCategory: 'specific error category'}</code></b> when any of:
+      <ul>
+        <li> INVALID_CREDENTIALS errors:
+        <ul>
+          <li>controlUserId is not a valid user.</li>
+        </ul>
+        </li>
+        <li> INACCESSIBLE_VALUE errors:
+        <ul>
+          <li>mission ID does not refer to a valid space mission.</li>
+          <li>mission ID does not refer to a space mission that this mission control user owns.</li>
+        </li>
+        </ul>
+        <li> BAD_INPUT errors:
+        <ul>
+          <li>Target is more than 100 characters in length (note: empty strings are OK).</li>
+        </ul>
+        </li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>clear</code>
+      <br /><br />
+      Reset the state of the application back to the start.
+    </td>
+    <td>
+      <b>Parameters:</b><br />
+      <code>( )</code>
+      <br /><br />
+      <b>Return type if no error:</b><br />
+      <code>{ }</code>
+    </td>
+    <td>
+    </td>
+  </tr>
+</table>
+
+### 🚀 3.6. Authorisation
+
+Elements of securely storing passwords and other tricky authorisation methods are not required for iteration 1. You can simply store passwords plainly, and use the user ID to identify each user. We will discuss ways to improve the quality and methods of these capabilities in the later iterations.
+
+Note that the `controlUserId` variable is simply the user ID of the user who is making the function call. For example,
+* A mission control user registers an account with Xecaps and is assigned some integer ID, e.g. `42` as their user ID.
+* When they make subsequent calls to functions, their user ID - in this case, `42` - is passed in as the `controlUserId` argument.
+
+Since `controlUserId` refers to the user ID of the user calling the functions, you do NOT need to store separate user IDs (e.g. a uId or userId + a controlUserId) to identify each user in your data structure - you only need to store one user ID. How you name this user ID property in your data structure is up to you.
+
+### 🚀 3.7. Working in parallel
+
+This iteration provides challenges for many groups when it comes to working in parallel. Your group's initial reaction will be that you need to complete registration before you can complete mission creation, and then mission creation must be done before you update a mission name, etc.
+
+There are several approaches that you can consider to overcome these challenges:
+
+* Have people working on down-stream tasks (like the mission implementation) work with stubbed versions of the up-stream tasks. E.g. The register function is stubbed to return a successful dummy response, and therefore two people can start work in parallel.
+* Co-ordinate with your team to ensure prerequisite features are completed first (e.g. Giuliana completes `adminAuthRegister` on Monday meaning Hayden can start `adminMissionCreate` on Tuesday).
+* You can pull any other remote branch into your own using the command `git pull origin <branch_name>`.
+    * This can be helpful when two people are working on functions on separate branches where one function is a prerequisite of the other, and an implementation is required to keep tests from failing.
+    * You should pull from `master` or `main` on a regular basis to ensure your code remains up-to-date.
+
+### 🚀 3.8. Marking Criteria
+
+<table>
+  <tr>
+    <th>Section</th>
+    <th>Weighting</th>
+    <th>Criteria</th>
+  </tr>
+  <tr>
+    <td>Automarking (Testing & Implementation)</td>
+    <td>40%</td>
+    <td>
+      <ul>
+      <li>Correct implementation of specified functions.</li>
+    </ul>
+      Whilst we look at your group's work as a whole, if we feel that materially unequal contributions occurred between group members we will assess your individual contribution against this criteria. Each group member will receive an individual mark.
+    </td>
+  </tr>
+  <tr>
+    <td>Test Quality</td>
+    <td>15%</td>
+    <td>
+      Develop tests that show a clear demonstration of:
+      <ul>
+        <li>Good test <b>coverage</b> - how well you cover the use cases (no need to run a coverage checker in this iteration).</li>
+        <li>Good test  <b>clarity</b> in communicating the purpose of tests and code.</li>
+        <li>Good test <b>design</b> - thoughtful, clear, and modular layout that follows course examples.</li>
+      </ul>
+      Whilst we look at your group's work as a whole, if we feel that materially unequal contributions occurred between group members we will assess your individual contribution against this criteria. Each group member will receive an individual mark.
+    </td>
+  </tr>
+  <tr>
+    <td>General Code Quality</td>
+    <td>10%</td>
+    <td>
+      <ul>
+        <li>Appropriate use of Javascript data structures (arrays, objects, etc.)</li>
+        <li>Appropriate style as covered so far in introductory programming.</li>
+      </ul>
+      Whilst we look at your group's work as a whole, if we feel that materially unequal contributions occurred between group members we will assess your individual contribution against this criteria. Each group member will receive an individual mark.
+    </td>
+  </tr>
+  <tr>
+    <td>Git Practices, Project Management, Teamwork</td>
+    <td>35%</td>
+    <td>
+      As an individual, in terms of git:
+      <ul>
+        <li>For particular features, committing the bulk of your tests prior to your implementation.</li>
+        <li>Your git commit messages are meaningful, clear, informative, and follow the conventional commits structure</li>
+        <li>You contribute at least 2 meaningful merge requests (approved by another team member) that merge your branch code to master.</li>
+      </ul>
+      As an individual, in terms of project management and teamwork:
+      <ul>
+        <li>Attendance to group check ins every week.</li>
+        <li>Effective use of course-provided MS Teams for effective communication with your group.</li>
+        <li>Use of issue board on Gitlab OR another equivalent tool that is used to effectively track your tasks.</li>
+        <li>Attendance and contributions at your teams standups, including at least one scenario where you were the leader of the meeting and took the minutes/notes for that meeting.</li>
+      </ul>
+    </td>
+  </tr>
+</table>
+
+For this and for all future milestones, you should consider the other expectations as outlined in section 6 below.
+
+The formula used for automarking in this iteration is:
+
+`Mark = t * i` (Mark equals `t` multiplied by `i`).
+
+Where:
+ * `t` is the mark you receive for your tests running against your code (100% = your implementation passes all of your tests).
+ * `i` is the mark you receive for our course tests (hidden) running against your code (100% = your implementation passes all of our tests).
+
+### 🚀 3.9. Dryrun
+
+We have provided a very simple dryrun for iteration 1 consisting of a few tests, including your implementation of `adminAuthRegister`, `adminAuthLogin`, `adminMissionCreate`. These only check the format of your return types and simple expected behaviour, so do not rely on these as an indicator of the correctness of your implementation or tests.
+
+To run the dryrun, you should be on a CSE machine (i.e. using `VLAB` or `ssh`'ed into CSE) and in the root directory of your project (e.g. `/project-backend`) and then copy the iteration 1 dryrun test into your src folder.
+
+To copy dryrun tests, you can run the following command on CSE machines:
+```bash
+cp ~dp1093/bin/xecaps/iter1.test.js .
+```
+
+Then you can run this as a normal `jest` test.
+
+Tips to ensure dryrun runs successfully:
+* Files sit within the `/src` directory.
+
+### 🚀 3.10. Submission & Peer Assessment
+
+Please see section 6 for information on **due date** and on how you will **demonstrate this iteration**.
+
+Please see section 7.5 for information on **peer assessment**.
 
 ## 📡 4. Iteration 2: Building a Web Server
 
@@ -423,7 +1091,7 @@ If the re-run automark after penalty is lower than your initial mark, we will ke
 * Create a merge request for this branch, and take note of merge request ID in the URL
   * It is the number at the end of the URL
   * "https://nw-syd-gitlab.cseunsw.tech/DPST1093/25T3/groups/T15A_DESSERT/project-backend/-/merge_requests/**67**"
-* Request a re-run on the 're-run request' channel of MS-TEAMS for this course
+* Request a re-run in your MS Teams channel with an `@courseadmin` tag.
 * Once you request it, it may take up to 72 hours for you to receive the results of the rerun.
   
 
@@ -445,18 +1113,164 @@ The demonstrations in weeks 5,9 and 12 will take place during your tutorial or l
 
 Demonstrations consist of a 15-20 minute Question and Answer session in front of your tutor. Each team member will be asked to explain their code.
 
-## 👌 7. Individual Assessment
 
-Coming in Iteration 1
+## 👌 7. Individual Contribution
 
+The marks given to you for each iteration are given to you individually. We do however use group marks (e.g. automarking) to infer this, and in many cases, you may receive the same mark as your group members, particularly in cases with well functioning groups. Your individual mark is determined by a combination of the factors below by your tutor, with your group mark as a reference point.Your tutor will look at the following items each iteration to determine your mark:
+ * Project check-in
+ * Code contribution
+ * Tutorial contributions
+ * Peer assessment
 
-## 💻 8. Automarking & Previews
+### 👌 7.1. Project check-in
 
-Coming in Iteration 1
+During your lab class, you and your team will conduct a short standup in the presence of your tutor. Each member of the team will briefly state what they have done in the past week, what they intend to do over the next week, and what issues they have faced or are currently facing. This is so your tutor, who is acting as a representative of the client, is kept informed of your progress. They will make note of your presence and may ask you to elaborate on the work you've done.
+
+Project check-ins are also excellent opportunities for your tutor to provide you with both technical and non-technical guidance.
+
+Your attendance and participation at project check-ins will contribute to your individual mark component for the project. In addition, your tutor will note down any absences from team-organised standups.
+
+These are easy marks. They are marks assumed that you will receive automatically, and are yours to lose if you neglect them.
+
+The following serves as a baseline for expected progress during project check-ins, in the specified weeks. For groups which do not meet this baseline, teamwork marks and/or individual scaling may be impacted.
+| Iteration | Week/Check-in | Expected progress                                                                                                                                     |
+| --------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0         | **Week 2**    | Twice-weekly standup meeting times organised, iteration 0 specification has been discussed in a meeting, at least 1 task per person has been assigned |
+| 1         | **Week 3**    | Iteration 1 specification has been discussed in a meeting, broken down in Sprint 1 and Sprint 2 as per tutorial. At least 1 task (including tests if applicable) for Sprint 1 complete and plan to finish all Sprint 1 tasks |
+| 1         | **Week 4**    | All Sprint 1 tasks complete, All tests complete, At least 1 Sprint 2 function complete per person |
+| 2         | **Week 5**    | Iteration 2 specification has been discussed in a meeting, Overall Sprint planning targets have been completed|
+| 2         | **Week 6**    | **Two checkins per week - a remote checkin on Monday/Tuesday, an in-person checkin on Wed/Thur** HTTP Tests complete for all server functions and HTTP function stubs complete plus helper functions logic has been completed |
+| 2         | **Week 7**    | **There will be two remote checkins during week 7** Server routes complete and all blocker function tests and logic complete |
+| 2         | **Week 8**    | **Two checkins per week - a remote checkin on Monday/Tuesday, an in-person checkin on Wed/Thurs** All tests and logic for remaining functions complete |
+| 3 | **Week 9** | Iteration 3 specification has been discussed in a meeting, Sprint planning is complete, Iteration 2 fixes are done |
+| 3         | **Week 10**    | Exceptions & tokens in HTTP headers added across the project, all HTTP Tests and HTTP function stubs are in master. All helper and blocking function logic is completed.
+| 3         | **Week 11**    | All tests and logic for remaining functions complete |
+| 3         | **Week 12** | Project Exhibition in Friday Lecture time, Pitch Presentation on Tuesda and Wednesday, Demos on Wednesday and Thursday |
+
+### 👌 7.2. Tut-Lab contributions
+
+From weeks 2 onward, your individual project mark may be reduced if you do not satisfy the following:
+* Attend all Tut-Lab.
+* Participate in Tut-Lab by asking questions and offering answers.
+* Attend all your project check-ins.
+
+We're comfortable with you missing or disengaging with 1 Tut-Lab per term, but for anything more than that please email your tutor. If you cannot meet one of the above criteria, you will likely be directed to special consideration.
+
+These are easy marks. They are marks assumed that you will receive automatically, and are yours to lose if you neglect them.
+
+### 👌 7.3. Code contribution
+
+All team members must contribute code to the project to a generally similar degree. Project Managers will assess the degree to which you have contributed by looking at your **git history** and analysing lines of code, number of commits, timing of commits, etc. If you contribute significantly less code than your team members, your work will be closely examined to determine what scaling needs to be applied.
+
+Note that **contributing more code is not a substitute for not contributing documentation**.
+
+Please also note that **failure to commit (as an individual) at least once in each week of your iteration may result in up to a 20% mark penalty**. It's critical that you at least demonstrate you can make minor progress each week. If this were an individual assignment we would not enforce this, but given it is a group assignment it's important we encourage you to commit regularly.
+
+### 👌 7.4. Documentation contribution
+
+All team members must contribute documentation to the project to a generally similar degree.
+
+In terms of code documentation, your functions are required to contain comments in JSDoc format, including paramters and return values:
+
+```javascript
+/**
+  * <Brief description of what the function does>
+  * 
+  * @param {data type} name - description of paramter
+  * @param {data type} name - description of parameter
+  * ...
+  * 
+  * @returns {data type} - description of condition for return
+  * @returns {data type} - description of condition for return
+*/
+```
+
+In each iteration you will be assessed on ensuring that every relevant function in the specification is appropriately documented.
+
+In terms of other documentation (such as reports and other notes in later iterations), we expect that group members will contribute equally.
+
+Note that, **contributing more documentation is not a substitute for not contributing code**.
+
+### 👌 7.5. Peer Assessment
+
+**Please note: Failure to complete a peer review for a particular iteration may result in a mark penalty of 10% for the iteration**
+
+At the end of each iteration, there will be a peer assessment survey where you will rate and leave comments about each team member's contribution to the project up until that point. 
+
+Your other team members will **not** be able to see how you rated them or what comments you left in either peer assessment. If your team members give you a less than satisfactory rating, your contribution will be scrutinised and you may find your final mark scaled down (after review by your tutor).
+
+The following criteria will be assessed by your team members:
+* **Participation**: What was the level of participation in group work, attendance at meetings, making suggestions, taking responsibility for tasks, being in communication with the team?
+* **Dependability**: How dependable was this team member in delivering assigned tasks, on time, with expected levels of quality? 
+* **Team Wellbeing**: How much did this team member contribute to the healthy functioning of the team by communicating with members, coordinating meetings, listening to concerns, facilitating discussion, offering suggestions?
+* **Work contribution**: How much did this team member contribute to the development of the major project. .
+
+<table>
+  <tr>
+    <th>Iteration</th>
+    <th>Link</th>
+    <th>Opens</th>
+    <th>Closes</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>[Peer Review Iteration 1](Link Sent to MS Teams)</td>
+    <td>Fri 10am, 26th September</td>
+    <td>Tues 9am, 30th September</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>[Peer Review Iteration 2](Link Sent to MS Teams)</td>
+    <td>Fri 10am, 24th October</td>
+    <td>Tues 9am, 28th October</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>[Peer Review Iteration 3](Link Sent to MS Teams)</td>
+    <td>Tues 10am, 18th November</td>
+    <td>Mon 9am, 24th November</td>
+  </tr>
+</table>
+
+### 👌 7.6. Managing Issues
+
+When a group member does not contribute equally, we are aware it can implicitly have an impact on your own mark by pulling the group mark down (e.g. through not finishing a critical feature), etc.
+
+The first step of any disagreement or issue is always to talk to your team member(s) on the chats in MS Teams. Make sure you have:
+1. Been clear about the issue you feel exists.
+2. Been clear about what you feel needs to happen and in what time frame to feel the issue is resolved.
+3. Gotten clarity that your team member(s) want to make the change.
+
+If you don't feel that the issue is being resolved quickly, you should escalate the issue by talking to your tutor with your group in a project check-in, or alternatively by emailing your tutor privately outlining your issue.
+
+It's imperative that issues are raised to your tutor ASAP, as we are limited in the mark adjustments we can do when issues are raised too late (e.g. we're limited with what we can do if you email your tutor with iteration 2 issues after iteration 2 is due).
+
+## 💻 8. Automarking Previews
+
+### 💻 8.1. Automarking
+
+Each iteration consists of an automarking component. The particular formula used to calculate this mark is specific to the iteration (and detailed above).
+
+When running your code or tests as part of the automarking, we place a 120 second timer on the running of your group's tests. This is more than enough time to complete everything unless you're doing something very wrong or silly with your code. As long as your tests take under 120 seconds to run, you don't have to worry about it potentially taking longer when we run automarking.
+
+#### 8.2 Preview Start times
+
+ Note that you should not rely on this system like you would the auto-test system for 1091/1092. Instead, its purpose is to give you an idea of how you should organise your own tests.
+
+Previews are run in the mid to late stages for each iteration. You may view the outcomes of your previews inside your MS Teams Channel.
+
+We will run automarking Previews from the following dates until the due date of each iteration:
+ - Iteration 1 :: September 21st
+ - Iteration 2 :: October 16th
+ - Iteration 3 :: November 10th
 
 ## 👀 9. Plagiarism
 
 The work you and your group submit must be your own work. Submission of work partially or completely derived from any other person or jointly written with any other person is not permitted. The penalties for such an offence may include negative marks, automatic failure of the course and possibly other academic discipline. Assignment submissions will be examined both automatically and manually for such submissions.
+
 Relevant scholarship authorities will be informed if students holding scholarships are involved in an incident of plagiarism or other misconduct.
+
 Do not provide or show your project work to any other person, except for your group and the teaching staff of DPST1093. If you knowingly provide or show your assignment work to another person for any reason, and work derived from it is submitted, you may be penalized, even if the work was submitted without your knowledge or consent. This may apply even if your work is submitted by a third party unknown to you.
+
 Note: you will not be penalized if your work has the potential to be taken without your consent or knowledge.
+
