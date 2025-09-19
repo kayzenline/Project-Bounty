@@ -1,13 +1,3 @@
-
-
-function adminAuthLogin(email, password) {
-  return { controlUserId: 1 };
-}
-
-module.exports = {
-  adminAuthLogin,
-};
-
 // This file should contain your functions relating to:
 // - adminAuth*
 // - adminControlUser*
@@ -63,6 +53,40 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
   return { controlUserId };
 }
 
+// Login a mission control user
+function adminAuthLogin(email, password) {
+  // Validate email format
+  if (!isValidEmail(email)) {
+    return { error: 'Invalid email format' };
+  }
+
+  // Validate password is provided
+  if (!password) {
+    return { error: 'Password is required' };
+  }
+
+  // Get current data
+  const data = getData();
+
+  // Find user by email
+  const user = data.missionControlUsers.find(u => u.email === email);
+  if (!user) {
+    return { error: 'User not found' };
+  }
+
+  // Check password
+  if (user.password !== password) {
+    user.numFailedPasswordsSinceLastLogin++;
+    return { error: 'Incorrect password' };
+  }
+
+  // Successful login
+  user.numSuccessfulLogins++;
+  user.numFailedPasswordsSinceLastLogin = 0;
+
+  return { controlUserId: user.controlUserId };
+}
+
 function adminControlUserDetails(controlUserId){
   return{
     user:{
@@ -80,4 +104,10 @@ function adminControlUserDetailsUpdate(controlUserId,email,nameFirst,nameLast){
 function adminControlUserPasswordUpdate(controlUserId,oldPassword,newPassword){
   return{}
 }
+
+
+export {
+  adminAuthRegister,
+  adminAuthLogin,
+};
 
