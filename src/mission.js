@@ -68,14 +68,35 @@ function adminMissionCreate(controlUserId, name, description, target) {
 
 
 function adminMissionInfo(controlUserId, missionId) {
-  return { 
-  missionId: 1,
-  name: 'Mercury',
-  timeCreated: 1683125870,
-  timeLastEdited: 1683125871,
-  description: "Place a manned spacecraft in orbital flight around the earth. Investigate a persons performance capabilities and their ability to function in the environment of space. Recover the person and the spacecraft safely",
-  target: 'Earth orbit'
+  try {
+    // check user id
+    const user = controlUserIdCheck(controlUserId);
+    // check mission id
+    if (!Number.isInteger(missionId) || missionId <= 0) {
+      const e = new Error('missionId must be a positive integer');
+      e.code = EC.BAD_INPUT;
+      throw e;
+    }
+    // check mission id is matched
+    const data = getData();
+    const mission = data.spaceMissions.find(m => m.missionId === missionId);
+    if (!mission || mission.ownerId !== user.controlUserId) {
+      const e = new Error('mission not accessible');
+      e.code = EC.INACCESSIBLE_VALUE;
+      throw e;
+    }
 
+    return {
+      missionId: mission.missionId,
+      name: mission.name,
+      timeCreated: mission.timeCreated,
+      timeLastEdited: mission.timeLastEdited,
+      description: mission.description,
+      target: mission.target,
+    };
+    // try failed
+  } catch (e) {
+    return { error: String(e.message), errorCategory: e.code ?? EC.UNKNOWN };
   }
 }
 
@@ -96,4 +117,4 @@ function adminMissionDescriptionUpdate(controlUserId, missionId, description) {
   return {};
 }
 
-export { adminMissionCreate };
+export { adminMissionCreate, adminMissionInfo };
