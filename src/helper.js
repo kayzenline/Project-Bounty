@@ -1,5 +1,5 @@
 import { getData } from './data.js';
-import { errorCategories as EC } from './testSamples.js';
+import { errorCategories as EC } from './errors.js';
 // Helper function to generate unique control user ID
 function controlUserIdGen() {
   const data = getData();
@@ -42,7 +42,7 @@ function findUserById(controlUserId) {
 // Helper function to check if control user's ID is valid or invalid
 function controlUserIdCheck(controlUserId) {
   //user id must be integer
-  if (!Number.isInteger(controlUserId)) {
+  if (!Number.isInteger(controlUserId) || controlUserId <= 0) {
     const e = new Error('controlUserId must be integer');
     e.code = EC.BAD_INPUT;
     throw e;
@@ -58,6 +58,33 @@ function controlUserIdCheck(controlUserId) {
   return user;
 }
 
+// check mission name is valid or not
+function missionNameValidity(name, maxlen = 100) {
+  // check type of name
+  if (typeof name !== 'string') {
+    const e = new Error('mission name must be a string');
+    e.cause = EC.BAD_INPUT;
+    throw e;
+  }
+  // check is name a empty
+  const n = name.trim()
+  if(n.length === 0) {
+    const e = new Error('misssion name cannot be a empty');
+    e.cause = EC.BAD_INPUT;
+    throw e;
+  }
+  // check name length
+  const nlen = name.length;
+  if(nlen > maxlen) {
+    const e = new Error('misssion name cannot be too long');
+    e.cause = EC.BAD_INPUT;
+    throw e;
+  }
+  return name;
+}
+
+
+
 export {
   controlUserIdGen,
   isValidPassword,
@@ -65,5 +92,6 @@ export {
   isValidEmail,
   findUserByEmail,
   findUserById,
-  controlUserIdCheck
+  controlUserIdCheck,
+  missionNameValidity
 };
