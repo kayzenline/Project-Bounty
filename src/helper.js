@@ -58,29 +58,27 @@ function controlUserIdCheck(controlUserId) {
   return user;
 }
 
-// check mission name is valid or not
+// Validate mission name and return the trimmed value
 function missionNameValidity(name, maxlen = 100) {
-  // check type of name
   if (typeof name !== 'string') {
     const e = new Error('mission name must be a string');
-    e.cause = EC.BAD_INPUT;
+    e.code = EC.BAD_INPUT;
     throw e;
   }
-  // check is name a empty
-  const n = name.trim()
-  if(n.length === 0) {
-    const e = new Error('misssion name cannot be a empty');
-    e.cause = EC.BAD_INPUT;
+  // mission name cannot be empty
+  const n = name.trim();
+  if (n.length === 0) {
+    const e = new Error('mission name cannot be empty');
+    e.code = EC.BAD_INPUT;
     throw e;
   }
-  // check name length
-  const nlen = name.length;
-  if(nlen > maxlen) {
-    const e = new Error('misssion name cannot be too long');
-    e.cause = EC.BAD_INPUT;
+  // mission name cannot be too long
+  if (n.length > maxlen) {
+    const e = new Error('mission name cannot be too long');
+    e.code = EC.BAD_INPUT;
     throw e;
   }
-  return name;
+  return n;
 }
 
 

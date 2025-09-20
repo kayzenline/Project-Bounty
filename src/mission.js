@@ -1,5 +1,8 @@
 // This file should contain your functions relating to:
 // - adminMission*
+import { getData } from './data.js';
+import { controlUserIdCheck, missionNameValidity } from './helper.js';
+import { errorCategories as EC } from './errors.js';
 function adminMissionList(controlUserId) {
   return {
     missions: [
@@ -18,13 +21,52 @@ function adminMissionRemove(controlUserId, missionId) {
   return {};
 }
 
+// Create a mission for a control user
+function adminMissionCreate(controlUserId, name, description, target) {
+  try {
+    // Validate control user and mission name
+    const user = controlUserIdCheck(controlUserId);
+    const fixedName = missionNameValidity(name, 100);
 
-function adminMissionCreate(controlUserId, name, description, target ) {
-    
-  return {
-    missionId: 2
-  };
+    // Minimal validation for description and target
+    if (typeof description !== 'string' || description.trim() === '') {
+      const e = new Error('description invalid');
+      e.code = EC.BAD_INPUT;
+      throw e;
+    }
+    if (typeof target !== 'string' || target.trim() === '') {
+      const e = new Error('target invalid');
+      e.code = EC.BAD_INPUT;
+      throw e;
+    }
+
+    // Generate missionId
+    const data = getData();
+    const nextId =
+      data.spaceMissions.length === 0
+        ? 1
+        : Math.max(...data.spaceMissions.map(m => m.missionId)) + 1;
+
+    // Persist mission
+    const now = Math.floor(Date.now() / 1000);
+    data.spaceMissions.push({
+      missionId: nextId,
+      ownerId: user.controlUserId,
+      name: fixedName,
+      description: description.trim(),
+      target: target.trim(),
+      timeCreated: now,
+      timeLastEdited: now,
+    });
+
+    return { missionId: nextId };
+  } catch (e) {
+    return { error: String(e.message), errorCategory: e.code ?? e.cause ?? EC.UNKNOWN };
+  }
 }
+
+
+
 function adminMissionInfo(controlUserId, missionId) {
   return { 
   missionId: 1,
@@ -36,9 +78,13 @@ function adminMissionInfo(controlUserId, missionId) {
 
   }
 }
+
+
 function adminMissionNameUpdate(controlUserId, missionId, name) {
   return {}
 }
+
+
 
 // Update mission target
 function adminMissionTargetUpdate(controlUserId, missionId, target) {
@@ -49,3 +95,5 @@ function adminMissionTargetUpdate(controlUserId, missionId, target) {
 function adminMissionDescriptionUpdate(controlUserId, missionId, description) {
   return {};
 }
+
+export { adminMissionCreate };
