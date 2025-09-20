@@ -82,6 +82,11 @@ function missionNameValidity(name, maxlen = 100) {
   }
   return name;
 }
+// Helper function to generate unique mission ID.
+function missionIdGen() {
+  const data = getData();
+  return data.nextMissionId++;
+}
 
 
 
@@ -93,5 +98,6 @@ export {
   findUserByEmail,
   findUserById,
   controlUserIdCheck,
-  missionNameValidity
+  missionNameValidity,
+  missionIdGen,
 };

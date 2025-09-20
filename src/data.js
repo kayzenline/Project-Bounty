@@ -2,7 +2,8 @@
 let data = {
   missionControlUsers: [],
   spaceMissions: [],
-  nextControlUserId: 1
+  nextControlUserId: 1,
+  nextMissionId: 1,
 };
 
 export function getData() {
@@ -17,7 +18,8 @@ export function clear() {
   data = {
     missionControlUsers: [],
     spaceMissions: [],
-    nextControlUserId: 1
+    nextControlUserId: 1,
+    nextMissionId: 1,
   };
   return {};
 }
