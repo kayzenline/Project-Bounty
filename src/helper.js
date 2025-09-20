@@ -107,6 +107,25 @@ function missionDescriptionValidity(description, maxlen = 400) {
   return description;
 }
 
+// Helper function for mission target validity
+function missionTargetValidity(target, maxlen = 100) {
+  // check type of target
+  if (typeof target !== 'string') {
+    const e = new Error('target must be a string');
+    e.code = EC.BAD_INPUT;
+    throw e;
+  }
+
+  // check target length
+  if (target.length > maxlen) {
+    const e = new Error('target is too long');
+    e.code = EC.BAD_INPUT;
+    throw e;
+  }
+
+  return target;
+}
+
 export {
   controlUserIdGen,
   isValidPassword,
@@ -118,4 +137,5 @@ export {
   missionNameValidity,
   missionIdGen,
   missionDescriptionValidity,
+  missionTargetValidity,
 };
