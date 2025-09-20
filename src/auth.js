@@ -109,5 +109,6 @@ function adminControlUserPasswordUpdate(controlUserId,oldPassword,newPassword){
 export {
   adminAuthRegister,
   adminAuthLogin,
+  adminControlUserDetails,
 };
 
