@@ -88,15 +88,20 @@ function adminAuthLogin(email, password) {
 }
 
 function adminControlUserDetails(controlUserId){
+  const data=getData();
+  const user=data.missionControlUsers.find(a=>a.controlUserId===controlUserId);
+  if(!user){
+    return {error:'User not found'};
+  }
   return{
     user:{
-      controlUserId: 1,
-      name: 'Bill Ryker',
-      email: 'strongbeard@starfleet.com.au',
-      numSuccessfulLogins: 3,
-      numFailedPasswordsSinceLastLogin: 1,
+      controlUserId: user.controlUserId,
+      name: `${user.nameFirst} ${user.nameLast}`,
+      email: user.email,
+      numSuccessfulLogins: user.numSuccessfulLogins,
+      numFailedPasswordsSinceLastLogin: user.numFailedPasswordsSinceLastLogin,
     }
-  }
+  };
 }
 function adminControlUserDetailsUpdate(controlUserId,email,nameFirst,nameLast){
   return{}
@@ -109,5 +114,6 @@ function adminControlUserPasswordUpdate(controlUserId,oldPassword,newPassword){
 export {
   adminAuthRegister,
   adminAuthLogin,
+  adminControlUserDetails,
 };
 
