@@ -88,7 +88,24 @@ function missionIdGen() {
   return data.nextMissionId++;
 }
 
+// Helper function for mission description validity
+function missionDescriptionValidity(description, maxlen = 400) {
+  // check type of description
+  if (typeof description !== 'string') {
+    const e = new Error('description must be a string');
+    e.code = EC.BAD_INPUT;
+    throw e;
+  }
 
+  // check description length
+  if (description.length > maxlen) {
+    const e = new Error('description is too long');
+    e.code = EC.BAD_INPUT;
+    throw e;
+  }
+
+  return description;
+}
 
 export {
   controlUserIdGen,
@@ -100,4 +117,5 @@ export {
   controlUserIdCheck,
   missionNameValidity,
   missionIdGen,
+  missionDescriptionValidity,
 };
