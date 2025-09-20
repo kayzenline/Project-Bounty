@@ -1,5 +1,5 @@
 import { getData } from './data.js';
-
+import { errorCategories as EC } from './testSamples.js';
 // Helper function to generate unique control user ID
 function controlUserIdGen() {
   const data = getData();
@@ -39,11 +39,31 @@ function findUserById(controlUserId) {
   return data.missionControlUsers.find(user => user.controlUserId === controlUserId);
 }
 
+// Helper function to check if control user's ID is valid or invalid
+function controlUserIdCheck(controlUserId) {
+  //user id must be integer
+  if (!Number.isInteger(controlUserId)) {
+    const e = new Error('controlUserId must be integer');
+    e.code = EC.BAD_INPUT;
+    throw e;
+  }
+  const data = getData();
+  //user id must correspond to an existing user
+  const user = data.missionControlUsers.find(u => u.controlUserId === controlUserId);
+  if (!user) {
+    const e = new Error('controlUserId not found');
+    e.code = EC.INACCESSIBLE_VALUE;
+    throw e;
+  }
+  return user;
+}
+
 export {
   controlUserIdGen,
   isValidPassword,
   isValidName,
   isValidEmail,
   findUserByEmail,
-  findUserById
+  findUserById,
+  controlUserIdCheck
 };
