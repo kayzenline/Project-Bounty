@@ -124,6 +124,25 @@ function missionTargetValidity(target, maxlen = 100) {
   return target;
 }
 
+// Helper function for checking if missionId is valid or invalid
+function missionIdCheck(missionId) {
+  //missionId must be integer
+  if (!Number.isInteger(missionId) || missionId <= 0) {
+    const e = new Error('missionId must be integer');
+    e.code = EC.BAD_INPUT;
+    throw e;
+  }
+  const data = getData();
+  //missionId must correspond to an existing spaceMission
+  const mission = data.spaceMissions.find(sm => sm.missionId === missionId);
+  if (!mission) {
+    const e = new Error('missionId not found');
+    e.code = EC.INACCESSIBLE_VALUE;
+    throw e;
+  }
+  return mission;
+}
+
 export {
   controlUserIdGen,
   isValidPassword,
@@ -136,4 +155,5 @@ export {
   missionIdGen,
   missionDescriptionValidity,
   missionTargetValidity,
+  missionIdCheck,
 };
