@@ -12,14 +12,4 @@ export function getData() {
 
 export function setData(newData) {
   data = newData;
-}
-
-export function clear() {
-  data = {
-    missionControlUsers: [],
-    spaceMissions: [],
-    nextControlUserId: 1,
-    nextMissionId: 1,
-  };
-  return {};
-}
+};
