@@ -9,5 +9,6 @@ export function clear() {
   data.missionControlUsers = [];
   data.spaceMissions = [];
   data.nextControlUserId = 1;
+  data.nextMissionId =1;
   return {};
 }

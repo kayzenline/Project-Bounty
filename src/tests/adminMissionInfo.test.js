@@ -1,6 +1,6 @@
 import { adminMissionCreate, adminMissionInfo } from '../mission.js';
 import { adminAuthRegister } from '../auth.js';
-import { clear } from '../data.js';
+import { clear } from '../other.js';
 import { errorCategories as EC } from '../testSamples.js';
 
 describe('adminMissionInfo', () => {

@@ -4,7 +4,7 @@ import { adminMissionTargetUpdate,
   missionTargetValidity
 } from '../helper.js';
 
-import { clear } from '../data.js';
+import { clear } from '../other.js';
 
 
 describe('adminMissionTargetUpdate', () => {

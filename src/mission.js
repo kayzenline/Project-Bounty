@@ -1,8 +1,10 @@
 // This file should contain your functions relating to:
 // - adminMission*
 import { getData } from './data.js';
-import { controlUserIdCheck, missionNameValidity } from './helper.js';
+import { controlUserIdCheck, missionIdCheck, missionNameValidity } from './helper.js';
 import { errorCategories as EC } from './errors.js';
+import { missionIdGen } from '../helper.js';
+
 function adminMissionList(controlUserId) {
   return {
     missions: [
@@ -42,10 +44,7 @@ function adminMissionCreate(controlUserId, name, description, target) {
 
     // Generate missionId
     const data = getData();
-    const nextId =
-      data.spaceMissions.length === 0
-        ? 1
-        : Math.max(...data.spaceMissions.map(m => m.missionId)) + 1;
+    const nextId = missionIdGen();
 
     // Persist mission
     const now = Math.floor(Date.now() / 1000);
@@ -117,4 +116,7 @@ function adminMissionDescriptionUpdate(controlUserId, missionId, description) {
   return {};
 }
 
-export { adminMissionCreate, adminMissionInfo };
+export {
+  adminMissionCreate,
+  adminMissionInfo,
+};
