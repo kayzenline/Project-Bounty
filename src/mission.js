@@ -23,19 +23,19 @@ function adminMissionRemove(controlUserId, missionId) {
   return {};
 }
 
-// Create a mission for a control user
+// create a mission for a control user
 function adminMissionCreate(controlUserId, name, description, target) {
   try {
-    // Validate control user and mission name
+    // validate control user and mission name
     const user = controlUserIdCheck(controlUserId);
     const fixedName = missionNameValidity(name, 100);
 
-    // Generate missionId
+    // generate missionId
     const data = getData();
     const nextId = missionIdGen();
 
 
-    // Persist mission
+    // persist mission
     const now = Math.floor(Date.now() / 1000);
     data.spaceMissions.push({
       missionId: nextId,
