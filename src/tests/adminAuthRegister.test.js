@@ -1,6 +1,5 @@
 import { adminAuthRegister } from '../auth.js';
-import { clear } from '../data.js';
-
+import { clear } from '../other.js';
 describe('adminAuthRegister', () => {
   beforeEach(() => {
     clear();

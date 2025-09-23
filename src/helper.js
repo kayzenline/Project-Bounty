@@ -58,29 +58,27 @@ function controlUserIdCheck(controlUserId) {
   return user;
 }
 
-// check mission name is valid or not
+// Validate mission name and return the trimmed value
 function missionNameValidity(name, maxlen = 100) {
-  // check type of name
   if (typeof name !== 'string') {
     const e = new Error('mission name must be a string');
-    e.cause = EC.BAD_INPUT;
+    e.code = EC.BAD_INPUT;
     throw e;
   }
-  // check is name a empty
-  const n = name.trim()
-  if(n.length === 0) {
-    const e = new Error('misssion name cannot be a empty');
-    e.cause = EC.BAD_INPUT;
+  // mission name cannot be empty
+  const n = name.trim();
+  if (n.length === 0) {
+    const e = new Error('mission name cannot be empty');
+    e.code = EC.BAD_INPUT;
     throw e;
   }
-  // check name length
-  const nlen = name.length;
-  if(nlen > maxlen) {
-    const e = new Error('misssion name cannot be too long');
-    e.cause = EC.BAD_INPUT;
+  // mission name cannot be too long
+  if (n.length > maxlen) {
+    const e = new Error('mission name cannot be too long');
+    e.code = EC.BAD_INPUT;
     throw e;
   }
-  return name;
+  return n;
 }
 // Helper function to generate unique mission ID.
 function missionIdGen() {
@@ -126,6 +124,25 @@ function missionTargetValidity(target, maxlen = 100) {
   return target;
 }
 
+// Helper function for checking if missionId is valid or invalid
+function missionIdCheck(missionId) {
+  //missionId must be integer
+  if (!Number.isInteger(missionId) || missionId <= 0) {
+    const e = new Error('missionId must be integer');
+    e.code = EC.BAD_INPUT;
+    throw e;
+  }
+  const data = getData();
+  //missionId must correspond to an existing spaceMission
+  const mission = data.spaceMissions.find(sm => sm.missionId === missionId);
+  if (!mission) {
+    const e = new Error('missionId not found');
+    e.code = EC.INACCESSIBLE_VALUE;
+    throw e;
+  }
+  return mission;
+}
+
 export {
   controlUserIdGen,
   isValidPassword,
@@ -138,4 +155,5 @@ export {
   missionIdGen,
   missionDescriptionValidity,
   missionTargetValidity,
+  missionIdCheck,
 };

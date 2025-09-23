@@ -1,5 +1,5 @@
-import { adminAuthLogin,adminAuthRegister,adminControlUserDetails} from '../auth.js';
-import { clear } from '../data.js';
+import { adminAuthRegister,adminControlUserDetails} from '../auth.js';
+import { clear } from '../other.js';
 describe('adminControlUserDetails', () => {
   beforeEach(() => {
     clear();
@@ -21,6 +21,5 @@ describe('adminControlUserDetails', () => {
       expect(details).toHaveProperty('error');
       expect(details.error).toBe('User not found');
     });
-  });
-
+});
 
