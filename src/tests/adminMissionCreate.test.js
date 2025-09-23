@@ -39,13 +39,6 @@ describe('adminMissionCreate', () => {
     }));
   });
 
-  // test.only('my test', () => {
-  //   try {
-  //     const e = new Error();
-  //     throw e;
-  //   } catch {
 
-  //   }
-  // })
 
 });
