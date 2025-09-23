@@ -3,7 +3,7 @@
 import { getData } from './data.js';
 import { controlUserIdCheck, missionIdCheck, missionNameValidity } from './helper.js';
 import { errorCategories as EC } from './errors.js';
-import { missionIdGen } from '../helper.js';
+import { missionIdGen } from './helper.js';
 
 function adminMissionList(controlUserId) {
   return {
@@ -30,21 +30,10 @@ function adminMissionCreate(controlUserId, name, description, target) {
     const user = controlUserIdCheck(controlUserId);
     const fixedName = missionNameValidity(name, 100);
 
-    // Minimal validation for description and target
-    if (typeof description !== 'string' || description.trim() === '') {
-      const e = new Error('description invalid');
-      e.code = EC.BAD_INPUT;
-      throw e;
-    }
-    if (typeof target !== 'string' || target.trim() === '') {
-      const e = new Error('target invalid');
-      e.code = EC.BAD_INPUT;
-      throw e;
-    }
-
     // Generate missionId
     const data = getData();
     const nextId = missionIdGen();
+
 
     // Persist mission
     const now = Math.floor(Date.now() / 1000);
