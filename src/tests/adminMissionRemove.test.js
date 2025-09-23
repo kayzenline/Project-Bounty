@@ -7,31 +7,42 @@ import { clear } from '../other.js';
       clear();
     });
     test('remove successfully',()=>{
-      const {userid}=adminAuthRegister("rosielover@gmail.com","a!b@AB1234","Kitty","Tan");
-      const {missionid}=adminMissionCreate(userid,"M plan","first task","Mars");
-      const result=adminMissionRemove(userid,missionid);
+      const {controlUserId}=adminAuthRegister("rosielover@gmail.com","a!b@AB1234","Kitty","Tan");
+      const {missionId}=adminMissionCreate(controlUserId,"M plan","first task","Mars");
+      const result=adminMissionRemove(controlUserId,missionId);
       expect(result).toEqual({});
     });
     //remove failed
     test('remove failed-invalid userId',()=>{
-      const {userid}=adminAuthRegister("rosielover@gmail.com","a!b@AB1234","Kitty","Tan");
-      const {missionid}=adminMissionCreate(userid,"M plan","first task","Mars");
-      const result=adminMissionRemove(-1,missionid);
-      expect(result).toEqual({error:'Invalid userId'});
+      const {controlUserId}=adminAuthRegister("rosielover@gmail.com","a!b@AB1234","Kitty","Tan");
+      const {missionId}=adminMissionCreate(controlUserId,"M plan","first task","Mars");
+      const result=adminMissionRemove(999,missionId);
+      expect(result).toEqual({error:'controlUserId not found'});
     });
     test('remove failed-Invalid missionid',()=>{
-      const {userid}=adminAuthRegister("rosielover@gmail.com","a!b@AB1234","Kitty","Tan");
-      const {missionid}=adminMissionCreate(userid,"M plan","first task","Mars");
-      const result=adminMissionRemove(userid,-1);
-      expect(result).toEqual({error:'Invalid missionId'});
+      const {controlUserId}=adminAuthRegister("rosielover@gmail.com","a!b@AB1234","Kitty","Tan");
+      const {missionId}=adminMissionCreate(controlUserId,"M plan","first task","Mars");
+      const result=adminMissionRemove(controlUserId,999);
+      expect(result).toEqual({error:'missionId not found'});
     });
     //mission invalid
     test('mission has been deleted', () => {
-      const { userid } = adminAuthRegister("rosielover@gmail.com","a!b@AB1234","Kitty","Tan");
-      const { missionid } = adminMissionCreate(userid,"M plan","first task","Mars");
-      adminMissionRemove(userid, missionid);
-      const result = adminMissionRemove(userid, missionid);
-      expect(result).toEqual({ error: 'Mission not found' });
+      const {controlUserId} = adminAuthRegister("rosielover@gmail.com","a!b@AB1234","Kitty","Tan");
+      const { missionId } = adminMissionCreate(controlUserId,"M plan","first task","Mars");
+      adminMissionRemove(controlUserId, missionId);
+      const result = adminMissionRemove(controlUserId, missionId);
+      expect(result).toEqual({ error: 'missionId not found' });
+    });
+    //userid is not int
+    test('userID is not integer', () => {
+      const result = adminMissionRemove(1.1,1);
+      expect(result).toEqual({ error: 'controlUserId must be integer' });
+    });
+    //missionid is not int
+    test('missionID is not integer', () => {
+      const {controlUserId} = adminAuthRegister("rosielover@gmail.com","a!b@AB1234","Kitty","Tan");
+      const result = adminMissionRemove(controlUserId,1.1);
+      expect(result).toEqual({ error: 'missionId must be integer' });
     });
     });
     
