@@ -1,9 +1,9 @@
 // This file should contain your functions relating to:
 // - adminMission*
-import { getData } from './data.js';
+import { getData,setData } from './data.js';
 import { controlUserIdCheck, missionIdCheck, missionNameValidity } from './helper.js';
 import { errorCategories as EC } from './errors.js';
-import { missionIdGen } from '../helper.js';
+import { missionIdGen } from './helper.js';
 
 function adminMissionList(controlUserId) {
   return {
@@ -19,7 +19,35 @@ function adminMissionList(controlUserId) {
     ],
   };
 }
+//remove mission
 function adminMissionRemove(controlUserId, missionId) {
+  let user;
+  try {
+    user = controlUserIdCheck(controlUserId);
+  } catch (e) {
+    if(e.code===EC.BAD_INPUT){
+      return { error:'controlUserId must be integer'}; 
+    }
+    if(e.code===EC.INACCESSIBLE_VALUE){
+      return { error:'controlUserId not found'};
+    }
+    return { error: 'Unknown error' };
+  }
+  let mission;
+  try {
+    mission = missionIdCheck(missionId);
+  } catch (e) {
+    if(e.code===EC.BAD_INPUT){
+      return { error:'missionId must be integer'}; 
+    }
+    if(e.code===EC.INACCESSIBLE_VALUE){
+      return { error:'missionId not found'};
+    }
+    return { error: 'Unknown error' };
+  }
+  const data = getData();
+  data.spaceMissions = data.spaceMissions.filter(m => m.missionId !== missionId);
+  setData(data);
   return {};
 }
 
@@ -117,6 +145,11 @@ function adminMissionDescriptionUpdate(controlUserId, missionId, description) {
 }
 
 export {
+  adminMissionList,
   adminMissionCreate,
   adminMissionInfo,
+  adminMissionRemove,
+  adminMissionNameUpdate,
+  adminMissionTargetUpdate,
+  adminMissionDescriptionUpdate,
 };

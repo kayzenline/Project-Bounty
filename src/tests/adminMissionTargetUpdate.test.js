@@ -1,10 +1,11 @@
-import { adminMissionTargetUpdate, 
+import {
   controlUserIdCheck, 
-  missionIdcheck, 
+  missionIdCheck, 
   missionTargetValidity
 } from '../helper.js';
 
 import { clear } from '../other.js';
+import { adminMissionTargetUpdate } from '../mission.js';
 
 
 describe('adminMissionTargetUpdate', () => {
