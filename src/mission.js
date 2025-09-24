@@ -21,34 +21,22 @@ function adminMissionList(controlUserId) {
 }
 //remove mission
 function adminMissionRemove(controlUserId, missionId) {
-  let user;
   try {
-    user = controlUserIdCheck(controlUserId);
+    const user = controlUserIdCheck(controlUserId);
+    const mission = missionIdCheck(missionId);
+    const data = getData();
+    data.spaceMissions = data.spaceMissions.filter(m => m.missionId !== missionId);
+    setData(data);
+    return {};
   } catch (e) {
     if(e.code===EC.BAD_INPUT){
-      return { error:'controlUserId must be integer'}; 
+      return { error:e.message}; 
     }
     if(e.code===EC.INACCESSIBLE_VALUE){
-      return { error:'controlUserId not found'};
+      return { error:e.message};
     }
     return { error: 'Unknown error' };
   }
-  let mission;
-  try {
-    mission = missionIdCheck(missionId);
-  } catch (e) {
-    if(e.code===EC.BAD_INPUT){
-      return { error:'missionId must be integer'}; 
-    }
-    if(e.code===EC.INACCESSIBLE_VALUE){
-      return { error:'missionId not found'};
-    }
-    return { error: 'Unknown error' };
-  }
-  const data = getData();
-  data.spaceMissions = data.spaceMissions.filter(m => m.missionId !== missionId);
-  setData(data);
-  return {};
 }
 
 // create a mission for a control user
@@ -116,9 +104,25 @@ function adminMissionInfo(controlUserId, missionId) {
   }
 }
 
-
+//Update mission name
 function adminMissionNameUpdate(controlUserId, missionId, name) {
-  return {}
+  try {
+    const user = controlUserIdCheck(controlUserId);
+    const mission = missionIdCheck(missionId);
+    const validname=missionNameValidity(name);
+    const data = getData();
+    data.spaceMissions.name=validname;
+    setData(data);
+    return {}
+  } catch (e) {
+    if(e.code===EC.BAD_INPUT){
+      return { error:e.message}; 
+    }
+    if(e.code===EC.INACCESSIBLE_VALUE){
+      return { error:e.message};
+    }
+    return { error: 'Unknown error' };
+  }
 }
 
 
