@@ -17,7 +17,7 @@ function isValidName(name) {
   // Name must be a non-empty string with only letters and spaces
   return typeof name === 'string' && 
          name.trim().length > 2 && 
-         name.trim().length <20 && 
+         name.trim().length < 20 && 
          /^[a-zA-Z\s]+$/.test(name.trim());
 }
 
