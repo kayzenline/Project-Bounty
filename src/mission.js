@@ -155,7 +155,18 @@ function adminMissionTargetUpdate(controlUserId, missionId, target) {
 
 // Update mission description
 function adminMissionDescriptionUpdate(controlUserId, missionId, description) {
-  return {};
+  try{
+    controlUserIdCheck(controlUserId);
+    missionIdCheck(missionId);
+    missionDescriptionValidity(description);
+
+    const data = getData();
+    const foundMission = data.spaceMissions.find(mission => mission.missionId === missionId);
+    foundMission.description = description;
+    return {};
+  } catch (e) {
+    return { error: String(e.message), errorCategory: e.code ?? EC.UNKNOWN };
+  }
 }
 
 export {
