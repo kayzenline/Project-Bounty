@@ -54,6 +54,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     nameFirst: nameFirst.trim(),
     nameLast: nameLast.trim(),
     numSuccessfulLogins: 0,
+    numFailedPasswordsSinceLastLogin:0,
     passwordHistory: [password],
   };
 
@@ -100,7 +101,7 @@ function adminControlUserDetails(controlUserId){
   const data=getData();
   const user=data.missionControlUsers.find(a=>a.controlUserId===controlUserId);
   if(!user){
-    return {error:'User not found'};
+    return {error:'User not found',errorCategory: 'INVALID_CREDENTIALS'};
   }
   return{
     user:{
