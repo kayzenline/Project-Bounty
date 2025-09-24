@@ -6,18 +6,22 @@ import { errorCategories as EC } from './errors.js';
 import { missionIdGen } from './helper.js';
 
 function adminMissionList(controlUserId) {
-  return {
-    missions: [
-      {
-        missionId: 1,
-        name: "Mercury",
-      },
-      {
-        missionId: 2,
-        name: "Apollo",
-      },
-    ],
-  };
+  try {
+    controlUserIdCheck(controlUserId);
+  } catch (e) {
+    return { error: String(e.message || 'invalid user'), errorCategory: EC.INVALID_CREDENTIALS };
+  }
+
+  try {
+    const data = getData();
+    const missions = (data.spaceMissions || [])
+      .filter(m => m.ownerId === controlUserId)
+      .map(m => ({ missionId: m.missionId, name: m.name }));
+
+    return { missions };
+  } catch (e) {
+    return { error: String(e.message), errorCategory: e.code ?? EC.UNKNOWN };
+  }
 }
 //remove mission
 function adminMissionRemove(controlUserId, missionId) {
