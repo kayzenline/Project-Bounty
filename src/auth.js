@@ -45,7 +45,6 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     nameFirst: nameFirst.trim(),
     nameLast: nameLast.trim(),
     numSuccessfulLogins: 0,
-    numFailedPasswordsSinceLastLogin: 0,
     passwordHistory: [password],
   };
 
