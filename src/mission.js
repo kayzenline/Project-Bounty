@@ -1,7 +1,13 @@
 // This file should contain your functions relating to:
 // - adminMission*
 import { getData,setData } from './data.js';
-import { controlUserIdCheck, missionIdCheck, missionNameValidity } from './helper.js';
+import {
+  controlUserIdCheck,
+  missionIdCheck,
+  missionNameValidity,
+  missionDescriptionValidity,
+  missionTargetValidity,
+} from './helper.js';
 import { errorCategories as EC } from './errors.js';
 import { missionIdGen } from './helper.js';
 
@@ -133,7 +139,18 @@ function adminMissionNameUpdate(controlUserId, missionId, name) {
 
 // Update mission target
 function adminMissionTargetUpdate(controlUserId, missionId, target) {
-  return {};
+  try{
+    controlUserIdCheck(controlUserId);
+    missionIdCheck(missionId);
+    missionTargetValidity(target);
+
+    const data = getData();
+    const foundMission = data.spaceMissions.find(mission => mission.missionId === missionId);
+    foundMission.target = target;
+    return {};
+  } catch (e) {
+    return { error: String(e.message), errorCategory: e.code ?? EC.UNKNOWN };
+  }
 }
 
 // Update mission description
