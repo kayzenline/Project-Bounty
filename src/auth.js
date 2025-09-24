@@ -45,7 +45,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     nameFirst: nameFirst.trim(),
     nameLast: nameLast.trim(),
     numSuccessfulLogins: 0,
-    numFailedPasswordsSinceLastLogin: 0
+    passwordHistory: [password],
   };
 
   data.missionControlUsers.push(newUser);
@@ -57,12 +57,12 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
 function adminAuthLogin(email, password) {
   // Validate email format
   if (!isValidEmail(email)) {
-    return { error: 'Invalid email format' };
+    return { error: 'Invalid email format', errorCategory: 'BAD_INPUT' };
   }
 
   // Validate password is provided
   if (!password) {
-    return { error: 'Password is required' };
+    return { error: 'Password is required', errorCategory: 'BAD_INPUT' };
   }
 
   // Get current data
@@ -71,13 +71,13 @@ function adminAuthLogin(email, password) {
   // Find user by email
   const user = data.missionControlUsers.find(u => u.email === email);
   if (!user) {
-    return { error: 'User not found' };
+    return { error: 'User not found', errorCategory: 'BAD_INPUT' };
   }
 
   // Check password
   if (user.password !== password) {
     user.numFailedPasswordsSinceLastLogin++;
-    return { error: 'Incorrect password' };
+    return { error: 'Incorrect password', errorCategory: 'BAD_INPUT' };
   }
 
   // Successful login
@@ -107,7 +107,37 @@ function adminControlUserDetailsUpdate(controlUserId,email,nameFirst,nameLast){
   return{}
 }
 function adminControlUserPasswordUpdate(controlUserId,oldPassword,newPassword){
-  return{}
+  const data = getData();
+  const user = (data.missionControlUsers || []).find(u => u.controlUserId === controlUserId);
+  if (!user) {
+    return { error: 'invalid user', errorCategory: 'INVALID_CREDENTIALS' };
+  }
+
+  if (user.password !== oldPassword) {
+    return { error: 'wrong old password', errorCategory: 'BAD_INPUT' };
+  }
+
+  if (oldPassword === newPassword) {
+    return { error: 'same as old', errorCategory: 'BAD_INPUT' };
+  }
+
+  const strong =
+    typeof newPassword === 'string' &&
+    newPassword.length >= 8 &&
+    /[A-Za-z]/.test(newPassword) &&
+    /[0-9]/.test(newPassword);
+  if (!strong) {
+    return { error: 'weak password', errorCategory: 'BAD_INPUT' };
+  }
+
+  user.passwordHistory = user.passwordHistory || [user.password];
+  if (user.passwordHistory.includes(newPassword)) {
+    return { error: 'password reused', errorCategory: 'BAD_INPUT' };
+  }
+
+  user.password = newPassword;
+  user.passwordHistory.push(newPassword);
+  return {};
 }
 
 
@@ -115,5 +145,6 @@ export {
   adminAuthRegister,
   adminAuthLogin,
   adminControlUserDetails,
+  adminControlUserPasswordUpdate,
 };
 
