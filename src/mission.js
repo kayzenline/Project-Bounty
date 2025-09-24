@@ -6,75 +6,56 @@ import { errorCategories as EC } from './errors.js';
 import { missionIdGen } from './helper.js';
 
 function adminMissionList(controlUserId) {
-  return {
-    missions: [
-      {
-        missionId: 1,
-        name: "Mercury",
-      },
-      {
-        missionId: 2,
-        name: "Apollo",
-      },
-    ],
-  };
+  try {
+    controlUserIdCheck(controlUserId);
+  } catch (e) {
+    return { error: String(e.message || 'invalid user'), errorCategory: EC.INVALID_CREDENTIALS };
+  }
+
+  try {
+    const data = getData();
+    const missions = (data.spaceMissions || [])
+      .filter(m => m.ownerId === controlUserId)
+      .map(m => ({ missionId: m.missionId, name: m.name }));
+
+    return { missions };
+  } catch (e) {
+    return { error: String(e.message), errorCategory: e.code ?? EC.UNKNOWN };
+  }
 }
 //remove mission
 function adminMissionRemove(controlUserId, missionId) {
-  let user;
   try {
-    user = controlUserIdCheck(controlUserId);
+    const user = controlUserIdCheck(controlUserId);
+    const mission = missionIdCheck(missionId);
+    const data = getData();
+    data.spaceMissions = data.spaceMissions.filter(m => m.missionId !== missionId);
+    setData(data);
+    return {};
   } catch (e) {
     if(e.code===EC.BAD_INPUT){
-      return { error:'controlUserId must be integer'}; 
+      return { error:e.message}; 
     }
     if(e.code===EC.INACCESSIBLE_VALUE){
-      return { error:'controlUserId not found'};
+      return { error:e.message};
     }
     return { error: 'Unknown error' };
   }
-  let mission;
-  try {
-    mission = missionIdCheck(missionId);
-  } catch (e) {
-    if(e.code===EC.BAD_INPUT){
-      return { error:'missionId must be integer'}; 
-    }
-    if(e.code===EC.INACCESSIBLE_VALUE){
-      return { error:'missionId not found'};
-    }
-    return { error: 'Unknown error' };
-  }
-  const data = getData();
-  data.spaceMissions = data.spaceMissions.filter(m => m.missionId !== missionId);
-  setData(data);
-  return {};
 }
 
-// Create a mission for a control user
+// create a mission for a control user
 function adminMissionCreate(controlUserId, name, description, target) {
   try {
-    // Validate control user and mission name
+    // validate control user and mission name
     const user = controlUserIdCheck(controlUserId);
     const fixedName = missionNameValidity(name, 100);
 
-    // Minimal validation for description and target
-    if (typeof description !== 'string' || description.trim() === '') {
-      const e = new Error('description invalid');
-      e.code = EC.BAD_INPUT;
-      throw e;
-    }
-    if (typeof target !== 'string' || target.trim() === '') {
-      const e = new Error('target invalid');
-      e.code = EC.BAD_INPUT;
-      throw e;
-    }
-
-    // Generate missionId
+    // generate missionId
     const data = getData();
     const nextId = missionIdGen();
 
-    // Persist mission
+
+    // persist mission
     const now = Math.floor(Date.now() / 1000);
     data.spaceMissions.push({
       missionId: nextId,
@@ -127,9 +108,25 @@ function adminMissionInfo(controlUserId, missionId) {
   }
 }
 
-
+//Update mission name
 function adminMissionNameUpdate(controlUserId, missionId, name) {
-  return {}
+  try {
+    const user = controlUserIdCheck(controlUserId);
+    const mission = missionIdCheck(missionId);
+    const validname=missionNameValidity(name);
+    const data = getData();
+    data.spaceMissions.name=validname;
+    setData(data);
+    return {}
+  } catch (e) {
+    if(e.code===EC.BAD_INPUT){
+      return { error:e.message}; 
+    }
+    if(e.code===EC.INACCESSIBLE_VALUE){
+      return { error:e.message};
+    }
+    return { error: 'Unknown error' };
+  }
 }
 
 
