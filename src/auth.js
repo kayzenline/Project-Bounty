@@ -2,8 +2,17 @@
 // - adminAuth*
 // - adminControlUser*
 
-import { controlUserIdGen, isValidEmail, isValidPassword, isValidName, findUserByEmail, findUserById } from './helper.js';
+import {
+  controlUserIdGen,
+  isValidEmail,
+  isValidPassword,
+  isValidName,
+  controlUserIdCheck,
+  findUserByEmail,
+  findUserById,
+} from './helper.js';
 import { getData } from './data.js';
+import { errorCategories as EC } from './errors.js';
 
 // Register a mission control user
 function adminAuthRegister(email, password, nameFirst, nameLast) {
@@ -104,8 +113,39 @@ function adminControlUserDetails(controlUserId){
   };
 }
 function adminControlUserDetailsUpdate(controlUserId,email,nameFirst,nameLast){
-  return{}
+  try{
+    controlUserIdCheck(controlUserId);
+    if (!isValidEmail(email)) {
+      const e = new Error('this email is invalid');
+      e.code = EC.BAD_INPUT;
+      throw e;
+    }
+    if (!(isValidName(nameFirst) && isValidName(nameLast))) {
+      const e = new Error('this name is invalid');
+      e.code = EC.BAD_INPUT;
+      throw e;
+    }
+    
+    const data = getData();
+    const exists = data.missionControlUsers.some(User => User.email === email);
+    if (exists) {
+      // something woring here
+      const e = new Error('excluding the current authorised user');
+      e.code = EC.BAD_INPUT;
+      throw e;
+      //
+    } else {
+      const theUser = findUserById(controlUserId);
+      theUser.email = email;
+      theUser.nameFirst = nameFirst;
+      theUser.nameLast = nameLast;
+    }
+    return {};
+  } catch (e) {
+    return { error: String(e.message), errorCategory: e.code ?? EC.UNKNOWN };
+  }
 }
+
 function adminControlUserPasswordUpdate(controlUserId,oldPassword,newPassword){
   const data = getData();
   const user = (data.missionControlUsers || []).find(u => u.controlUserId === controlUserId);
@@ -145,6 +185,7 @@ export {
   adminAuthRegister,
   adminAuthLogin,
   adminControlUserDetails,
+  adminControlUserDetailsUpdate,
   adminControlUserPasswordUpdate,
 };
 
