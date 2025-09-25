@@ -15,21 +15,21 @@ describe('adminAuthLogin', () => {
 
   test('invalid email format', () => {
     const result = adminAuthLogin('invalid-email', 'password123');
-    expect(result).toEqual({ error: 'Invalid email format' });
+    expect(result).toEqual({ error: 'User not found', errorCategory: 'BAD_INPUT' });
   });
 
   test('missing password', () => {
     const result = adminAuthLogin('test@example.com', '');
-    expect(result).toEqual({ error: 'Password is required' });
+    expect(result).toEqual({ error: 'Password is required', errorCategory: 'BAD_INPUT' });
   });
 
   test('user not found', () => {
     const result = adminAuthLogin('nonexistent@example.com', 'password123');
-    expect(result).toEqual({ error: 'User not found' });
+    expect(result).toEqual({ error: 'User not found', errorCategory: 'BAD_INPUT' });
   });
 
   test('incorrect password', () => {
     const result = adminAuthLogin('test@example.com', 'wrongpassword');
-    expect(result).toEqual({ error: 'Incorrect password' });
+    expect(result).toEqual({ error: 'Incorrect password', errorCategory: 'BAD_INPUT' });
   });
 });

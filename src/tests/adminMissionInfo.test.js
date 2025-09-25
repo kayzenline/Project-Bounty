@@ -42,8 +42,8 @@ describe('adminMissionInfo', () => {
     }));
   });
   test('fails when mission belongs to another user', () => {
-  const a = adminAuthRegister('a@b.com', 'pass1234', 'A', 'User');
-  const b = adminAuthRegister('b@b.com', 'pass1234', 'B', 'User');
+  const a = adminAuthRegister('a@b.com', 'pass1234', 'Alice', 'User');
+  const b = adminAuthRegister('b@b.com', 'pass1234', 'Bob', 'User');
   const { missionId } = adminMissionCreate(a.controlUserId, 'Apollo', 'Moon mission', 'Moon');
   const res = adminMissionInfo(b.controlUserId, missionId);
   expect(res.errorCategory).toEqual(EC.INACCESSIBLE_VALUE);
