@@ -114,11 +114,7 @@ function adminControlUserDetails(controlUserId){
   const data=getData();
   const user=data.missionControlUsers.find(a=>a.controlUserId===controlUserId);
   if(!user){
-<<<<<<< HEAD
-    return {error:'User not found',errorCategory: 'INVALID_CREDENTIALS'};
-=======
     return {error:'User not found', errorCategory: EC.INVALID_CREDENTIALS};
->>>>>>> 98250ee30b2741d7223cf2091173d1dadb032734
   }
   return{
     user:{
