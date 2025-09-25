@@ -1,5 +1,5 @@
 import { getData } from './data.js';
-import { errorCategories as EC } from './errors.js';
+import { errorCategories as EC, errorCategories } from './errors.js';
 // Helper function to generate unique control user ID
 function controlUserIdGen() {
   const data = getData();
@@ -50,18 +50,31 @@ function findUserById(controlUserId) {
 function controlUserIdCheck(controlUserId) {
   //user id must be integer
   if (!Number.isInteger(controlUserId) || controlUserId <= 0) {
-    const e = new Error('controlUserId must be integer');
-    e.code = EC.BAD_INPUT;
-    throw e;
+    // const e = new Error('controlUserId must be integer');
+    // e.code = EC.BAD_INPUT;
+    // throw e;
+    throw {
+      error: 'e',
+      errorCategory: EC.BAD_INPUT
+    }
   }
+
   const data = getData();
+
   //user id must correspond to an existing user
   const user = data.missionControlUsers.find(u => u.controlUserId === controlUserId);
   if (!user) {
-    const e = new Error('controlUserId not found');
-    e.code = EC.INACCESSIBLE_VALUE;
-    throw e;
+    // const e = new Error('controlUserId not found');
+    // e.code = EC.INVALID_CREDENTIALS;
+    // throw e;
+
+    throw {
+      error: 'e',
+      errorCategory: EC.INVALID_CREDENTIALS
+    }
   }
+
+
   return user;
 }
 
@@ -134,18 +147,20 @@ function missionTargetValidity(target, maxlen = 100) {
 // Helper function for checking if missionId is valid or invalid
 function missionIdCheck(missionId) {
   //missionId must be integer
-  if (!Number.isInteger(missionId) || missionId <= 0) {
-    const e = new Error('missionId must be integer');
-    e.code = EC.BAD_INPUT;
-    throw e;
+  if (!Number.isInteger(missionId) || missionId < 0) {
+    throw {
+      error: 'e',
+      errorCategory: EC.BAD_INPUT
+    }
   }
   const data = getData();
   //missionId must correspond to an existing spaceMission
   const mission = data.spaceMissions.find(sm => sm.missionId === missionId);
   if (!mission) {
-    const e = new Error('missionId not found');
-    e.code = EC.INACCESSIBLE_VALUE;
-    throw e;
+    throw {
+      error: 'e',
+      errorCategory: EC.INVALID_CREDENTIALS
+    }
   }
   return mission;
 }
@@ -164,3 +179,12 @@ export {
   missionTargetValidity,
   missionIdCheck,
 };
+
+
+export function handleMissonError(err) {
+  if (err.errorCategory !== undefined) {
+    return err;
+  } else {
+    return { error: err.message, errorCategory: EC.UNKNOWN };
+  }
+}

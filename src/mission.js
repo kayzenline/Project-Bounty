@@ -1,12 +1,13 @@
 // This file should contain your functions relating to:
 // - adminMission*
-import { getData,setData } from './data.js';
+import { getData, setData } from './data.js';
 import {
   controlUserIdCheck,
   missionIdCheck,
   missionNameValidity,
   missionDescriptionValidity,
   missionTargetValidity,
+  handleMissonError,
 } from './helper.js';
 import { errorCategories as EC } from './errors.js';
 import { missionIdGen } from './helper.js';
@@ -26,7 +27,7 @@ function adminMissionList(controlUserId) {
 
     return { missions };
   } catch (e) {
-    return { error: String(e.message), errorCategory: e.code ?? EC.UNKNOWN };
+    return handleMissonError(e);
   }
 }
 //remove mission
@@ -39,65 +40,65 @@ function adminMissionRemove(controlUserId, missionId) {
     setData(data);
     return {};
   } catch (e) {
-    if(e.code===EC.BAD_INPUT){
-      return { error:e.message}; 
+    if (e.code === EC.BAD_INPUT) {
+      return { error: e.message };
     }
-    if(e.code===EC.INACCESSIBLE_VALUE){
-      return { error:e.message};
+    if (e.code === EC.INACCESSIBLE_VALUE) {
+      return { error: e.message };
     }
     return { error: 'Unknown error' };
   }
 }
-
-// create a mission for a control user
+// create a new mission
 function adminMissionCreate(controlUserId, name, description, target) {
   try {
-    // validate control user and mission name
+    // check the information
     const user = controlUserIdCheck(controlUserId);
-    const fixedName = missionNameValidity(name, 100);
+    const fixedName = missionNameValidity(name);
+    const fixedDescription = missionDescriptionValidity(description);
+    const fixedTarget = missionTargetValidity(target);
 
-    // generate missionId
     const data = getData();
-    const nextId = missionIdGen();
+    const duplicate = data.spaceMissions.some(
+      mission => mission.ownerId === user.controlUserId,
+    );
+    if (duplicate) {
+      const e = new Error('mission name already exists');
+      e.code = EC.BAD_INPUT;
+    }
 
-
-    // persist mission
-    const now = Math.floor(Date.now() / 1000);
+    const missionId = data.spaceMissions.length;
+    const timestamp = Math.floor(Date.now() / 1000);
     data.spaceMissions.push({
-      missionId: nextId,
+      missionId,
       ownerId: user.controlUserId,
       name: fixedName,
-      description: description.trim(),
-      target: target.trim(),
-      timeCreated: now,
-      timeLastEdited: now,
+      description: fixedDescription,
+      target: fixedTarget,
+      timeCreated: timestamp,
+      timeLastEdited: timestamp,
     });
 
-    return { missionId: nextId };
+    return { missionId };
   } catch (e) {
-    return { error: String(e.message), errorCategory: e.code ?? e.cause ?? EC.UNKNOWN };
+    //console.log('sofjioe', e);
+    return e;
+    //return handleMissonError(e);
   }
 }
 
 
-
 function adminMissionInfo(controlUserId, missionId) {
   try {
-    // check user id
     const user = controlUserIdCheck(controlUserId);
-    // check mission id
-    if (!Number.isInteger(missionId) || missionId <= 0) {
-      const e = new Error('missionId must be a positive integer');
-      e.code = EC.BAD_INPUT;
-      throw e;
-    }
-    // check mission id is matched
-    const data = getData();
-    const mission = data.spaceMissions.find(m => m.missionId === missionId);
-    if (!mission || mission.ownerId !== user.controlUserId) {
-      const e = new Error('mission not accessible');
-      e.code = EC.INACCESSIBLE_VALUE;
-      throw e;
+    const mission = missionIdCheck(missionId);
+
+    //console.log('foej3j', mission.ownerId, user.controlUserId);
+    if (mission.ownerId !== user.controlUserId) {
+      throw {
+        error: 'sdiofje',
+        errorCategory: EC.INACCESSIBLE_VALUE,
+      }
     }
 
     return {
@@ -108,9 +109,8 @@ function adminMissionInfo(controlUserId, missionId) {
       description: mission.description,
       target: mission.target,
     };
-    // try failed
-  } catch (e) {
-    return { error: String(e.message), errorCategory: e.code ?? EC.UNKNOWN };
+  } catch (err) {
+    return handleMissonError(err);
   }
 }
 
@@ -119,17 +119,17 @@ function adminMissionNameUpdate(controlUserId, missionId, name) {
   try {
     const user = controlUserIdCheck(controlUserId);
     const mission = missionIdCheck(missionId);
-    const validname=missionNameValidity(name);
+    const validname = missionNameValidity(name);
     const data = getData();
-    data.spaceMissions.name=validname;
+    data.spaceMissions.name = validname;
     setData(data);
     return {}
   } catch (e) {
-    if(e.code===EC.BAD_INPUT){
-      return { error:e.message}; 
+    if (e.code === EC.BAD_INPUT) {
+      return { error: e.message };
     }
-    if(e.code===EC.INACCESSIBLE_VALUE){
-      return { error:e.message};
+    if (e.code === EC.INACCESSIBLE_VALUE) {
+      return { error: e.message };
     }
     return { error: 'Unknown error' };
   }
@@ -139,7 +139,7 @@ function adminMissionNameUpdate(controlUserId, missionId, name) {
 
 // Update mission target
 function adminMissionTargetUpdate(controlUserId, missionId, target) {
-  try{
+  try {
     controlUserIdCheck(controlUserId);
     missionIdCheck(missionId);
     missionTargetValidity(target);
@@ -155,7 +155,7 @@ function adminMissionTargetUpdate(controlUserId, missionId, target) {
 
 // Update mission description
 function adminMissionDescriptionUpdate(controlUserId, missionId, description) {
-  try{
+  try {
     controlUserIdCheck(controlUserId);
     missionIdCheck(missionId);
     missionDescriptionValidity(description);

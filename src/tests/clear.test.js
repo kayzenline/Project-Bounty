@@ -1,34 +1,39 @@
 import { clear } from '../other.js';
 import { getData } from '../data.js';
-import { adminAuthRegister } from '../auth.js';
-import { adminMissionCreate } from '../mission.js';
 
 describe('clear', () => {
-  test('returns an empty object', () => {
-    const res = clear();
-    expect(res).toEqual({});
-  });
-
   test('clears all users and missions and resets counters', () => {
-    // start from a clean state
-    clear();
-    // create a user and a mission to populate state
-    const { controlUserId } = adminAuthRegister('astro@example.com', 'password123', 'Neil', 'Armstrong');
-    expect(controlUserId).toEqual(1);
-    const created = adminMissionCreate(controlUserId, 'Mercury', 'Orbit the Earth', 'LEO');
-    expect(created).toHaveProperty('missionId');
-    // ensure state is populated
+    // define a special data
     let data = getData();
-    expect(data.missionControlUsers.length).toEqual(1);
-    expect(data.spaceMissions.length).toEqual(1);
-    expect(data.nextControlUserId).toEqual(2);
-    expect(data.nextMissionId).toEqual(2);
-    // clear and verify reset
-    clear();
-    data = getData();
-    expect(data.missionControlUsers).toEqual([]);
-    expect(data.spaceMissions).toEqual([]);
-    expect(data.nextControlUserId).toBe(1);
-    expect(data.nextMissionId).toBe(1);
-  })
+    let missionOrigin = {
+      missionId: 1,
+      ownerId: 1,
+      name: 'Mercury',
+      description: "Place a manned spacecraft in orbital flight around the earth. Investigate a persons performance capabilities and their ability to function in the environment of space. Recover the person and the spacecraft safely",
+      target: 'Earth orbit',
+      timeCreated: 1683125870,
+      timeLastEdited: 1683125871,
+    };
+    let controlUser = {
+      controlUserId: 1,
+      name: 'Bill Ryker ',
+      email: 'strongbeard@starfleet.com.au',
+      numSuccessfulLogins: 3,
+      numFailedPasswordsSinceLastLogin: 1,
+    };
+    data.missionControlUsers.push(controlUser);
+    data.spaceMissions.push(missionOrigin);
+    data.nextControlUserId = 2;
+    data.nextMissionId = 2;
+
+    expect(clear()).toEqual({});
+    const newData = getData();
+    expect(newData).toStrictEqual({
+      missionControlUsers: [],
+      spaceMissions: [],
+      nextControlUserId: 1,
+      nextMissionId: 1
+    })
+
+  });
 });
