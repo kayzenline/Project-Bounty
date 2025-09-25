@@ -14,11 +14,17 @@ function isValidPassword(password) {
 
 // Helper function to validate name
 function isValidName(name) {
-  // Name must be a non-empty string with only letters and spaces
-  return typeof name === 'string' && 
-         name.trim().length > 2 && 
-         name.trim().length < 20 && 
-         /^[a-zA-Z\s]+$/.test(name.trim());
+  // Name must be a non-empty string with only letters, spaces, hyphens, or apostrophes
+  if (typeof name !== 'string') {
+    return false;
+  }
+  const trimmedName = name.trim();
+  // Name must be between 2 and 20 characters (inclusive)
+  if (trimmedName.length < 2 || trimmedName.length > 20) {
+    return false;
+  }
+  // Name can only contain letters, spaces, hyphens, or apostrophes
+  return /^[a-zA-Z\s\-']+$/.test(trimmedName);
 }
 
 // Helper function to validate email
