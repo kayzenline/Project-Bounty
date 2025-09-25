@@ -1,18 +1,41 @@
+# This is a comment
+# image - the container image to use for the runner 
+image: comp1531/basic:latest
 
+# cache - a store of common files that should be saved and reused for each runner 
+cache:
+  paths:
+    - node_modules
 
+# before_script - a set of commands to execute before each stage component
+before_script:
+  - npm install
+
+# stages - a collection of execution components in the CI pipeline
 stages:
-  - build
-  - test
+  - checks
 
-build-job:
-  stage: build
+# a single labelled component belonging to a particular stage
+# these will be executed in the order that they appear
+# they will run their script lines in order of appearance as well
+# This is a stage component that runs your jest tests, useful for iteration 1
+testing:
+  stage: checks
   script:
-    - echo "Building project..."
-    - echo "Build complete!"
+    - npm run test
+  only:
+    refs:
+      - merge_requests
+      - main
+      - master
+# --------------- ITERATION 2 ONWARDS ------------ #
+# The stages below are for iteration 2 onwards
+# typecheck:
+#   stage: checks
+#   script:
+#     - npm run tsc
 
-test-job:
-  stage: test
-  script:
-    - echo "Running tests..."
-    - echo "All tests passed!"
-
+# linting:
+#   stage: checks
+#   script:
+#     - npm run lint

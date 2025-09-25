@@ -1,22 +1,15 @@
 {
-  "name": "project-backend-main",
-  "version": "1.0.0",
-  "description": "DPST1093 Mission Control Backend",
-  "type": "module",
-  "main": "src/auth.js",
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/.bin/jest",
-    "test:coverage": "node --experimental-vm-modules node_modules/.bin/jest --coverage"
+    "test": "jest"
+  },
+  "dependencies": {
+    "validator": "^13.7.0"
   },
   "devDependencies": {
-    "jest": "^29.7.0"
+    "@babel/cli": "^7.22.5",
+    "@babel/core": "^7.22.5",
+    "@babel/preset-env": "^7.22.5",
+    "jest": "^28.1.0"
   },
-  "jest": {
-    "testEnvironment": "node",
-    "transform": {},
-    "collectCoverageFrom": [
-      "src/**/*.js",
-      "!src/**/*.test.js"
-    ]
-  }
+  "type": "module"
 }
