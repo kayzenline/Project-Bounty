@@ -19,7 +19,7 @@ describe('adminControlUserDetails', () => {
       const invalidId = 1234; 
       const details = adminControlUserDetails(invalidId);
       expect(details).toHaveProperty('error');
-      expect(details.error).toBe('User not found','INVALID_CREDENTIALS');
+      expect(details).toEqual({error:'User not found',errorCategory: 'INVALID_CREDENTIALS'});
     });
 });
 
