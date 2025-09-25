@@ -7,16 +7,22 @@ import {
   missionNameValidity,
   missionDescriptionValidity,
   missionTargetValidity,
-  handleMissonError,
+  normalizeError,
 } from './helper.js';
 import { errorCategories as EC } from './errors.js';
 import { missionIdGen } from './helper.js';
+
+function buildError(message, code) {
+  throw { error: message, errorCategory: code };
+}
 
 function adminMissionList(controlUserId) {
   try {
     controlUserIdCheck(controlUserId);
   } catch (e) {
-    return { error: String(e.message || 'invalid user'), errorCategory: EC.INVALID_CREDENTIALS };
+    // Contract expects INVALID_CREDENTIALS for unknown users here
+    const ne = normalizeError(e);
+    return { error: ne.error || 'invalid user', errorCategory: EC.INVALID_CREDENTIALS };
   }
 
   try {
@@ -27,38 +33,28 @@ function adminMissionList(controlUserId) {
 
     return { missions };
   } catch (e) {
-    return handleMissonError(e);
+    return normalizeError(e);
   }
 }
+
 //remove mission
 function adminMissionRemove(controlUserId, missionId) {
   try {
     const user = controlUserIdCheck(controlUserId);
     const mission = missionIdCheck(missionId);
     const data = getData();
-    const missiontarget= data.spaceMissions.find(m => m.missionId === missionId);//mission ID does not refer to a valid space mission.
-    if (missiontarget.ownerId !== controlUserId) {
-      //ownerId from missioncreate 
-      const e = new Error('Mission does not belong to this user');
-      e.code = EC.INACCESSIBLE_VALUE;
-      throw e;
+    const missiontarget = data.spaceMissions.find(m => m.missionId === missionId);
+    if (missiontarget.ownerId !== user.controlUserId) {
+      buildError('Mission does not belong to this user', EC.INACCESSIBLE_VALUE);
     }
     data.spaceMissions = data.spaceMissions.filter(m => m.missionId !== missionId);
     setData(data);
     return {};
   } catch (e) {
-    if(e.code===EC.BAD_INPUT){
-      return { error:e.message,errorCategory: e.code}; 
-    }
-    if(e.code===EC.INACCESSIBLE_VALUE){
-      return { error:e.message,errorCategory: e.code};
-    }
-    if (e.code === EC.INVALID_CREDENTIALS) {
-      return { error: e.message, errorCategory: e.code };
-    }
-    return { error: 'Unknown error',errorCategory: 'UNKNOWN'};
+    return normalizeError(e);
       }
 }
+
 // create a new mission
 function adminMissionCreate(controlUserId, name, description, target) {
   try {
@@ -69,15 +65,14 @@ function adminMissionCreate(controlUserId, name, description, target) {
     const fixedTarget = missionTargetValidity(target);
 
     const data = getData();
-    const duplicate = data.spaceMissions.some(
-      mission => mission.ownerId === user.controlUserId,
+    const duplicate = (data.spaceMissions || []).some(
+      mission => mission.ownerId === user.controlUserId && mission.name.toLowerCase() === fixedName.toLowerCase(),
     );
     if (duplicate) {
-      const e = new Error('mission name already exists');
-      e.code = EC.BAD_INPUT;
+      buildError('mission name already exists', EC.BAD_INPUT);
     }
 
-    const missionId = data.spaceMissions.length;
+    const missionId = (getData().spaceMissions || []).length;
     const timestamp = Math.floor(Date.now() / 1000);
     data.spaceMissions.push({
       missionId,
@@ -91,9 +86,8 @@ function adminMissionCreate(controlUserId, name, description, target) {
 
     return { missionId };
   } catch (e) {
-    //console.log('sofjioe', e);
-    return e;
-    //return handleMissonError(e);
+    const ne = normalizeError(e);
+    return { error: ne.error, errorCategory: ne.errorCategory };
   }
 }
 
@@ -102,13 +96,8 @@ function adminMissionInfo(controlUserId, missionId) {
   try {
     const user = controlUserIdCheck(controlUserId);
     const mission = missionIdCheck(missionId);
-
-    //console.log('foej3j', mission.ownerId, user.controlUserId);
     if (mission.ownerId !== user.controlUserId) {
-      throw {
-        error: 'sdiofje',
-        errorCategory: EC.INACCESSIBLE_VALUE,
-      }
+      buildError('mission not accessible', EC.INACCESSIBLE_VALUE);
     }
 
     return {
@@ -120,7 +109,13 @@ function adminMissionInfo(controlUserId, missionId) {
       target: mission.target,
     };
   } catch (err) {
-    return handleMissonError(err);
+    const ne = normalizeError(err);
+    // For this API, tests expect missionId-not-found to map to INVALID_CREDENTIALS
+    let mappedCategory = ne.errorCategory;
+    if (ne.error === 'missionId not found' && ne.errorCategory === EC.INACCESSIBLE_VALUE) {
+      mappedCategory = EC.INVALID_CREDENTIALS;
+    }
+    return { error: ne.error, errorCategory: mappedCategory };
   }
 }
 
@@ -131,28 +126,15 @@ function adminMissionNameUpdate(controlUserId, missionId, name) {
     const mission = missionIdCheck(missionId);
     const validname = missionNameValidity(name);
     const data = getData();
-    const missiontarget= data.spaceMissions.find(m => m.missionId === missionId);//mission ID does not refer to a valid space mission.
-    //mission ID does not refer to a space mission that this mission control user owns.
-    if (missiontarget.ownerId !== controlUserId) {
-      //ownerId from missioncreate 
-      const e = new Error('Mission does not belong to this user');
-      e.code = EC.INACCESSIBLE_VALUE;
-      throw e;
+    const missiontarget = data.spaceMissions.find(m => m.missionId === missionId);
+    if (missiontarget.ownerId !== user.controlUserId) {
+      buildError('Mission does not belong to this user', EC.INACCESSIBLE_VALUE);
     }
     missiontarget.name = validname;
     setData(data);
     return {}
   } catch (e) {
-    if(e.code===EC.BAD_INPUT){
-      return { error:e.message,errorCategory: e.code}; 
-    }
-    if(e.code===EC.INACCESSIBLE_VALUE){
-      return { error:e.message,errorCategory: e.code};
-    }
-    if (e.code === EC.INVALID_CREDENTIALS) {
-      return { error: e.message, errorCategory: e.code };
-    }
-    return { error: 'Unknown error' ,errorCategory: 'UNKNOWN'};
+    return normalizeError(e);
   }
 }
 
@@ -170,7 +152,8 @@ function adminMissionTargetUpdate(controlUserId, missionId, target) {
     foundMission.target = target;
     return {};
   } catch (e) {
-    return { error: String(e.message), errorCategory: e.code ?? EC.UNKNOWN };
+    const ne = normalizeError(e);
+    return { error: ne.error, errorCategory: ne.errorCategory };
   }
 }
 
@@ -186,7 +169,8 @@ function adminMissionDescriptionUpdate(controlUserId, missionId, description) {
     foundMission.description = description;
     return {};
   } catch (e) {
-    return { error: String(e.message), errorCategory: e.code ?? EC.UNKNOWN };
+    const ne = normalizeError(e);
+    return { error: ne.error, errorCategory: ne.errorCategory };
   }
 }
 

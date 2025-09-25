@@ -10,6 +10,7 @@ import {
   controlUserIdCheck,
   findUserByEmail,
   findUserById,
+  normalizeError,
 } from './helper.js';
 import { getData } from './data.js';
 import { errorCategories as EC } from './errors.js';
@@ -156,7 +157,8 @@ function adminControlUserDetailsUpdate(controlUserId,email,nameFirst,nameLast){
     }
     return {};
   } catch (e) {
-    return { error: String(e.message), errorCategory: e.code ?? EC.UNKNOWN };
+    const ne = normalizeError(e);
+    return { error: ne.error, errorCategory: ne.errorCategory };
   }
 }
 

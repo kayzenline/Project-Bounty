@@ -1,5 +1,5 @@
 import { getData } from './data.js';
-import { errorCategories as EC, errorCategories } from './errors.js';
+import { errorCategories as EC } from './errors.js';
 // Helper function to generate unique control user ID
 function controlUserIdGen() {
   const data = getData();
@@ -50,13 +50,10 @@ function findUserById(controlUserId) {
 function controlUserIdCheck(controlUserId) {
   //user id must be integer
   if (!Number.isInteger(controlUserId) || controlUserId <= 0) {
-    // const e = new Error('controlUserId must be integer');
-    // e.code = EC.BAD_INPUT;
-    // throw e;
     throw {
-      error: 'e',
-      errorCategory: EC.BAD_INPUT
-    }
+      error: 'controlUserId must be integer',
+      errorCategory: EC.BAD_INPUT,
+    };
   }
 
   const data = getData();
@@ -64,14 +61,10 @@ function controlUserIdCheck(controlUserId) {
   //user id must correspond to an existing user
   const user = data.missionControlUsers.find(u => u.controlUserId === controlUserId);
   if (!user) {
-    // const e = new Error('controlUserId not found');
-    // e.code = EC.INVALID_CREDENTIALS;
-    // throw e;
-
     throw {
-      error: 'e',
-      errorCategory: EC.INVALID_CREDENTIALS
-    }
+      error: 'controlUserId not found',
+      errorCategory: EC.INVALID_CREDENTIALS,
+    };
   }
 
 
@@ -81,22 +74,16 @@ function controlUserIdCheck(controlUserId) {
 // Validate mission name and return the trimmed value
 function missionNameValidity(name, maxlen = 100) {
   if (typeof name !== 'string') {
-    const e = new Error('mission name must be a string');
-    e.code = EC.BAD_INPUT;
-    throw e;
+    throw { error: 'mission name must be a string', errorCategory: EC.BAD_INPUT };
   }
   // mission name cannot be empty
   const n = name.trim();
   if (n.length === 0) {
-    const e = new Error('mission name cannot be empty');
-    e.code = EC.BAD_INPUT;
-    throw e;
+    throw { error: 'mission name cannot be empty', errorCategory: EC.BAD_INPUT };
   }
   // mission name cannot be too long
   if (n.length > maxlen) {
-    const e = new Error('mission name cannot be too long');
-    e.code = EC.BAD_INPUT;
-    throw e;
+    throw { error: 'mission name cannot be too long', errorCategory: EC.BAD_INPUT };
   }
   return n;
 }
@@ -148,19 +135,13 @@ function missionTargetValidity(target, maxlen = 100) {
 function missionIdCheck(missionId) {
   //missionId must be integer
   if (!Number.isInteger(missionId) || missionId < 0) {
-    throw {
-      error: 'e',
-      errorCategory: EC.BAD_INPUT
-    }
+    throw { error: 'missionId must be integer', errorCategory: EC.BAD_INPUT };
   }
   const data = getData();
   //missionId must correspond to an existing spaceMission
   const mission = data.spaceMissions.find(sm => sm.missionId === missionId);
   if (!mission) {
-    throw {
-      error: 'e',
-      errorCategory: EC.INVALID_CREDENTIALS
-    }
+    throw { error: 'missionId not found', errorCategory: EC.INACCESSIBLE_VALUE };
   }
   return mission;
 }
@@ -180,11 +161,18 @@ export {
   missionIdCheck,
 };
 
-
-export function handleMissonError(err) {
-  if (err.errorCategory !== undefined) {
-    return err;
-  } else {
-    return { error: err.message, errorCategory: EC.UNKNOWN };
+// Normalize thrown errors (either Error or {error, errorCategory})
+export function normalizeError(err) {
+  if (err && typeof err === 'object') {
+    if ('error' in err || 'errorCategory' in err) {
+      return {
+        error: String(err.error ?? err.message ?? 'Unknown error'),
+        errorCategory: err.errorCategory ?? err.code ?? EC.UNKNOWN,
+      };
+    }
+    if ('message' in err) {
+      return { error: String(err.message), errorCategory: err.code ?? EC.UNKNOWN };
+    }
   }
+  return { error: String(err), errorCategory: EC.UNKNOWN };
 }
