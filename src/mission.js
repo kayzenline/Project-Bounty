@@ -36,18 +36,28 @@ function adminMissionRemove(controlUserId, missionId) {
     const user = controlUserIdCheck(controlUserId);
     const mission = missionIdCheck(missionId);
     const data = getData();
+    const missiontarget= data.spaceMissions.find(m => m.missionId === missionId);//mission ID does not refer to a valid space mission.
+    if (missiontarget.ownerId !== controlUserId) {
+      //ownerId from missioncreate 
+      const e = new Error('Mission does not belong to this user');
+      e.code = EC.INACCESSIBLE_VALUE;
+      throw e;
+    }
     data.spaceMissions = data.spaceMissions.filter(m => m.missionId !== missionId);
     setData(data);
     return {};
   } catch (e) {
-    if (e.code === EC.BAD_INPUT) {
-      return { error: e.message };
+    if(e.code===EC.BAD_INPUT){
+      return { error:e.message,errorCategory: e.code}; 
     }
-    if (e.code === EC.INACCESSIBLE_VALUE) {
-      return { error: e.message };
+    if(e.code===EC.INACCESSIBLE_VALUE){
+      return { error:e.message,errorCategory: e.code};
     }
-    return { error: 'Unknown error' };
-  }
+    if (e.code === EC.INVALID_CREDENTIALS) {
+      return { error: e.message, errorCategory: e.code };
+    }
+    return { error: 'Unknown error',errorCategory: 'UNKNOWN'};
+      }
 }
 // create a new mission
 function adminMissionCreate(controlUserId, name, description, target) {
@@ -121,17 +131,28 @@ function adminMissionNameUpdate(controlUserId, missionId, name) {
     const mission = missionIdCheck(missionId);
     const validname = missionNameValidity(name);
     const data = getData();
-    data.spaceMissions.name = validname;
+    const missiontarget= data.spaceMissions.find(m => m.missionId === missionId);//mission ID does not refer to a valid space mission.
+    //mission ID does not refer to a space mission that this mission control user owns.
+    if (missiontarget.ownerId !== controlUserId) {
+      //ownerId from missioncreate 
+      const e = new Error('Mission does not belong to this user');
+      e.code = EC.INACCESSIBLE_VALUE;
+      throw e;
+    }
+    missiontarget.name = validname;
     setData(data);
     return {}
   } catch (e) {
-    if (e.code === EC.BAD_INPUT) {
-      return { error: e.message };
+    if(e.code===EC.BAD_INPUT){
+      return { error:e.message,errorCategory: e.code}; 
     }
-    if (e.code === EC.INACCESSIBLE_VALUE) {
-      return { error: e.message };
+    if(e.code===EC.INACCESSIBLE_VALUE){
+      return { error:e.message,errorCategory: e.code};
     }
-    return { error: 'Unknown error' };
+    if (e.code === EC.INVALID_CREDENTIALS) {
+      return { error: e.message, errorCategory: e.code };
+    }
+    return { error: 'Unknown error' ,errorCategory: 'UNKNOWN'};
   }
 }
 
