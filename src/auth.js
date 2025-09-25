@@ -18,22 +18,7 @@ import { errorCategories as EC } from './errors.js';
 function adminAuthRegister(email, password, nameFirst, nameLast) {
   // Validate email format
   if (!isValidEmail(email)) {
-    return { error: 'Invalid email format' };
-  }
-
-  // Validate password
-  if (!isValidPassword(password)) {
-    return { error: 'Password must be at least 8 characters long' };
-  }
-
-  // Validate first name
-  if (!isValidName(nameFirst)) {
-    return { error: 'Invalid first name' };
-  }
-
-  // Validate last name
-  if (!isValidName(nameLast)) {
-    return { error: 'Invalid last name' };
+    return { error: 'Invalid email format', errorCategory: EC.BAD_INPUT };
   }
 
   // Get current data
@@ -42,7 +27,37 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
   // Check if email already exists
   const existingUser = data.missionControlUsers.find(user => user.email === email);
   if (existingUser) {
-    return { error: 'Email already registered' };
+    return { error: 'Email already registered', errorCategory: EC.BAD_INPUT };
+  }
+
+  // Validate first name content (must contain only valid characters)
+  if (typeof nameFirst !== 'string' || !/^[a-zA-Z\s\-']+$/.test(nameFirst.trim())) {
+    return { error: 'Invalid first name content', errorCategory: EC.BAD_INPUT };
+  }
+
+  // Validate first name length
+  if (nameFirst.trim().length < 2 || nameFirst.trim().length > 20) {
+    return { error: 'Invalid first name length', errorCategory: EC.BAD_INPUT };
+  }
+
+  // Validate last name content (must contain only valid characters)
+  if (typeof nameLast !== 'string' || !/^[a-zA-Z\s\-']+$/.test(nameLast.trim())) {
+    return { error: 'Invalid last name content', errorCategory: EC.BAD_INPUT };
+  }
+
+  // Validate last name length
+  if (nameLast.trim().length < 2 || nameLast.trim().length > 20) {
+    return { error: 'Invalid last name length', errorCategory: EC.BAD_INPUT };
+  }
+
+  // Validate password length
+  if (typeof password !== 'string' || password.length < 8) {
+    return { error: 'Password must be at least 8 characters long', errorCategory: EC.BAD_INPUT };
+  }
+
+  // Validate password content (must contain at least one number and one letter)
+  if (!/(?=.*[a-zA-Z])(?=.*[0-9])/.test(password)) {
+    return { error: 'Password must contain at least one letter and one number', errorCategory: EC.BAD_INPUT };
   }
 
   // Create new user
@@ -54,6 +69,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     nameFirst: nameFirst.trim(),
     nameLast: nameLast.trim(),
     numSuccessfulLogins: 0,
+    numFailedPasswordsSinceLastLogin: 0,
     passwordHistory: [password],
   };
 
@@ -64,14 +80,9 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
 
 // Login a mission control user
 function adminAuthLogin(email, password) {
-  // Validate email format
-  if (!isValidEmail(email)) {
-    return { error: 'Invalid email format', errorCategory: 'BAD_INPUT' };
-  }
-
   // Validate password is provided
-  if (!password) {
-    return { error: 'Password is required', errorCategory: 'BAD_INPUT' };
+  if (!password || password === '') {
+    return { error: 'Password is required', errorCategory: EC.BAD_INPUT };
   }
 
   // Get current data
@@ -80,13 +91,16 @@ function adminAuthLogin(email, password) {
   // Find user by email
   const user = data.missionControlUsers.find(u => u.email === email);
   if (!user) {
-    return { error: 'User not found', errorCategory: 'BAD_INPUT' };
+    return { error: 'User not found', errorCategory: EC.BAD_INPUT };
   }
 
   // Check password
   if (user.password !== password) {
+    if (!user.numFailedPasswordsSinceLastLogin) {
+      user.numFailedPasswordsSinceLastLogin = 0;
+    }
     user.numFailedPasswordsSinceLastLogin++;
-    return { error: 'Incorrect password', errorCategory: 'BAD_INPUT' };
+    return { error: 'Incorrect password', errorCategory: EC.BAD_INPUT };
   }
 
   // Successful login
@@ -100,15 +114,15 @@ function adminControlUserDetails(controlUserId){
   const data=getData();
   const user=data.missionControlUsers.find(a=>a.controlUserId===controlUserId);
   if(!user){
-    return {error:'User not found'};
+    return {error:'User not found', errorCategory: EC.INVALID_CREDENTIALS};
   }
   return{
     user:{
       controlUserId: user.controlUserId,
       name: `${user.nameFirst} ${user.nameLast}`,
       email: user.email,
-      numSuccessfulLogins: user.numSuccessfulLogins,
-      numFailedPasswordsSinceLastLogin: user.numFailedPasswordsSinceLastLogin,
+      numSuccessfulLogins: user.numSuccessfulLogins || 0,
+      numFailedPasswordsSinceLastLogin: user.numFailedPasswordsSinceLastLogin || 0,
     }
   };
 }
@@ -150,7 +164,7 @@ function adminControlUserPasswordUpdate(controlUserId,oldPassword,newPassword){
   const data = getData();
   const user = (data.missionControlUsers || []).find(u => u.controlUserId === controlUserId);
   if (!user) {
-    return { error: 'invalid user', errorCategory: 'INVALID_CREDENTIALS' };
+    return { error: 'invalid user', errorCategory: EC.INVALID_CREDENTIALS };
   }
 
   if (user.password !== oldPassword) {

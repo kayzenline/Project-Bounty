@@ -24,25 +24,25 @@ describe('adminControlUserPasswordUpdate (minimal spec set)', () => {
   });
 
   test('BAD_INPUT: wrong old password', () => {
-    const { controlUserId } = adminAuthRegister('a@b.com', 'Abcd1234', 'A', 'B');
+    const { controlUserId } = adminAuthRegister('a@b.com', 'Abcd1234', 'Alice', 'Brown');
     const res = adminControlUserPasswordUpdate(controlUserId, 'WRONG', 'Newpass123');
     expect(res.errorCategory).toBe('BAD_INPUT');
   });
 
   test('BAD_INPUT: old === new', () => {
-    const { controlUserId } = adminAuthRegister('c@d.com', 'Abcd1234', 'C', 'D');
+    const { controlUserId } = adminAuthRegister('c@d.com', 'Abcd1234', 'Charlie', 'Davis');
     const res = adminControlUserPasswordUpdate(controlUserId, 'Abcd1234', 'Abcd1234');
     expect(res.errorCategory).toBe('BAD_INPUT');
   });
 
   test('BAD_INPUT: new password too weak (representative)', () => {
-    const { controlUserId } = adminAuthRegister('e@f.com', 'Abcd1234', 'E', 'F');
+    const { controlUserId } = adminAuthRegister('e@f.com', 'Abcd1234', 'Emma', 'Foster');
     const res = adminControlUserPasswordUpdate(controlUserId, 'Abcd1234', 'OnlyLetters');
     expect(res.errorCategory).toBe('BAD_INPUT');
   });
 
   test('BAD_INPUT: cannot reuse any previous password', () => {
-    const { controlUserId } = adminAuthRegister('g@h.com', 'Abcd1234', 'G', 'H');
+    const { controlUserId } = adminAuthRegister('g@h.com', 'Abcd1234', 'George', 'Harrison');
     expect(adminControlUserPasswordUpdate(controlUserId, 'Abcd1234', 'Qwerty123')).toEqual({});
     const res = adminControlUserPasswordUpdate(controlUserId, 'Qwerty123', 'Abcd1234');
     expect(res.errorCategory).toBe('BAD_INPUT');
