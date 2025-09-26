@@ -9,8 +9,7 @@ import {
   missionTargetValidity,
   normalizeError,
 } from './helper.js';
-import { errorCategories as EC } from './errors.js';
-import { missionIdGen } from './helper.js';
+import { errorCategories as EC } from './testSamples.js';
 
 function buildError(message, code) {
   throw { error: message, errorCategory: code };
@@ -52,7 +51,7 @@ function adminMissionRemove(controlUserId, missionId) {
     return {};
   } catch (e) {
     return normalizeError(e);
-      }
+  }
 }
 
 // create a new mission
