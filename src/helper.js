@@ -1,5 +1,5 @@
 import { getData } from './data.js';
-import { errorCategories as EC } from './errors.js';
+import { errorCategories as EC } from './testSamples.js';
 // Helper function to generate unique control user ID
 function controlUserIdGen() {
   const data = getData();
