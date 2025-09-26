@@ -30,11 +30,9 @@ describe('adminMissionTargetUpdate', () => {
     const controlUserId1 = 'abc';
     const controlUserId2 = 2;
     const missionId = 1;
-    const description = 'xxxxxx';
-
+    const description = 'xxxxxx'
     const result1 = adminMissionDescriptionUpdate(controlUserId1, missionId, description);
     expect(result1.error).toContain('controlUserId must be integer');
-    
     const result2 = adminMissionDescriptionUpdate(controlUserId2, missionId, description);
     expect(result2.error).toContain('controlUserId not found');
   });
@@ -55,10 +53,8 @@ describe('adminMissionTargetUpdate', () => {
     const missionId = 1;
     const description1 = 'x'.repeat(401);
     const description2 = 1;
-
     const result1 = adminMissionDescriptionUpdate(controlUserId, missionId, description1);
-    expect(result1.error).toContain('description is too long');
-
+    expect(result1.error).toContain('description is too long')
     const result2 = adminMissionDescriptionUpdate(controlUserId, missionId, description2);
     expect(result2.error).toContain('description must be a string');
   });
@@ -67,10 +63,8 @@ describe('adminMissionTargetUpdate', () => {
     const controlUserId  = 1;
     const missionId = 1;
     const description = 'xxxxxx';
-
     const result = adminMissionDescriptionUpdate(controlUserId, missionId, description);
     expect(result).toEqual({});
-
     const data = getData();
     const updatedMission = data.spaceMissions.find(m => m.missionId === missionId);
     expect(updatedMission.description).toBe(description);

@@ -15,7 +15,7 @@ describe('adminMissionCreate', () => {
   test('creates a mission and returns missionId', () => {
     const result = adminMissionCreate(controlUserId, 'Mercury', 'Orbit the Earth', 'Earth orbit');
     expect(result).toEqual(expect.objectContaining({ missionId: expect.any(Number) }));
-    expect(result.missionId).toStrictEqual(0);
+    expect(result.missionId).toStrictEqual(1);
   });
 
   test('creating multiple missions yields distinct ids', () => {
@@ -37,6 +37,15 @@ describe('adminMissionCreate', () => {
       error: expect.any(String),
       errorCategory: EC.BAD_INPUT,
     }));
+  });
+
+  test('fails when mission name already exists for the user', () => {
+    adminMissionCreate(controlUserId, 'Mercury', 'First mission', 'Earth orbit');
+    const res = adminMissionCreate(controlUserId, 'Mercury', 'Duplicate mission', 'Mars');
+    expect(res).toEqual({
+      error: 'mission name already exists',
+      errorCategory: EC.BAD_INPUT,
+    });
   });
 
 

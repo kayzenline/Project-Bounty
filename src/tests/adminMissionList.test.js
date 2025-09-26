@@ -1,6 +1,8 @@
 import { adminAuthRegister } from '../auth.js';
+import { getData } from '../data.js';
 import { adminMissionCreate, adminMissionList } from '../mission.js';
 import { clear } from '../other.js';
+import { errorCategories as EC } from '../testSamples.js';
 
 beforeEach(() => clear());
 
@@ -30,5 +32,16 @@ describe('adminMissionList', () => {
     const { controlUserId } = adminAuthRegister('x@y.com', 'Abcd1234', 'River', 'Song');
     const res = adminMissionList(controlUserId);
     expect(res.missions).toEqual([]);
+  });
+
+  test('unknown error when data store is corrupted', () => {
+    const { controlUserId } = adminAuthRegister('glitch@example.com', 'Abcd1234', 'Rose', 'Tyler');
+    const data = getData();
+    data.spaceMissions = {};
+    const res = adminMissionList(controlUserId);
+    expect(res).toEqual({
+      error: expect.stringContaining('filter'),
+      errorCategory: EC.UNKNOWN,
+    });
   });
 });
