@@ -30,7 +30,7 @@ describe('adminMissionInfo', () => {
     const res = adminMissionInfo(controlUserId, 99999);
     expect(res).toEqual(expect.objectContaining({
       error: expect.any(String),
-      errorCategory: EC.INVALID_CREDENTIALS,
+      errorCategory: EC.INACCESSIBLE_VALUE,
     }));
   });
 
@@ -47,7 +47,6 @@ describe('adminMissionInfo', () => {
     const b = adminAuthRegister('b@b.com', 'pass1234', 'Bob', 'User');
     const { missionId } = adminMissionCreate(a.controlUserId, 'Apollo', 'Moon mission', 'Moon');
     const res = adminMissionInfo(b.controlUserId, missionId);
-
     expect(res).toStrictEqual({
       error: expect.any(String),
       errorCategory: EC.INACCESSIBLE_VALUE

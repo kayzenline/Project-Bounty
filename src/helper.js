@@ -72,20 +72,29 @@ function controlUserIdCheck(controlUserId) {
 }
 
 // Validate mission name and return the trimmed value
-function missionNameValidity(name, maxlen = 100) {
+function missionNameValidity(name, { minLen = 3, maxLen = 30 } = {}) {
   if (typeof name !== 'string') {
     throw { error: 'mission name must be a string', errorCategory: EC.BAD_INPUT };
   }
-  // mission name cannot be empty
-  const n = name.trim();
-  if (n.length === 0) {
+
+  const trimmed = name.trim();
+  if (trimmed.length === 0) {
     throw { error: 'mission name cannot be empty', errorCategory: EC.BAD_INPUT };
   }
-  // mission name cannot be too long
-  if (n.length > maxlen) {
-    throw { error: 'mission name cannot be too long', errorCategory: EC.BAD_INPUT };
+
+  if (trimmed.length < minLen) {
+    throw { error: 'mission name is too short', errorCategory: EC.BAD_INPUT };
   }
-  return n;
+
+  if (trimmed.length > maxLen) {
+    throw { error: 'mission name is too long', errorCategory: EC.BAD_INPUT };
+  }
+
+  if (!/^[a-zA-Z0-9\s\-']+$/.test(trimmed)) {
+    throw { error: 'mission name contains invalid characters', errorCategory: EC.BAD_INPUT };
+  }
+
+  return trimmed;
 }
 // Helper function to generate unique mission ID.
 function missionIdGen() {
@@ -165,13 +174,31 @@ export {
 export function normalizeError(err) {
   if (err && typeof err === 'object') {
     if ('error' in err || 'errorCategory' in err) {
+      let message = 'Unknown error';
+      if ('error' in err && err.error !== undefined && err.error !== null) {
+        message = err.error;
+      } else if ('message' in err && err.message !== undefined && err.message !== null) {
+        message = err.message;
+      }
+
+      let category = EC.UNKNOWN;
+      if ('errorCategory' in err && err.errorCategory !== undefined && err.errorCategory !== null) {
+        category = err.errorCategory;
+      } else if ('code' in err && err.code !== undefined && err.code !== null) {
+        category = err.code;
+      }
+
       return {
-        error: String(err.error ?? err.message ?? 'Unknown error'),
-        errorCategory: err.errorCategory ?? err.code ?? EC.UNKNOWN,
+        error: String(message),
+        errorCategory: category,
       };
     }
     if ('message' in err) {
-      return { error: String(err.message), errorCategory: err.code ?? EC.UNKNOWN };
+      let category = EC.UNKNOWN;
+      if ('code' in err && err.code !== undefined && err.code !== null) {
+        category = err.code;
+      }
+      return { error: String(err.message), errorCategory: category };
     }
   }
   return { error: String(err), errorCategory: EC.UNKNOWN };

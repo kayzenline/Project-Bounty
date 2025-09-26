@@ -12,7 +12,7 @@ describe('adminControlUserDetails', () => {
       expect(result.controlUserId).toEqual(userid);
       expect(userdetails.user.name).toEqual('Kitty Tan');
       expect(userdetails.user.email).toEqual('rosielover@gmail.com');
-      expect(userdetails.user.numSuccessfulLogins).toEqual(0);
+      expect(userdetails.user.numSuccessfulLogins).toEqual(1);
       expect(userdetails.user.numFailedPasswordsSinceLastLogin).toEqual(0);
     });
     test('function return error',()=>{
@@ -22,4 +22,3 @@ describe('adminControlUserDetails', () => {
       expect(details).toEqual({error:'User not found',errorCategory: 'INVALID_CREDENTIALS'});
     });
 });
-

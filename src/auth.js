@@ -67,7 +67,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     password,
     nameFirst: nameFirst.trim(),
     nameLast: nameLast.trim(),
-    numSuccessfulLogins: 0,
+    numSuccessfulLogins: 1,
     numFailedPasswordsSinceLastLogin: 0,
     passwordHistory: [password],
   };
@@ -125,6 +125,7 @@ function adminControlUserDetails(controlUserId) {
     }
   };
 }
+
 function adminControlUserDetailsUpdate(controlUserId, email, nameFirst, nameLast) {
   try {
     controlUserIdCheck(controlUserId);
