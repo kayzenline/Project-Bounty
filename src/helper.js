@@ -1,5 +1,5 @@
 import { getData } from './data.js';
-import { errorCategories as EC } from './errors.js';
+import { errorCategories as EC } from './testSamples.js';
 // Helper function to generate unique control user ID
 function controlUserIdGen() {
   const data = getData();
@@ -50,42 +50,51 @@ function findUserById(controlUserId) {
 function controlUserIdCheck(controlUserId) {
   //user id must be integer
   if (!Number.isInteger(controlUserId) || controlUserId <= 0) {
-    const e = new Error('controlUserId must be integer');
-    e.code = EC.BAD_INPUT;
-    throw e;
+    throw {
+      error: 'controlUserId must be integer',
+      errorCategory: EC.BAD_INPUT,
+    };
   }
+
   const data = getData();
+
   //user id must correspond to an existing user
   const user = data.missionControlUsers.find(u => u.controlUserId === controlUserId);
   if (!user) {
-    const e = new Error('controlUserId not found');
-    e.code = EC.INACCESSIBLE_VALUE;
-    throw e;
+    throw {
+      error: 'controlUserId not found',
+      errorCategory: EC.INVALID_CREDENTIALS,
+    };
   }
+
+
   return user;
 }
 
 // Validate mission name and return the trimmed value
-function missionNameValidity(name, maxlen = 100) {
+function missionNameValidity(name, { minLen = 3, maxLen = 30 } = {}) {
   if (typeof name !== 'string') {
-    const e = new Error('mission name must be a string');
-    e.code = EC.BAD_INPUT;
-    throw e;
+    throw { error: 'mission name must be a string', errorCategory: EC.BAD_INPUT };
   }
-  // mission name cannot be empty
-  const n = name.trim();
-  if (n.length === 0) {
-    const e = new Error('mission name cannot be empty');
-    e.code = EC.BAD_INPUT;
-    throw e;
+
+  const trimmed = name.trim();
+  if (trimmed.length === 0) {
+    throw { error: 'mission name cannot be empty', errorCategory: EC.BAD_INPUT };
   }
-  // mission name cannot be too long
-  if (n.length > maxlen) {
-    const e = new Error('mission name cannot be too long');
-    e.code = EC.BAD_INPUT;
-    throw e;
+
+  if (trimmed.length < minLen) {
+    throw { error: 'mission name is too short', errorCategory: EC.BAD_INPUT };
   }
-  return n;
+
+  if (trimmed.length > maxLen) {
+    throw { error: 'mission name is too long', errorCategory: EC.BAD_INPUT };
+  }
+
+  if (!/^[a-zA-Z0-9\s\-']+$/.test(trimmed)) {
+    throw { error: 'mission name contains invalid characters', errorCategory: EC.BAD_INPUT };
+  }
+
+  return trimmed;
 }
 // Helper function to generate unique mission ID.
 function missionIdGen() {
@@ -134,18 +143,14 @@ function missionTargetValidity(target, maxlen = 100) {
 // Helper function for checking if missionId is valid or invalid
 function missionIdCheck(missionId) {
   //missionId must be integer
-  if (!Number.isInteger(missionId) || missionId <= 0) {
-    const e = new Error('missionId must be integer');
-    e.code = EC.BAD_INPUT;
-    throw e;
+  if (!Number.isInteger(missionId) || missionId < 0) {
+    throw { error: 'missionId must be integer', errorCategory: EC.BAD_INPUT };
   }
   const data = getData();
   //missionId must correspond to an existing spaceMission
   const mission = data.spaceMissions.find(sm => sm.missionId === missionId);
   if (!mission) {
-    const e = new Error('missionId not found');
-    e.code = EC.INACCESSIBLE_VALUE;
-    throw e;
+    throw { error: 'missionId not found', errorCategory: EC.INACCESSIBLE_VALUE };
   }
   return mission;
 }
@@ -164,3 +169,37 @@ export {
   missionTargetValidity,
   missionIdCheck,
 };
+
+// Normalize thrown errors (either Error or {error, errorCategory})
+export function normalizeError(err) {
+  if (err && typeof err === 'object') {
+    if ('error' in err || 'errorCategory' in err) {
+      let message = 'Unknown error';
+      if ('error' in err && err.error !== undefined && err.error !== null) {
+        message = err.error;
+      } else if ('message' in err && err.message !== undefined && err.message !== null) {
+        message = err.message;
+      }
+
+      let category = EC.UNKNOWN;
+      if ('errorCategory' in err && err.errorCategory !== undefined && err.errorCategory !== null) {
+        category = err.errorCategory;
+      } else if ('code' in err && err.code !== undefined && err.code !== null) {
+        category = err.code;
+      }
+
+      return {
+        error: String(message),
+        errorCategory: category,
+      };
+    }
+    if ('message' in err) {
+      let category = EC.UNKNOWN;
+      if ('code' in err && err.code !== undefined && err.code !== null) {
+        category = err.code;
+      }
+      return { error: String(err.message), errorCategory: category };
+    }
+  }
+  return { error: String(err), errorCategory: EC.UNKNOWN };
+}

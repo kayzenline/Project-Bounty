@@ -27,7 +27,6 @@ describe('adminMissionTargetUpdate', () => {
 
     const result1 = adminControlUserDetailsUpdate(controlUserId1, email, nameFirst, nameLast);
     expect(result1.error).toContain('controlUserId must be integer');
-    
     const result2 = adminControlUserDetailsUpdate(controlUserId2, email, nameFirst, nameLast);
     expect(result2.error).toContain('controlUserId not found');
   });

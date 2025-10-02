@@ -12,14 +12,13 @@ describe('adminControlUserDetails', () => {
       expect(result.controlUserId).toEqual(userid);
       expect(userdetails.user.name).toEqual('Kitty Tan');
       expect(userdetails.user.email).toEqual('rosielover@gmail.com');
-      expect(userdetails.user.numSuccessfulLogins).toEqual(0);
+      expect(userdetails.user.numSuccessfulLogins).toEqual(1);
       expect(userdetails.user.numFailedPasswordsSinceLastLogin).toEqual(0);
     });
     test('function return error',()=>{
       const invalidId = 1234; 
       const details = adminControlUserDetails(invalidId);
       expect(details).toHaveProperty('error');
-      expect(details.error).toBe('User not found');
+      expect(details).toEqual({error:'User not found',errorCategory: 'INVALID_CREDENTIALS'});
     });
 });
-

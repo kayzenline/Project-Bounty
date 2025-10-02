@@ -5,14 +5,13 @@
 import {
   controlUserIdGen,
   isValidEmail,
-  isValidPassword,
   isValidName,
   controlUserIdCheck,
-  findUserByEmail,
   findUserById,
+  normalizeError,
 } from './helper.js';
 import { getData } from './data.js';
-import { errorCategories as EC } from './errors.js';
+import { errorCategories as EC } from './testSamples.js';
 
 // Register a mission control user
 function adminAuthRegister(email, password, nameFirst, nameLast) {
@@ -68,7 +67,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     password,
     nameFirst: nameFirst.trim(),
     nameLast: nameLast.trim(),
-    numSuccessfulLogins: 0,
+    numSuccessfulLogins: 1,
     numFailedPasswordsSinceLastLogin: 0,
     passwordHistory: [password],
   };
@@ -110,14 +109,14 @@ function adminAuthLogin(email, password) {
   return { controlUserId: user.controlUserId };
 }
 
-function adminControlUserDetails(controlUserId){
-  const data=getData();
-  const user=data.missionControlUsers.find(a=>a.controlUserId===controlUserId);
-  if(!user){
-    return {error:'User not found', errorCategory: EC.INVALID_CREDENTIALS};
+function adminControlUserDetails(controlUserId) {
+  const data = getData();
+  const user = data.missionControlUsers.find(a => a.controlUserId === controlUserId);
+  if (!user) {
+    return { error: 'User not found', errorCategory: EC.INVALID_CREDENTIALS };
   }
-  return{
-    user:{
+  return {
+    user: {
       controlUserId: user.controlUserId,
       name: `${user.nameFirst} ${user.nameLast}`,
       email: user.email,
@@ -126,8 +125,9 @@ function adminControlUserDetails(controlUserId){
     }
   };
 }
-function adminControlUserDetailsUpdate(controlUserId,email,nameFirst,nameLast){
-  try{
+
+function adminControlUserDetailsUpdate(controlUserId, email, nameFirst, nameLast) {
+  try {
     controlUserIdCheck(controlUserId);
     if (!isValidEmail(email)) {
       const e = new Error('this email is invalid');
@@ -139,7 +139,7 @@ function adminControlUserDetailsUpdate(controlUserId,email,nameFirst,nameLast){
       e.code = EC.BAD_INPUT;
       throw e;
     }
-    
+
     const data = getData();
     const exists = data.missionControlUsers.some(User => User.email === email);
     if (exists) {
@@ -156,11 +156,12 @@ function adminControlUserDetailsUpdate(controlUserId,email,nameFirst,nameLast){
     }
     return {};
   } catch (e) {
-    return { error: String(e.message), errorCategory: e.code ?? EC.UNKNOWN };
+    const ne = normalizeError(e);
+    return { error: ne.error, errorCategory: ne.errorCategory };
   }
 }
 
-function adminControlUserPasswordUpdate(controlUserId,oldPassword,newPassword){
+function adminControlUserPasswordUpdate(controlUserId, oldPassword, newPassword) {
   const data = getData();
   const user = (data.missionControlUsers || []).find(u => u.controlUserId === controlUserId);
   if (!user) {

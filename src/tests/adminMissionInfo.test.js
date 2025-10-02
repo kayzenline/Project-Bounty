@@ -36,17 +36,23 @@ describe('adminMissionInfo', () => {
 
   test('fails when controlUserId is invalid', () => {
     const res = adminMissionInfo('abc', 1);
-    expect(res).toEqual(expect.objectContaining({
+    expect(res).toStrictEqual({
       error: expect.any(String),
       errorCategory: EC.BAD_INPUT,
-    }));
+    });
   });
+
   test('fails when mission belongs to another user', () => {
-  const a = adminAuthRegister('a@b.com', 'pass1234', 'Alice', 'User');
-  const b = adminAuthRegister('b@b.com', 'pass1234', 'Bob', 'User');
-  const { missionId } = adminMissionCreate(a.controlUserId, 'Apollo', 'Moon mission', 'Moon');
-  const res = adminMissionInfo(b.controlUserId, missionId);
-  expect(res.errorCategory).toEqual(EC.INACCESSIBLE_VALUE);
-});
+    const a = adminAuthRegister('a@b.com', 'pass1234', 'Alice', 'User');
+    const b = adminAuthRegister('b@b.com', 'pass1234', 'Bob', 'User');
+    const { missionId } = adminMissionCreate(a.controlUserId, 'Apollo', 'Moon mission', 'Moon');
+    const res = adminMissionInfo(b.controlUserId, missionId);
+    expect(res).toStrictEqual({
+      error: expect.any(String),
+      errorCategory: EC.INACCESSIBLE_VALUE
+    })
+
+
+  });
 
 });
