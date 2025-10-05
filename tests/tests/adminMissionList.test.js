@@ -1,8 +1,8 @@
-import { adminAuthRegister } from '../auth.js';
-import { getData } from '../data.js';
-import { adminMissionCreate, adminMissionList } from '../mission.js';
-import { clear } from '../other.js';
-import { errorCategories as EC } from '../testSamples.js';
+import { adminAuthRegister } from '../../src/auth.js';
+import { getData } from '../../src/data.js';
+import { adminMissionCreate, adminMissionList } from '../../src/mission.js';
+import { clear } from '../../src/other.js';
+import { errorCategories as EC } from '../../src/testSamples.js';
 
 beforeEach(() => clear());
 

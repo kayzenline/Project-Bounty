@@ -1,4 +1,4 @@
-import { missionTargetValidity } from '../helper.js';
+import { missionTargetValidity } from '../../src/helper.js';
 
 describe('missionTargetValidity (spec: string, empty allowed, <= 100 chars)', () => {
   test('valid short target returns as-is', () => {

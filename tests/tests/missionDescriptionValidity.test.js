@@ -1,4 +1,4 @@
-import { missionDescriptionValidity } from '../helper.js';
+import { missionDescriptionValidity } from '../../src/helper.js';
 
 describe('missionDescriptionValidity (spec: string, empty allowed, <= 400 chars)', () => {
   test('valid short description returns as-is', () => {

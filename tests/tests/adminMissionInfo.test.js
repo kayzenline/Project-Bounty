@@ -1,7 +1,7 @@
-import { adminMissionCreate, adminMissionInfo } from '../mission.js';
-import { adminAuthRegister } from '../auth.js';
-import { clear } from '../other.js';
-import { errorCategories as EC } from '../testSamples.js';
+import { adminMissionCreate, adminMissionInfo } from '../../src/mission.js';
+import { adminAuthRegister } from '../../src/auth.js';
+import { clear } from '../../src/other.js';
+import { errorCategories as EC } from '../../src/testSamples.js';
 
 describe('adminMissionInfo', () => {
   let controlUserId;

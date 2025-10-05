@@ -1,6 +1,6 @@
-import { clear } from '../other.js';
-import { adminControlUserDetailsUpdate } from '../auth.js';
-import { getData } from '../data.js';
+import { clear } from '../../src/other.js';
+import { adminControlUserDetailsUpdate } from '../../src/auth.js';
+import { getData } from '../../src/data.js';
 
 describe('adminMissionTargetUpdate', () => {
   beforeEach(() => {

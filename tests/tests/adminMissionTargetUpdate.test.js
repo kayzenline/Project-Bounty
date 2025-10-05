@@ -1,6 +1,6 @@
-import { clear } from '../other.js';
-import { adminMissionDescriptionUpdate } from '../mission.js';
-import { getData } from '../data.js';
+import { clear } from '../../src/other.js';
+import { adminMissionTargetUpdate } from '../../src/mission.js';
+import { getData } from '../../src/data.js';
 
 describe('adminMissionTargetUpdate', () => {
   beforeEach(() => {
@@ -30,43 +30,49 @@ describe('adminMissionTargetUpdate', () => {
     const controlUserId1 = 'abc';
     const controlUserId2 = 2;
     const missionId = 1;
-    const description = 'xxxxxx'
-    const result1 = adminMissionDescriptionUpdate(controlUserId1, missionId, description);
+    const target = 'xxxxxx';
+
+    const result1 = adminMissionTargetUpdate(controlUserId1, missionId, target);
     expect(result1.error).toContain('controlUserId must be integer');
-    const result2 = adminMissionDescriptionUpdate(controlUserId2, missionId, description);
+    
+    const result2 = adminMissionTargetUpdate(controlUserId2, missionId, target);
     expect(result2.error).toContain('controlUserId not found');
   });
   test('check function get a invalid missionId', () => {
     const controlUserId = 1;
     const missionId1 = '1';
     const missionId2 = 2;
-    const description = 'xxxxxx';
-    const result1 = adminMissionDescriptionUpdate(controlUserId, missionId1, description);
+    const target = 'xxxxxx';
+    const result1 = adminMissionTargetUpdate(controlUserId, missionId1, target);
     expect(result1.error).toContain('missionId must be integer');
     
-    const result2 = adminMissionDescriptionUpdate(controlUserId, missionId2, description);
+    const result2 = adminMissionTargetUpdate(controlUserId, missionId2, target);
     expect(result2.error).toContain('missionId not found');
   });
 
-  test('check function get a invalid description', () => {
+  test('check function get a invalid target', () => {
     const controlUserId  = 1;
     const missionId = 1;
-    const description1 = 'x'.repeat(401);
-    const description2 = 1;
-    const result1 = adminMissionDescriptionUpdate(controlUserId, missionId, description1);
-    expect(result1.error).toContain('description is too long')
-    const result2 = adminMissionDescriptionUpdate(controlUserId, missionId, description2);
-    expect(result2.error).toContain('description must be a string');
+    const target1 = 'x'.repeat(101);
+    const target2 = 1;
+
+    const result1 = adminMissionTargetUpdate(controlUserId, missionId, target1);
+    expect(result1.error).toContain('target is too long');
+
+    const result2 = adminMissionTargetUpdate(controlUserId, missionId, target2);
+    expect(result2.error).toContain('target must be a string');
   });
 
   test('check function returns correctly', () => {
     const controlUserId  = 1;
     const missionId = 1;
-    const description = 'xxxxxx';
-    const result = adminMissionDescriptionUpdate(controlUserId, missionId, description);
+    const target = 'xxxxxx';
+
+    const result = adminMissionTargetUpdate(controlUserId, missionId, target);
     expect(result).toEqual({});
+
     const data = getData();
     const updatedMission = data.spaceMissions.find(m => m.missionId === missionId);
-    expect(updatedMission.description).toBe(description);
+    expect(updatedMission.target).toBe(target);
   });
 });

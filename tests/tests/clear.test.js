@@ -1,5 +1,5 @@
-import { clear } from '../other.js';
-import { getData } from '../data.js';
+import { clear } from '../../src/other.js';
+import { getData } from '../../src/data.js';
 
 describe('clear', () => {
   test('clears all users and missions and resets counters', () => {

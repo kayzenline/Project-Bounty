@@ -1,6 +1,6 @@
-import {adminMissionRemove,adminMissionCreate,} from '../mission.js';
-import {adminAuthRegister } from '../auth.js';
-import { clear } from '../other.js';
+import {adminMissionRemove,adminMissionCreate,} from '../../src/mission.js';
+import {adminAuthRegister } from '../../src/auth.js';
+import { clear } from '../../src/other.js';
 //remove successfully
   describe('adminMissionRemove', () => {
     beforeEach(() => {
