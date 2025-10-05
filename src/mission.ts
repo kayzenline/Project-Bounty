@@ -1,6 +1,6 @@
 // This file should contain your functions relating to:
 // - adminMission*
-import { getData, setData } from './data.js';
+import { getData, setData } from './dataStore.js';
 import {
   controlUserIdCheck,
   missionIdCheck,
@@ -12,11 +12,11 @@ import {
 } from './helper.js';
 import { errorCategories as EC } from './testSamples.js';
 
-function buildError(message, code) {
+function buildError(message: string, code: string) {
   throw { error: message, errorCategory: code };
 }
 
-function adminMissionList(controlUserId) {
+function adminMissionList(controlUserId: number) {
   try {
     controlUserIdCheck(controlUserId);
   } catch (e) {
@@ -38,7 +38,7 @@ function adminMissionList(controlUserId) {
 }
 
 //remove mission
-function adminMissionRemove(controlUserId, missionId) {
+function adminMissionRemove(controlUserId: number, missionId: number) {
   try {
     const user = controlUserIdCheck(controlUserId);
     const mission = missionIdCheck(missionId);
@@ -56,7 +56,7 @@ function adminMissionRemove(controlUserId, missionId) {
 }
 
 // create a new mission
-function adminMissionCreate(controlUserId, name, description, target) {
+function adminMissionCreate(controlUserId: number, name:string, description:string, target:string) {
   try {
     // check the information
     const user = controlUserIdCheck(controlUserId);
@@ -65,9 +65,9 @@ function adminMissionCreate(controlUserId, name, description, target) {
     const fixedTarget = missionTargetValidity(target);
 
     const data = getData();
-    const duplicate = (data.spaceMissions || []).some( mission =>
-        mission.ownerId === user.controlUserId &&
-        mission.name.trim().toLowerCase() === fixedName.trim().toLowerCase()
+    const duplicate = (data.spaceMissions || []).some(mission =>
+      mission.ownerId === user.controlUserId &&
+      mission.name.trim().toLowerCase() === fixedName.trim().toLowerCase()
     );
     // check duplicated
     if (duplicate) {
@@ -99,7 +99,7 @@ function adminMissionCreate(controlUserId, name, description, target) {
 }
 
 
-function adminMissionInfo(controlUserId, missionId) {
+function adminMissionInfo(controlUserId:number, missionId:number) {
   try {
     const user = controlUserIdCheck(controlUserId);
     const mission = missionIdCheck(missionId);
@@ -122,7 +122,7 @@ function adminMissionInfo(controlUserId, missionId) {
 }
 
 //Update mission name
-function adminMissionNameUpdate(controlUserId, missionId, name) {
+function adminMissionNameUpdate(controlUserId:number, missionId:number, name:string) {
   try {
     const user = controlUserIdCheck(controlUserId);
     const mission = missionIdCheck(missionId);
@@ -153,7 +153,7 @@ function adminMissionNameUpdate(controlUserId, missionId, name) {
 
 
 // Update mission target
-function adminMissionTargetUpdate(controlUserId, missionId, target) {
+function adminMissionTargetUpdate(controlUserId:number, missionId:number, target:string) {
   try {
     const user = controlUserIdCheck(controlUserId);
     const mission = missionIdCheck(missionId);
@@ -176,7 +176,7 @@ function adminMissionTargetUpdate(controlUserId, missionId, target) {
 }
 
 // Update mission description
-function adminMissionDescriptionUpdate(controlUserId, missionId, description) {
+function adminMissionDescriptionUpdate(controlUserId:number, missionId:number, description:string) {
   try {
     // create check condition
     const user = controlUserIdCheck(controlUserId);
