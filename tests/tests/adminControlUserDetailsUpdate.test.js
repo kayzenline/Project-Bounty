@@ -1,6 +1,6 @@
 import { clear } from '../../src/other.js';
 import { adminControlUserDetailsUpdate } from '../../src/auth.js';
-import { getData } from '../../src/data.js';
+import { getData } from '../../src/dataStore.js';
 
 describe('adminMissionTargetUpdate', () => {
   beforeEach(() => {
@@ -62,15 +62,15 @@ describe('adminMissionTargetUpdate', () => {
   });
 
   test('check function get a invalid name', () => {
-    const controlUserId  = 1;
+    const controlUserId = 1;
     const email = 'example1@domain.com';
     const nameList = [
-      {nameFirst: 'T', nameLast: 'Stark'},
-      {nameFirst: 'Tony', nameLast: 'S'},
-      {nameFirst: 'T'.repeat(21), nameLast: 'Stark'},
-      {nameFirst: 'Tony', nameLast: 'S'.repeat(21)},
-      {nameFirst: '@Tony', nameLast: 'Stark'},
-      {nameFirst: 'Tony', nameLast: '@Stark'}
+      { nameFirst: 'T', nameLast: 'Stark' },
+      { nameFirst: 'Tony', nameLast: 'S' },
+      { nameFirst: 'T'.repeat(21), nameLast: 'Stark' },
+      { nameFirst: 'Tony', nameLast: 'S'.repeat(21) },
+      { nameFirst: '@Tony', nameLast: 'Stark' },
+      { nameFirst: 'Tony', nameLast: '@Stark' }
     ];
 
     for (let names of nameList) {
@@ -93,7 +93,7 @@ describe('adminMissionTargetUpdate', () => {
   });
 
   test('check function returns correctly', () => {
-    const controlUserId  = 1;
+    const controlUserId = 1;
     const email = 'example123@domain.com';
     const nameFirst = 'Tony';
     const nameLast = 'Stark';

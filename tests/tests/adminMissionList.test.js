@@ -1,5 +1,5 @@
 import { adminAuthRegister } from '../../src/auth.js';
-import { getData } from '../../src/data.js';
+import { getData } from '../../src/dataStore.js';
 import { adminMissionCreate, adminMissionList } from '../../src/mission.js';
 import { clear } from '../../src/other.js';
 import { errorCategories as EC } from '../../src/testSamples.js';

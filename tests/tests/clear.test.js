@@ -1,5 +1,5 @@
 import { clear } from '../../src/other.js';
-import { getData } from '../../src/data.js';
+import { getData } from '../../src/dataStore.js';
 
 describe('clear', () => {
   test('clears all users and missions and resets counters', () => {

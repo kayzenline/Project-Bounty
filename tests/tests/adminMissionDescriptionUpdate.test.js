@@ -1,6 +1,6 @@
 import { clear } from '../../src/other.js';
 import { adminMissionDescriptionUpdate } from '../../src/mission.js';
-import { getData } from '../../src/data.js';
+import { getData } from '../../src/dataStore.js';
 
 describe('adminMissionTargetUpdate', () => {
   beforeEach(() => {
@@ -43,13 +43,13 @@ describe('adminMissionTargetUpdate', () => {
     const description = 'xxxxxx';
     const result1 = adminMissionDescriptionUpdate(controlUserId, missionId1, description);
     expect(result1.error).toContain('missionId must be integer');
-    
+
     const result2 = adminMissionDescriptionUpdate(controlUserId, missionId2, description);
     expect(result2.error).toContain('missionId not found');
   });
 
   test('check function get a invalid description', () => {
-    const controlUserId  = 1;
+    const controlUserId = 1;
     const missionId = 1;
     const description1 = 'x'.repeat(401);
     const description2 = 1;
@@ -60,7 +60,7 @@ describe('adminMissionTargetUpdate', () => {
   });
 
   test('check function returns correctly', () => {
-    const controlUserId  = 1;
+    const controlUserId = 1;
     const missionId = 1;
     const description = 'xxxxxx';
     const result = adminMissionDescriptionUpdate(controlUserId, missionId, description);

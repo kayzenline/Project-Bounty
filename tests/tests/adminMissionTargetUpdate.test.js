@@ -1,6 +1,6 @@
 import { clear } from '../../src/other.js';
 import { adminMissionTargetUpdate } from '../../src/mission.js';
-import { getData } from '../../src/data.js';
+import { getData } from '../../src/dataStore.js';
 
 describe('adminMissionTargetUpdate', () => {
   beforeEach(() => {
@@ -34,7 +34,7 @@ describe('adminMissionTargetUpdate', () => {
 
     const result1 = adminMissionTargetUpdate(controlUserId1, missionId, target);
     expect(result1.error).toContain('controlUserId must be integer');
-    
+
     const result2 = adminMissionTargetUpdate(controlUserId2, missionId, target);
     expect(result2.error).toContain('controlUserId not found');
   });
@@ -45,13 +45,13 @@ describe('adminMissionTargetUpdate', () => {
     const target = 'xxxxxx';
     const result1 = adminMissionTargetUpdate(controlUserId, missionId1, target);
     expect(result1.error).toContain('missionId must be integer');
-    
+
     const result2 = adminMissionTargetUpdate(controlUserId, missionId2, target);
     expect(result2.error).toContain('missionId not found');
   });
 
   test('check function get a invalid target', () => {
-    const controlUserId  = 1;
+    const controlUserId = 1;
     const missionId = 1;
     const target1 = 'x'.repeat(101);
     const target2 = 1;
@@ -64,7 +64,7 @@ describe('adminMissionTargetUpdate', () => {
   });
 
   test('check function returns correctly', () => {
-    const controlUserId  = 1;
+    const controlUserId = 1;
     const missionId = 1;
     const target = 'xxxxxx';
 
