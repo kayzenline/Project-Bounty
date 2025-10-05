@@ -1,10 +1,10 @@
-import { adminMissionCreate, adminMissionInfo } from '../mission.js';
-import { adminAuthRegister } from '../auth.js';
-import { clear } from '../other.js';
-import { errorCategories as EC } from '../testSamples.js';
+import { adminMissionCreate, adminMissionInfo } from '../../src/mission';
+import { adminAuthRegister } from '../../src/auth';
+import { clear } from '../../src/other';
+import { errorCategories as EC } from '../../src/testSamples';
 
 describe('adminMissionInfo', () => {
-  let controlUserId;
+  let controlUserId:number;
 
   beforeEach(() => {
     clear();
@@ -35,6 +35,7 @@ describe('adminMissionInfo', () => {
   });
 
   test('fails when controlUserId is invalid', () => {
+    // @ts-expect-error intentional invalid type for validation check
     const res = adminMissionInfo('abc', 1);
     expect(res).toStrictEqual({
       error: expect.any(String),
@@ -50,7 +51,7 @@ describe('adminMissionInfo', () => {
     expect(res).toStrictEqual({
       error: expect.any(String),
       errorCategory: EC.INACCESSIBLE_VALUE
-    })
+    });
 
 
   });

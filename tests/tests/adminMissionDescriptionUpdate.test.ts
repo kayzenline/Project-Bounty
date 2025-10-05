@@ -1,6 +1,6 @@
-import { clear } from '../other.js';
-import { adminMissionDescriptionUpdate } from '../mission.js';
-import { getData } from '../data.js';
+import { clear } from '../../src/other';
+import { adminMissionDescriptionUpdate } from '../../src/mission';
+import { getData } from '../../src/dataStore';
 
 describe('adminMissionTargetUpdate', () => {
   beforeEach(() => {
@@ -16,10 +16,13 @@ describe('adminMissionTargetUpdate', () => {
     };
     const controlUser = {
       controlUserId: 1,
-      name: 'Bill Ryker ',
       email: 'strongbeard@starfleet.com.au',
+      password: 'xxxxxxxxx',
+      nameFirst: 'Bill',
+      nameLast: 'Ryker',
       numSuccessfulLogins: 3,
       numFailedPasswordsSinceLastLogin: 1,
+      passwordHistory: ['xxxxxxxxx'],
     };
     const data = getData();
     data.missionControlUsers.push(controlUser);
@@ -30,7 +33,8 @@ describe('adminMissionTargetUpdate', () => {
     const controlUserId1 = 'abc';
     const controlUserId2 = 2;
     const missionId = 1;
-    const description = 'xxxxxx'
+    const description = 'xxxxxx';
+    // @ts-expect-error intentional invalid type for validation
     const result1 = adminMissionDescriptionUpdate(controlUserId1, missionId, description);
     expect(result1.error).toContain('controlUserId must be integer');
     const result2 = adminMissionDescriptionUpdate(controlUserId2, missionId, description);
@@ -41,32 +45,37 @@ describe('adminMissionTargetUpdate', () => {
     const missionId1 = '1';
     const missionId2 = 2;
     const description = 'xxxxxx';
+    // @ts-expect-error intentional invalid type for validation
     const result1 = adminMissionDescriptionUpdate(controlUserId, missionId1, description);
     expect(result1.error).toContain('missionId must be integer');
-    
+
     const result2 = adminMissionDescriptionUpdate(controlUserId, missionId2, description);
     expect(result2.error).toContain('missionId not found');
   });
 
   test('check function get a invalid description', () => {
-    const controlUserId  = 1;
+    const controlUserId = 1;
     const missionId = 1;
     const description1 = 'x'.repeat(401);
     const description2 = 1;
     const result1 = adminMissionDescriptionUpdate(controlUserId, missionId, description1);
-    expect(result1.error).toContain('description is too long')
+    expect(result1.error).toContain('description is too long');
+    // @ts-expect-error intentional invalid type for validation
     const result2 = adminMissionDescriptionUpdate(controlUserId, missionId, description2);
     expect(result2.error).toContain('description must be a string');
   });
 
   test('check function returns correctly', () => {
-    const controlUserId  = 1;
+    const controlUserId = 1;
     const missionId = 1;
     const description = 'xxxxxx';
     const result = adminMissionDescriptionUpdate(controlUserId, missionId, description);
     expect(result).toEqual({});
     const data = getData();
     const updatedMission = data.spaceMissions.find(m => m.missionId === missionId);
+    if (!updatedMission) {
+      throw new Error('Expected mission to exist in test setup');
+    }
     expect(updatedMission.description).toBe(description);
   });
 });

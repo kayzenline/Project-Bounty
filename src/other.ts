@@ -1,6 +1,6 @@
 // This file should contain your functions relating to:
 // - clear
-import { getData } from './data.js';
+import { getData } from './dataStore';
 
 // Reset application state
 // Function to clear all data (for testing)

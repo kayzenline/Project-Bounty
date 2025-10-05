@@ -9,12 +9,12 @@ import {
   controlUserIdCheck,
   findUserById,
   normalizeError,
-} from './helper.js';
-import { getData } from './data.js';
-import { errorCategories as EC } from './testSamples.js';
+} from './helper';
+import { getData } from './dataStore';
+import { errorCategories as EC } from './testSamples';
 
 // Register a mission control user
-function adminAuthRegister(email, password, nameFirst, nameLast) {
+function adminAuthRegister(email:string, password:string, nameFirst:string, nameLast:string) {
   // Validate email format
   if (!isValidEmail(email)) {
     return { error: 'Invalid email format', errorCategory: EC.BAD_INPUT };
@@ -78,7 +78,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
 }
 
 // Login a mission control user
-function adminAuthLogin(email, password) {
+function adminAuthLogin(email:string, password:string) {
   // Validate password is provided
   if (!password || password === '') {
     return { error: 'Password is required', errorCategory: EC.BAD_INPUT };
@@ -109,7 +109,7 @@ function adminAuthLogin(email, password) {
   return { controlUserId: user.controlUserId };
 }
 
-function adminControlUserDetails(controlUserId) {
+function adminControlUserDetails(controlUserId:number) {
   const data = getData();
   const user = data.missionControlUsers.find(a => a.controlUserId === controlUserId);
   if (!user) {
@@ -126,16 +126,18 @@ function adminControlUserDetails(controlUserId) {
   };
 }
 
-function adminControlUserDetailsUpdate(controlUserId, email, nameFirst, nameLast) {
+type ErrorWithCode = Error & { code?: string };
+
+function adminControlUserDetailsUpdate(controlUserId:number, email:string, nameFirst:string, nameLast:string) {
   try {
     controlUserIdCheck(controlUserId);
     if (!isValidEmail(email)) {
-      const e = new Error('this email is invalid');
+      const e = new Error('this email is invalid') as ErrorWithCode;
       e.code = EC.BAD_INPUT;
       throw e;
     }
     if (!(isValidName(nameFirst) && isValidName(nameLast))) {
-      const e = new Error('this name is invalid');
+      const e = new Error('this name is invalid') as ErrorWithCode;
       e.code = EC.BAD_INPUT;
       throw e;
     }
@@ -144,7 +146,7 @@ function adminControlUserDetailsUpdate(controlUserId, email, nameFirst, nameLast
     const exists = data.missionControlUsers.some(User => User.email === email);
     if (exists) {
       // something woring here
-      const e = new Error('excluding the current authorised user');
+      const e = new Error('excluding the current authorised user') as ErrorWithCode;
       e.code = EC.BAD_INPUT;
       throw e;
       //
@@ -161,7 +163,7 @@ function adminControlUserDetailsUpdate(controlUserId, email, nameFirst, nameLast
   }
 }
 
-function adminControlUserPasswordUpdate(controlUserId, oldPassword, newPassword) {
+function adminControlUserPasswordUpdate(controlUserId:number, oldPassword:string, newPassword:string) {
   const data = getData();
   const user = (data.missionControlUsers || []).find(u => u.controlUserId === controlUserId);
   if (!user) {
