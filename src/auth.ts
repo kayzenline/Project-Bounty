@@ -9,9 +9,9 @@ import {
   controlUserIdCheck,
   findUserById,
   normalizeError,
-} from './helper.js';
-import { getData } from './dataStore.js';
-import { errorCategories as EC } from './testSamples.js';
+} from './helper';
+import { getData } from './dataStore';
+import { errorCategories as EC } from './testSamples';
 
 // Register a mission control user
 function adminAuthRegister(email:string, password:string, nameFirst:string, nameLast:string) {

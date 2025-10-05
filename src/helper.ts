@@ -1,5 +1,5 @@
-import { getData } from './dataStore.js';
-import { errorCategories as EC } from './testSamples.js';
+import { getData } from './dataStore';
+import { errorCategories as EC } from './testSamples';
 // Helper function to generate unique control user ID
 function controlUserIdGen() {
   const data = getData();

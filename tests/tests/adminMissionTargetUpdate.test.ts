@@ -1,6 +1,6 @@
-import { clear } from '../../src/other.js';
-import { adminMissionTargetUpdate } from '../../src/mission.js';
-import { getData } from '../../src/dataStore.js';
+import { clear } from '../../src/other';
+import { adminMissionTargetUpdate } from '../../src/mission';
+import { getData } from '../../src/dataStore';
 
 describe('adminMissionTargetUpdate', () => {
   beforeEach(() => {
@@ -16,10 +16,13 @@ describe('adminMissionTargetUpdate', () => {
     };
     const controlUser = {
       controlUserId: 1,
-      name: 'Bill Ryker ',
       email: 'strongbeard@starfleet.com.au',
+      password: 'xxxxxxxxx',
+      nameFirst: 'Bill',
+      nameLast: 'Ryker',
       numSuccessfulLogins: 3,
       numFailedPasswordsSinceLastLogin: 1,
+      passwordHistory: ['xxxxxxxxx'],
     };
     const data = getData();
     data.missionControlUsers.push(controlUser);
@@ -32,10 +35,17 @@ describe('adminMissionTargetUpdate', () => {
     const missionId = 1;
     const target = 'xxxxxx';
 
+    // @ts-expect-error intentional invalid type to test validation path
     const result1 = adminMissionTargetUpdate(controlUserId1, missionId, target);
+    if (!('error' in result1)) {
+      throw new Error('Expected error for non-integer controlUserId');
+    }
     expect(result1.error).toContain('controlUserId must be integer');
 
     const result2 = adminMissionTargetUpdate(controlUserId2, missionId, target);
+    if (!('error' in result2)) {
+      throw new Error('Expected error for unknown controlUserId');
+    }
     expect(result2.error).toContain('controlUserId not found');
   });
   test('check function get a invalid missionId', () => {
@@ -43,10 +53,17 @@ describe('adminMissionTargetUpdate', () => {
     const missionId1 = '1';
     const missionId2 = 2;
     const target = 'xxxxxx';
+    // @ts-expect-error intentional invalid type to test validation path
     const result1 = adminMissionTargetUpdate(controlUserId, missionId1, target);
+    if (!('error' in result1)) {
+      throw new Error('Expected error for non-integer missionId');
+    }
     expect(result1.error).toContain('missionId must be integer');
 
     const result2 = adminMissionTargetUpdate(controlUserId, missionId2, target);
+    if (!('error' in result2)) {
+      throw new Error('Expected error for unknown missionId');
+    }
     expect(result2.error).toContain('missionId not found');
   });
 
@@ -57,9 +74,16 @@ describe('adminMissionTargetUpdate', () => {
     const target2 = 1;
 
     const result1 = adminMissionTargetUpdate(controlUserId, missionId, target1);
+    if (!('error' in result1)) {
+      throw new Error('Expected error for long target');
+    }
     expect(result1.error).toContain('target is too long');
 
+    // @ts-expect-error intentional invalid type to test validation path
     const result2 = adminMissionTargetUpdate(controlUserId, missionId, target2);
+    if (!('error' in result2)) {
+      throw new Error('Expected error for non-string target');
+    }
     expect(result2.error).toContain('target must be a string');
   });
 
@@ -73,6 +97,9 @@ describe('adminMissionTargetUpdate', () => {
 
     const data = getData();
     const updatedMission = data.spaceMissions.find(m => m.missionId === missionId);
+    if (!updatedMission) {
+      throw new Error('Expected mission to exist after update');
+    }
     expect(updatedMission.target).toBe(target);
   });
 });

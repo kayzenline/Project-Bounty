@@ -1,6 +1,6 @@
-import { clear } from '../../src/other.js';
-import { adminControlUserDetailsUpdate } from '../../src/auth.js';
-import { getData } from '../../src/dataStore.js';
+import { clear } from '../../src/other';
+import { adminControlUserDetailsUpdate } from '../../src/auth';
+import { getData } from '../../src/dataStore';
 
 describe('adminMissionTargetUpdate', () => {
   beforeEach(() => {
@@ -11,8 +11,9 @@ describe('adminMissionTargetUpdate', () => {
       password: 'xxxxxxxxx',
       nameFirst: 'Bill',
       nameLast: 'Ryker',
+      numSuccessfulLogins: 0,
       numFailedPasswordsSinceLastLogin: 1,
-      passwordHistory: 'zzzzzzzzz',
+      passwordHistory: ['xxxxxxxxx'],
     };
     const data = getData();
     data.missionControlUsers.push(controlUser);
@@ -25,6 +26,7 @@ describe('adminMissionTargetUpdate', () => {
     const nameFirst = 'Tony';
     const nameLast = 'Stark';
 
+    // @ts-expect-error intentionally passing invalid type to verify validation
     const result1 = adminControlUserDetailsUpdate(controlUserId1, email, nameFirst, nameLast);
     expect(result1.error).toContain('controlUserId must be integer');
     const result2 = adminControlUserDetailsUpdate(controlUserId2, email, nameFirst, nameLast);
@@ -47,8 +49,9 @@ describe('adminMissionTargetUpdate', () => {
       password: 'xxxxxxxxx',
       nameFirst: 'Bilian',
       nameLast: 'Rykery',
+      numSuccessfulLogins: 0,
       numFailedPasswordsSinceLastLogin: 1,
-      passwordHistory: 'zzzzzzzzz',
+      passwordHistory: ['xxxxxxxxx'],
     };
     const data = getData();
     data.missionControlUsers.push(controlUser2);
@@ -84,8 +87,9 @@ describe('adminMissionTargetUpdate', () => {
         password: 'xxxxxxxxx',
         nameFirst: 'Bill',
         nameLast: 'Ryker',
+        numSuccessfulLogins: 0,
         numFailedPasswordsSinceLastLogin: 1,
-        passwordHistory: 'zzzzzzzzz',
+        passwordHistory: ['xxxxxxxxx'],
       };
       const data = getData();
       data.missionControlUsers.push(controlUser);

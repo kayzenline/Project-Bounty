@@ -1,5 +1,5 @@
-import { clear } from '../../src/other.js';
-import { getData } from '../../src/dataStore.js';
+import { clear } from '../../src/other';
+import { getData } from '../../src/dataStore';
 
 describe('clear', () => {
   test('clears all users and missions and resets counters', () => {
@@ -16,10 +16,13 @@ describe('clear', () => {
     };
     let controlUser = {
       controlUserId: 1,
-      name: 'Bill Ryker ',
       email: 'strongbeard@starfleet.com.au',
+      password: 'xxxxxxxxx',
+      nameFirst: 'Bill',
+      nameLast: 'Ryker',
       numSuccessfulLogins: 3,
       numFailedPasswordsSinceLastLogin: 1,
+      passwordHistory: ['xxxxxxxxx'],
     };
     data.missionControlUsers.push(controlUser);
     data.spaceMissions.push(missionOrigin);
@@ -32,8 +35,8 @@ describe('clear', () => {
       missionControlUsers: [],
       spaceMissions: [],
       nextControlUserId: 1,
-      nextMissionId: 1
-    })
+      nextMissionId: 1,
+    });
 
   });
 });

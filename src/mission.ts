@@ -1,6 +1,6 @@
 // This file should contain your functions relating to:
 // - adminMission*
-import { getData, setData } from './dataStore.js';
+import { getData, setData } from './dataStore';
 import {
   controlUserIdCheck,
   missionIdCheck,
@@ -9,8 +9,8 @@ import {
   missionTargetValidity,
   missionIdGen,
   normalizeError,
-} from './helper.js';
-import { errorCategories as EC } from './testSamples.js';
+} from './helper';
+import { errorCategories as EC } from './testSamples';
 
 function buildError(message: string, code: string) {
   throw { error: message, errorCategory: code };

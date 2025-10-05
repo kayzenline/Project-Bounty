@@ -1,4 +1,4 @@
-import { missionTargetValidity } from '../../src/helper.js';
+import { missionTargetValidity } from '../../src/helper';
 
 describe('missionTargetValidity (spec: string, empty allowed, <= 100 chars)', () => {
   test('valid short target returns as-is', () => {
@@ -16,7 +16,9 @@ describe('missionTargetValidity (spec: string, empty allowed, <= 100 chars)', ()
   });
 
   test('non-string throws', () => {
-    expect(() => missionTargetValidity(456)).toThrow('target must be a string');
+    expect(() => 
+      // @ts-expect-error testing invalid number argument
+      missionTargetValidity(456)).toThrow('target must be a string');
     expect(() => missionTargetValidity(undefined)).toThrow('target must be a string');
   });
 });
