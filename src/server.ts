@@ -13,8 +13,10 @@ import process from 'process';
 import config from './config.json';
 // import your logic calls - add further items as required
 import { echo } from './newecho';
-import {errorCategories} from './testSamples';
-import {adminMissionTransfer} from './missionTransferExample';
+import { errorCategories } from './testSamples';
+import { adminMissionTransfer } from './missionTransferExample';
+import { loadData } from './dataStore';
+import router from './routes';
 
 // Set up web app
 const app = express();
@@ -36,6 +38,10 @@ const HOST: string = process.env.IP || '127.0.0.1';
 // ====================================================================
 //  ================= WORK IS DONE BELOW THIS LINE ===================
 // ====================================================================
+
+loadData();
+
+app.use('/', router);
 
 // Example get request
 app.get('/echo', (req: Request, res: Response) => {
@@ -63,15 +69,15 @@ app.post('/v1/admin/mission/:missionid/transfer', (req: Request, res: Response) 
 
   const result = adminMissionTransfer(controlUserId, missionId, userEmail);
   if ('error' in result) {
-    switch(result.errorCategory) {
+    switch (result.errorCategory) {
       case errorCategories.INVALID_CREDENTIALS:
-        return res.status(401).json({error: result.error});
+        return res.status(401).json({ error: result.error });
         break;
       case errorCategories.INACCESSIBLE_VALUE:
-        return res.status(403).json({error: result.error});
+        return res.status(403).json({ error: result.error });
         break;
       case errorCategories.BAD_INPUT:
-        return res.status(400).json({error: result.error});
+        return res.status(400).json({ error: result.error });
         break;
       default:
 

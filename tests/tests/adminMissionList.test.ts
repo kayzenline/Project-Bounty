@@ -45,7 +45,7 @@ describe('adminMissionList', () => {
   test('unknown error when data store is corrupted', () => {
     const { controlUserId } = adminAuthRegister('glitch@example.com', 'Abcd1234', 'Rose', 'Tyler');
     const data = getData();
-   // @ts-expect-error intentional invalid type for validation check
+    // @ts-expect-error intentional invalid type for validation check
     data.spaceMissions = {};
     const res = adminMissionList(controlUserId);
     if (!('errorCategory' in res)) {

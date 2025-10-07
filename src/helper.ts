@@ -7,13 +7,13 @@ function controlUserIdGen() {
 }
 
 // Helper function to validate password
-function isValidPassword(password:string) {
+function isValidPassword(password: string) {
   // Password must be at least 8 characters long
   return typeof password === 'string' && password.length >= 8;
 }
 
 // Helper function to validate name
-function isValidName(name:string) {
+function isValidName(name: string) {
   // Name must be a non-empty string with only letters, spaces, hyphens, or apostrophes
   if (typeof name !== 'string') {
     return false;
@@ -28,26 +28,26 @@ function isValidName(name:string) {
 }
 
 // Helper function to validate email
-function isValidEmail(email:string) {
+function isValidEmail(email: string) {
   // Basic email validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return typeof email === 'string' && emailRegex.test(email);
 }
 
 // Helper function to find user by email
-function findUserByEmail(email:string) {
+function findUserByEmail(email: string) {
   const data = getData();
-  return data.missionControlUsers.find(user => user.email === email);
+  return data.controlUsers.find(user => user.email === email);
 }
 
 // Helper function to find user by controlUserId
-function findUserById(controlUserId:number) {
+function findUserById(controlUserId: number) {
   const data = getData();
-  return data.missionControlUsers.find(user => user.controlUserId === controlUserId);
+  return data.controlUsers.find(user => user.controlUserId === controlUserId);
 }
 
 // Helper function to check if control user's ID is valid or invalid
-function controlUserIdCheck(controlUserId:number) {
+function controlUserIdCheck(controlUserId: number) {
   //user id must be integer
   if (!Number.isInteger(controlUserId) || controlUserId <= 0) {
     throw {
@@ -59,7 +59,7 @@ function controlUserIdCheck(controlUserId:number) {
   const data = getData();
 
   //user id must correspond to an existing user
-  const user = data.missionControlUsers.find(u => u.controlUserId === controlUserId);
+  const user = data.controlUsers.find(u => u.controlUserId === controlUserId);
   if (!user) {
     throw {
       error: 'controlUserId not found',
@@ -72,7 +72,7 @@ function controlUserIdCheck(controlUserId:number) {
 }
 
 // Validate mission name and return the trimmed value
-function missionNameValidity(name:string, { minLen = 3, maxLen = 30 } = {}) {
+function missionNameValidity(name: string, { minLen = 3, maxLen = 30 } = {}) {
   if (typeof name !== 'string') {
     throw { error: 'mission name must be a string', errorCategory: EC.BAD_INPUT };
   }
@@ -108,7 +108,7 @@ interface CustomError extends Error {
 }
 
 // Helper function for mission description validity
-function missionDescriptionValidity(description:string, maxlen = 400) {
+function missionDescriptionValidity(description: string, maxlen = 400) {
   // check type of description
   if (typeof description !== 'string') {
     const e = new Error('description must be a string') as CustomError;
@@ -127,7 +127,7 @@ function missionDescriptionValidity(description:string, maxlen = 400) {
 }
 
 // Helper function for mission target validity
-function missionTargetValidity(target:string, maxlen = 100) {
+function missionTargetValidity(target: string, maxlen = 100) {
   // check type of target
   if (typeof target !== 'string') {
     const e = new Error('target must be a string') as CustomError;
@@ -146,7 +146,7 @@ function missionTargetValidity(target:string, maxlen = 100) {
 }
 
 // Helper function for checking if missionId is valid or invalid
-function missionIdCheck(missionId:number) {
+function missionIdCheck(missionId: number) {
   //missionId must be integer
   if (!Number.isInteger(missionId) || missionId < 0) {
     throw { error: 'missionId must be integer', errorCategory: EC.BAD_INPUT };

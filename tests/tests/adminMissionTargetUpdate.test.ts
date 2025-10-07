@@ -1,20 +1,20 @@
 import { clear } from '../../src/other';
 import { adminMissionTargetUpdate } from '../../src/mission';
-import { getData } from '../../src/dataStore';
+import { getData, Mission, MissionControlUser } from '../../src/dataStore';
 
 describe('adminMissionTargetUpdate', () => {
   beforeEach(() => {
     clear();
-    const missionOrigin = {
+    const missionOrigin: Mission = {
       missionId: 1,
-      ownerId: 1,
+      controlUserId: 1,
       name: 'Mercury',
       description: "Place a manned spacecraft in orbital flight around the earth. Investigate a persons performance capabilities and their ability to function in the environment of space. Recover the person and the spacecraft safely",
       target: 'Earth orbit',
       timeCreated: 1683125870,
       timeLastEdited: 1683125871,
     };
-    const controlUser = {
+    const controlUser: MissionControlUser = {
       controlUserId: 1,
       email: 'strongbeard@starfleet.com.au',
       password: 'xxxxxxxxx',
@@ -25,7 +25,7 @@ describe('adminMissionTargetUpdate', () => {
       passwordHistory: ['xxxxxxxxx'],
     };
     const data = getData();
-    data.missionControlUsers.push(controlUser);
+    data.controlUsers.push(controlUser);
     data.spaceMissions.push(missionOrigin);
   });
 
