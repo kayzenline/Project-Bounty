@@ -30,12 +30,20 @@ interface DataStore {
   nextMissionId: number;
 }
 
+const DB_PATH = path.join(__dirname, "db.json");
+
 let data: DataStore = {
   controlUsers: [],
   spaceMissions: [],
   nextControlUserId: 1,
   nextMissionId: 1,
 };
+
+function create_if_not_exist() {
+  if (!fs.existsSync(DB_PATH)) {
+    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+  }
+}
 
 export function getData(): DataStore {
   return data;
@@ -44,11 +52,12 @@ export function getData(): DataStore {
 export function setData(newData: DataStore) {
   data = newData;
 
-  fs.writeFileSync(path.join(__dirname, 'db.json'), JSON.stringify(data, null, 2));
+  fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
 };
 
 export function loadData() {
-  const newData = JSON.parse(fs.readFileSync(path.join(__dirname, 'db.json'), 'utf-8'))
+  create_if_not_exist();
+  const newData = JSON.parse(fs.readFileSync(DB_PATH, "utf-8"));
 
   data = newData;
 }
