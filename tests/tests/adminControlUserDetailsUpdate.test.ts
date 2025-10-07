@@ -16,7 +16,7 @@ describe('adminMissionTargetUpdate', () => {
       passwordHistory: ['xxxxxxxxx'],
     };
     const data = getData();
-    data.missionControlUsers.push(controlUser);
+    data.controlUsers.push(controlUser);
   });
 
   test('check function get a invalid controlUserId', () => {
@@ -54,7 +54,7 @@ describe('adminMissionTargetUpdate', () => {
       passwordHistory: ['xxxxxxxxx'],
     };
     const data = getData();
-    data.missionControlUsers.push(controlUser2);
+    data.controlUsers.push(controlUser2);
     const controlUserId = 1;
     const email = 'example123@domain.com.au';
     const nameFirst = 'Tony';
@@ -92,7 +92,7 @@ describe('adminMissionTargetUpdate', () => {
         passwordHistory: ['xxxxxxxxx'],
       };
       const data = getData();
-      data.missionControlUsers.push(controlUser);
+      data.controlUsers.push(controlUser);
     }
   });
 
@@ -106,7 +106,7 @@ describe('adminMissionTargetUpdate', () => {
     expect(result).toEqual({});
 
     const data = getData();
-    const updatedUserDetails = data.missionControlUsers.find(m => m.controlUserId === controlUserId);
+    const updatedUserDetails = data.controlUsers.find(m => m.controlUserId === controlUserId);
     expect(updatedUserDetails.email).toBe(email);
     expect(updatedUserDetails.nameFirst).toBe(nameFirst);
     expect(updatedUserDetails.nameLast).toBe(nameLast);

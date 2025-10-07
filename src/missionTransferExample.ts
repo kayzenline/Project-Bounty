@@ -1,5 +1,5 @@
-import {getData, setData} from './dataStore';
-import {errorCategories} from './testSamples';
+import { getData, setData } from './dataStore';
+import { errorCategories } from './testSamples';
 
 /**
  * Transfers a space mission from one control User to another controlUser
@@ -19,33 +19,33 @@ export function adminMissionTransfer(controlUserId: number, missionId: number, u
     //   userEmail is the current logged in control user
     //   missionId refers to a space mission that has a name that is already used by the target user
     let data = getData();
-    
-    let targetUser = data.controlUsers.find((user) => user.userEmail === userEmail);
+
+    let targetUser = data.controlUsers.find((user) => user.email === userEmail);
     if (!targetUser) {
-        return { error : `Can not find a control user with email: ${userEmail}`, errorCategory: errorCategories.BAD_INPUT};
+        return { error: `Can not find a control user with email: ${userEmail}`, errorCategory: errorCategories.BAD_INPUT };
     }
 
     let thisUser = data.controlUsers.find((user) => user.controlUserId === controlUserId);
     // not a required check, just a legacy check from Iteration 1
     if (!thisUser) {
-        return { error : `Can not find this control user with controlUserId: ${controlUserId}`, errorCategory: errorCategories.INVALID_CREDENTIALS};
+        return { error: `Can not find this control user with controlUserId: ${controlUserId}`, errorCategory: errorCategories.INVALID_CREDENTIALS };
     } else if (thisUser.email === userEmail) {
-        return { error : `Can not transfer a mission to the same user: ${thisUser.email} -> ${userEmail}`, errorCategory: errorCategories.BAD_INPUT};
+        return { error: `Can not transfer a mission to the same user: ${thisUser.email} -> ${userEmail}`, errorCategory: errorCategories.BAD_INPUT };
     }
 
-    let targetMission = data.missions.find((mission) => mission.controlUserId === controlUserId);
+    let targetMission = data.spaceMissions.find((mission) => mission.controlUserId === controlUserId);
 
     // not a required check, just a legacy from Iteration 1
     if (!targetMission) {
-        return { error : `Invalid mission to access: ${missiondId}`, errorCategory: errorCategories.INACCESSIBLE_VALUE};
+        return { error: `Invalid mission to access: ${missionId}`, errorCategory: errorCategories.INACCESSIBLE_VALUE };
     } else {
-        let missionNameConflict = data.missions.find((mission) => mission.controlUserId === targetUser.controlUserId && mission.name === targetMission.name)
+        let missionNameConflict = data.spaceMissions.find((mission) => mission.controlUserId === targetUser.controlUserId && mission.name === targetMission.name)
         if (missionNameConflict) {
-            return { error : `Can not transfer a mission to user: ${targetUser.email} as they they own a mission with the same name: ${targetMission.name}`, errorCategory: errorCategories.BAD_INPUT};
+            return { error: `Can not transfer a mission to user: ${targetUser.email} as they they own a mission with the same name: ${targetMission.name}`, errorCategory: errorCategories.BAD_INPUT };
         }
     }
-    
+
     targetMission.controlUserId = targetUser.controlUserId;
-    saveData(data);
+    setData(data);
     return {};
 }

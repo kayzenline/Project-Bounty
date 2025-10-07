@@ -8,7 +8,7 @@ import { getData } from './dataStore';
 
 export function clear() {
   let data = getData();
-  data.missionControlUsers = [];
+  data.controlUsers = [];
   data.spaceMissions = [];
   data.nextControlUserId = 1;
   data.nextMissionId = 1;
