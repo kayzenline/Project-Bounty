@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from 'fs';
+import path from 'path';
 
 // Global data store
 interface MissionControlUser {
@@ -28,18 +28,24 @@ interface DataStore {
   spaceMissions: Mission[];
   nextControlUserId: number;
   nextMissionId: number;
+  sessions: Session[];
 }
 
-const DB_PATH = path.join(__dirname, "db.json");
+interface Session {
+  controlUserSessionId:string;
+  controlUserId: number;
+}
+const DB_PATH = path.join(__dirname, 'db.json');
 
 let data: DataStore = {
   controlUsers: [],
   spaceMissions: [],
   nextControlUserId: 1,
   nextMissionId: 1,
+  sessions: []
 };
 
-function create_if_not_exist() {
+function createIfNotExist() {
   if (!fs.existsSync(DB_PATH)) {
     fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
   }
@@ -53,18 +59,18 @@ export function setData(newData: DataStore) {
   data = newData;
 
   fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
-};
+}
 
 export function loadData() {
-  create_if_not_exist();
-  const newData = JSON.parse(fs.readFileSync(DB_PATH, "utf-8"));
+  createIfNotExist();
+  const newData = JSON.parse(fs.readFileSync(DB_PATH, 'utf-8'));
 
   data = newData;
 }
 
-
 export {
   Mission,
   MissionControlUser,
-  DataStore
-}
+  DataStore,
+  Session
+};

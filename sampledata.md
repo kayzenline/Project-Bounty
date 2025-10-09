@@ -26,6 +26,12 @@ let data = {
       timeLastEdited: 1683125871
     }
   ],
+  sessions: [
+    {
+      userSessionId: '123y'
+      authUserId: 123
+    }
+  ]
   nextControlUserId: 2,
   nextMissionId: 2
 };
