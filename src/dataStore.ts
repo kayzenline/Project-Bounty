@@ -57,14 +57,12 @@ export function getData(): DataStore {
 
 export function setData(newData: DataStore) {
   data = newData;
-
   fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
 }
 
 export function loadData() {
   createIfNotExist();
   const newData = JSON.parse(fs.readFileSync(DB_PATH, 'utf-8'));
-
   data = newData;
 }
 

@@ -17,6 +17,7 @@ import { errorCategories } from './testSamples';
 import { adminMissionTransfer } from './missionTransferExample';
 import { loadData } from './dataStore';
 import router from './routes';
+import { findControlUserIdFromSession } from './helper';
 
 // Set up web app
 const app = express();
@@ -62,25 +63,23 @@ app.post('/v1/admin/mission/:missionid/transfer', (req: Request, res: Response) 
   // 5. Return your response
   const userEmail = req.body.userEmail;
   const missionId = parseInt(req.params.missionid);
-  const controlUserSessionId = req.headers.controlUserSessionId;
+  const controlUserSessionId = req.headers.controlusersessionid as string;
 
-  // assumes a helper function called findControlUserIdFromSession
-  // const controlUserId = findControlUserIdFromSession(controlUserSessionId);
+  const controlUserId = findControlUserIdFromSession(controlUserSessionId);
 
   const result = adminMissionTransfer(controlUserId, missionId, userEmail);
   if ('error' in result) {
     switch (result.errorCategory) {
       case errorCategories.INVALID_CREDENTIALS:
         return res.status(401).json({ error: result.error });
-        break;
+
       case errorCategories.INACCESSIBLE_VALUE:
         return res.status(403).json({ error: result.error });
-        break;
+
       case errorCategories.BAD_INPUT:
         return res.status(400).json({ error: result.error });
-        break;
-      default:
 
+      default:
     }
   }
 });

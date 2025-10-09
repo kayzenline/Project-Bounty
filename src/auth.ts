@@ -75,22 +75,20 @@ function adminAuthRegister(email: string, password: string, nameFirst: string, n
 
   data.controlUsers.push(newUser);
 
-  const newSessionId = generateSessionId();
-
+  const controlUserSessionId = generateSessionId();
   const newSession = {
-    controlUserSessionId: newSessionId,
+    controlUserSessionId: controlUserSessionId,
     controlUserId: controlUserId,
-  }
-
+  };
   data.sessions.push(newSession);
-
-  return { newSessionId };
+  return { controlUserSessionId };
 }
 
 // Login a mission control user
 function adminAuthLogin(email: string, password: string) {
   // Validate password is provided
   if (!password || password === '') {
+    // wo sh sb
     return { error: 'Password is required', errorCategory: EC.BAD_INPUT };
   }
 
