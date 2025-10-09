@@ -28,3 +28,18 @@ tests:
     - cat $SERVER_LOG
 
 # You can add more pipelines or pipelines components that do things like: tsc or eslint
+linting:
+  stage: checks
+  only:
+    - master
+    - merge_requests
+  script:
+    - npm run lint
+
+type-checking:
+  stage: checks
+  only:
+    - master
+    - merge_requests
+  script:
+    - npm run tsc
