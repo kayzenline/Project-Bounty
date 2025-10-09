@@ -9,6 +9,7 @@ import {
   controlUserIdCheck,
   findUserById,
   normalizeError,
+  generateSessionId,
 } from './helper';
 import { getData } from './dataStore';
 import { errorCategories as EC } from './testSamples';
@@ -74,7 +75,16 @@ function adminAuthRegister(email: string, password: string, nameFirst: string, n
 
   data.controlUsers.push(newUser);
 
-  return { controlUserId };
+  const newSessionId = generateSessionId();
+
+  const newSession = {
+    controlUserSessionId: newSessionId,
+    controlUserId: controlUserId,
+  }
+
+  data.sessions.push(newSession);
+
+  return { newSessionId };
 }
 
 // Login a mission control user
@@ -197,7 +207,6 @@ function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: stri
   return {};
 }
 
-
 export {
   adminAuthRegister,
   adminAuthLogin,
@@ -205,4 +214,3 @@ export {
   adminControlUserDetailsUpdate,
   adminControlUserPasswordUpdate,
 };
-
