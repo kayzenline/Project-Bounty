@@ -67,7 +67,7 @@ app.post('/v1/admin/mission/:missionid/transfer', (req: Request, res: Response) 
   // assumes a helper function called findControlUserIdFromSession
   // const controlUserId = findControlUserIdFromSession(controlUserSessionId);
 
-  const result = adminMissionTransfer(controlUserId, missionId, userEmail);
+  const result = adminMissionTransfer(controlUserSessionId, missionId, userEmail);
   if ('error' in result) {
     switch (result.errorCategory) {
       case errorCategories.INVALID_CREDENTIALS:
