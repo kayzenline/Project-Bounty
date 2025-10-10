@@ -10,7 +10,7 @@ router.get('/v1/admin/controluser/details', (req,res)=>{
   }
   const sessionId=parseInt(Id as string);
   if (isNaN(sessionId)) {
-    return res.status(401).json({ error: 'ControlUserSessionId is invalid', errorCategory: EC.INVALID_CREDENTIALS });
+    return res.status(401).json({ error: 'ControlUserSessionId is not a number', errorCategory: EC.INVALID_CREDENTIALS });
   }
   const result=adminControlUserDetails(sessionId);
   if('error' in result){
@@ -46,7 +46,7 @@ router.put('/v1/admin/controluser/password', (req,res)=>{
   }
   const sessionId=parseInt(Id as string);
   if (isNaN(sessionId)) {
-    return res.status(401).json({ error: 'ControlUserSessionId is invalid', errorCategory: EC.INVALID_CREDENTIALS });
+    return res.status(401).json({ error: 'ControlUserSessionId is not a number', errorCategory: EC.INVALID_CREDENTIALS });
   }
   const{oldPassword,newPassword}=req.body;
   const result=adminControlUserPasswordUpdate(sessionId,oldPassword,newPassword);
