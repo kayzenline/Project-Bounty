@@ -35,7 +35,7 @@
         "sync-request-curl": "^3.0.0",
         "ts-jest": "^29.4.5",
         "ts-node-dev": "^2.0.0",
-        "typescript": "^5.9.3",
+        "typescript": "^5.3.3",
         "yaml": "^2.4.5"
     }
 }
