@@ -1,6 +1,6 @@
-import { clear } from '../other.js';
-import { adminControlUserDetailsUpdate } from '../auth.js';
-import { getData } from '../data.js';
+import { clear } from '../../src/other';
+import { adminControlUserDetailsUpdate } from '../../src/auth';
+import { getData } from '../../src/dataStore';
 
 describe('adminMissionTargetUpdate', () => {
   beforeEach(() => {
@@ -11,11 +11,12 @@ describe('adminMissionTargetUpdate', () => {
       password: 'xxxxxxxxx',
       nameFirst: 'Bill',
       nameLast: 'Ryker',
+      numSuccessfulLogins: 0,
       numFailedPasswordsSinceLastLogin: 1,
-      passwordHistory: 'zzzzzzzzz',
+      passwordHistory: ['xxxxxxxxx'],
     };
     const data = getData();
-    data.missionControlUsers.push(controlUser);
+    data.controlUsers.push(controlUser);
   });
 
   test('check function get a invalid controlUserId', () => {
@@ -25,6 +26,7 @@ describe('adminMissionTargetUpdate', () => {
     const nameFirst = 'Tony';
     const nameLast = 'Stark';
 
+    // @ts-expect-error intentionally passing invalid type to verify validation
     const result1 = adminControlUserDetailsUpdate(controlUserId1, email, nameFirst, nameLast);
     expect(result1.error).toContain('controlUserId must be integer');
     const result2 = adminControlUserDetailsUpdate(controlUserId2, email, nameFirst, nameLast);
@@ -47,11 +49,12 @@ describe('adminMissionTargetUpdate', () => {
       password: 'xxxxxxxxx',
       nameFirst: 'Bilian',
       nameLast: 'Rykery',
+      numSuccessfulLogins: 0,
       numFailedPasswordsSinceLastLogin: 1,
-      passwordHistory: 'zzzzzzzzz',
+      passwordHistory: ['xxxxxxxxx'],
     };
     const data = getData();
-    data.missionControlUsers.push(controlUser2);
+    data.controlUsers.push(controlUser2);
     const controlUserId = 1;
     const email = 'example123@domain.com.au';
     const nameFirst = 'Tony';
@@ -62,15 +65,15 @@ describe('adminMissionTargetUpdate', () => {
   });
 
   test('check function get a invalid name', () => {
-    const controlUserId  = 1;
+    const controlUserId = 1;
     const email = 'example1@domain.com';
     const nameList = [
-      {nameFirst: 'T', nameLast: 'Stark'},
-      {nameFirst: 'Tony', nameLast: 'S'},
-      {nameFirst: 'T'.repeat(21), nameLast: 'Stark'},
-      {nameFirst: 'Tony', nameLast: 'S'.repeat(21)},
-      {nameFirst: '@Tony', nameLast: 'Stark'},
-      {nameFirst: 'Tony', nameLast: '@Stark'}
+      { nameFirst: 'T', nameLast: 'Stark' },
+      { nameFirst: 'Tony', nameLast: 'S' },
+      { nameFirst: 'T'.repeat(21), nameLast: 'Stark' },
+      { nameFirst: 'Tony', nameLast: 'S'.repeat(21) },
+      { nameFirst: '@Tony', nameLast: 'Stark' },
+      { nameFirst: 'Tony', nameLast: '@Stark' }
     ];
 
     for (let names of nameList) {
@@ -84,16 +87,17 @@ describe('adminMissionTargetUpdate', () => {
         password: 'xxxxxxxxx',
         nameFirst: 'Bill',
         nameLast: 'Ryker',
+        numSuccessfulLogins: 0,
         numFailedPasswordsSinceLastLogin: 1,
-        passwordHistory: 'zzzzzzzzz',
+        passwordHistory: ['xxxxxxxxx'],
       };
       const data = getData();
-      data.missionControlUsers.push(controlUser);
+      data.controlUsers.push(controlUser);
     }
   });
 
   test('check function returns correctly', () => {
-    const controlUserId  = 1;
+    const controlUserId = 1;
     const email = 'example123@domain.com';
     const nameFirst = 'Tony';
     const nameLast = 'Stark';
@@ -102,7 +106,7 @@ describe('adminMissionTargetUpdate', () => {
     expect(result).toEqual({});
 
     const data = getData();
-    const updatedUserDetails = data.missionControlUsers.find(m => m.controlUserId === controlUserId);
+    const updatedUserDetails = data.controlUsers.find(m => m.controlUserId === controlUserId);
     expect(updatedUserDetails.email).toBe(email);
     expect(updatedUserDetails.nameFirst).toBe(nameFirst);
     expect(updatedUserDetails.nameLast).toBe(nameLast);

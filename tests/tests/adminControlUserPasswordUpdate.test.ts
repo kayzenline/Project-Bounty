@@ -2,8 +2,8 @@ import {
   adminAuthRegister,
   adminAuthLogin,
   adminControlUserPasswordUpdate,
-} from '../auth.js';
-import { clear } from '../other.js';
+} from '../../src/auth';
+import { clear } from '../../src/other';
 
 beforeEach(() => clear());
 

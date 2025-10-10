@@ -9,12 +9,12 @@ import {
   controlUserIdCheck,
   findUserById,
   normalizeError,
-} from './helper.js';
-import { getData } from './data.js';
-import { errorCategories as EC } from './testSamples.js';
+} from './helper';
+import { getData } from './dataStore';
+import { errorCategories as EC } from './testSamples';
 
 // Register a mission control user
-function adminAuthRegister(email, password, nameFirst, nameLast) {
+function adminAuthRegister(email: string, password: string, nameFirst: string, nameLast: string) {
   // Validate email format
   if (!isValidEmail(email)) {
     return { error: 'Invalid email format', errorCategory: EC.BAD_INPUT };
@@ -24,7 +24,7 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
   const data = getData();
 
   // Check if email already exists
-  const existingUser = data.missionControlUsers.find(user => user.email === email);
+  const existingUser = data.controlUsers.find(user => user.email === email);
   if (existingUser) {
     return { error: 'Email already registered', errorCategory: EC.BAD_INPUT };
   }
@@ -72,13 +72,13 @@ function adminAuthRegister(email, password, nameFirst, nameLast) {
     passwordHistory: [password],
   };
 
-  data.missionControlUsers.push(newUser);
+  data.controlUsers.push(newUser);
 
   return { controlUserId };
 }
 
 // Login a mission control user
-function adminAuthLogin(email, password) {
+function adminAuthLogin(email: string, password: string) {
   // Validate password is provided
   if (!password || password === '') {
     return { error: 'Password is required', errorCategory: EC.BAD_INPUT };
@@ -88,7 +88,7 @@ function adminAuthLogin(email, password) {
   const data = getData();
 
   // Find user by email
-  const user = data.missionControlUsers.find(u => u.email === email);
+  const user = data.controlUsers.find(u => u.email === email);
   if (!user) {
     return { error: 'User not found', errorCategory: EC.BAD_INPUT };
   }
@@ -109,9 +109,9 @@ function adminAuthLogin(email, password) {
   return { controlUserId: user.controlUserId };
 }
 
-function adminControlUserDetails(controlUserId) {
+function adminControlUserDetails(controlUserId: number) {
   const data = getData();
-  const user = data.missionControlUsers.find(a => a.controlUserId === controlUserId);
+  const user = data.controlUsers.find(a => a.controlUserId === controlUserId);
   if (!user) {
     return { error: 'User not found', errorCategory: EC.INVALID_CREDENTIALS };
   }
@@ -126,25 +126,27 @@ function adminControlUserDetails(controlUserId) {
   };
 }
 
-function adminControlUserDetailsUpdate(controlUserId, email, nameFirst, nameLast) {
+type ErrorWithCode = Error & { code?: string };
+
+function adminControlUserDetailsUpdate(controlUserId: number, email: string, nameFirst: string, nameLast: string) {
   try {
     controlUserIdCheck(controlUserId);
     if (!isValidEmail(email)) {
-      const e = new Error('this email is invalid');
+      const e = new Error('this email is invalid') as ErrorWithCode;
       e.code = EC.BAD_INPUT;
       throw e;
     }
     if (!(isValidName(nameFirst) && isValidName(nameLast))) {
-      const e = new Error('this name is invalid');
+      const e = new Error('this name is invalid') as ErrorWithCode;
       e.code = EC.BAD_INPUT;
       throw e;
     }
 
     const data = getData();
-    const exists = data.missionControlUsers.some(User => User.email === email);
+    const exists = data.controlUsers.some(User => User.email === email);
     if (exists) {
       // something woring here
-      const e = new Error('excluding the current authorised user');
+      const e = new Error('excluding the current authorised user') as ErrorWithCode;
       e.code = EC.BAD_INPUT;
       throw e;
       //
@@ -161,9 +163,9 @@ function adminControlUserDetailsUpdate(controlUserId, email, nameFirst, nameLast
   }
 }
 
-function adminControlUserPasswordUpdate(controlUserId, oldPassword, newPassword) {
+function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: string, newPassword: string) {
   const data = getData();
-  const user = (data.missionControlUsers || []).find(u => u.controlUserId === controlUserId);
+  const user = (data.controlUsers || []).find(u => u.controlUserId === controlUserId);
   if (!user) {
     return { error: 'invalid user', errorCategory: EC.INVALID_CREDENTIALS };
   }

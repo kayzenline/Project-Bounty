@@ -1,4 +1,4 @@
-import { missionDescriptionValidity } from '../helper.js';
+import { missionDescriptionValidity } from '../../src/helper';
 
 describe('missionDescriptionValidity (spec: string, empty allowed, <= 400 chars)', () => {
   test('valid short description returns as-is', () => {
@@ -15,7 +15,8 @@ describe('missionDescriptionValidity (spec: string, empty allowed, <= 400 chars)
   });
 
   test('non-string throws', () => {
+    // @ts-expect-error testing invalid number argument
     expect(() => missionDescriptionValidity(123)).toThrow('description must be a string');
-    expect(() => missionDescriptionValidity(null)).toThrow('description must be a string');
+    expect(() => missionDescriptionValidity(null as unknown as string)).toThrow('description must be a string');
   });
 });

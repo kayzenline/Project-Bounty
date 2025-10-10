@@ -1,5 +1,5 @@
-import { getData } from './data.js';
-import { errorCategories as EC } from './testSamples.js';
+import { getData } from './dataStore';
+import { errorCategories as EC } from './testSamples';
 // Helper function to generate unique control user ID
 function controlUserIdGen() {
   const data = getData();
@@ -7,13 +7,13 @@ function controlUserIdGen() {
 }
 
 // Helper function to validate password
-function isValidPassword(password) {
+function isValidPassword(password: string) {
   // Password must be at least 8 characters long
   return typeof password === 'string' && password.length >= 8;
 }
 
 // Helper function to validate name
-function isValidName(name) {
+function isValidName(name: string) {
   // Name must be a non-empty string with only letters, spaces, hyphens, or apostrophes
   if (typeof name !== 'string') {
     return false;
@@ -28,26 +28,26 @@ function isValidName(name) {
 }
 
 // Helper function to validate email
-function isValidEmail(email) {
+function isValidEmail(email: string) {
   // Basic email validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return typeof email === 'string' && emailRegex.test(email);
 }
 
 // Helper function to find user by email
-function findUserByEmail(email) {
+function findUserByEmail(email: string) {
   const data = getData();
-  return data.missionControlUsers.find(user => user.email === email);
+  return data.controlUsers.find(user => user.email === email);
 }
 
 // Helper function to find user by controlUserId
-function findUserById(controlUserId) {
+function findUserById(controlUserId: number) {
   const data = getData();
-  return data.missionControlUsers.find(user => user.controlUserId === controlUserId);
+  return data.controlUsers.find(user => user.controlUserId === controlUserId);
 }
 
 // Helper function to check if control user's ID is valid or invalid
-function controlUserIdCheck(controlUserId) {
+function controlUserIdCheck(controlUserId: number) {
   //user id must be integer
   if (!Number.isInteger(controlUserId) || controlUserId <= 0) {
     throw {
@@ -59,7 +59,7 @@ function controlUserIdCheck(controlUserId) {
   const data = getData();
 
   //user id must correspond to an existing user
-  const user = data.missionControlUsers.find(u => u.controlUserId === controlUserId);
+  const user = data.controlUsers.find(u => u.controlUserId === controlUserId);
   if (!user) {
     throw {
       error: 'controlUserId not found',
@@ -72,7 +72,7 @@ function controlUserIdCheck(controlUserId) {
 }
 
 // Validate mission name and return the trimmed value
-function missionNameValidity(name, { minLen = 3, maxLen = 30 } = {}) {
+function missionNameValidity(name: string, { minLen = 3, maxLen = 30 } = {}) {
   if (typeof name !== 'string') {
     throw { error: 'mission name must be a string', errorCategory: EC.BAD_INPUT };
   }
@@ -102,18 +102,23 @@ function missionIdGen() {
   return data.nextMissionId++;
 }
 
+// Custom error type with code property
+interface CustomError extends Error {
+  code?: string;
+}
+
 // Helper function for mission description validity
-function missionDescriptionValidity(description, maxlen = 400) {
+function missionDescriptionValidity(description: string, maxlen = 400) {
   // check type of description
   if (typeof description !== 'string') {
-    const e = new Error('description must be a string');
+    const e = new Error('description must be a string') as CustomError;
     e.code = EC.BAD_INPUT;
     throw e;
   }
 
   // check description length
   if (description.length > maxlen) {
-    const e = new Error('description is too long');
+    const e = new Error('description is too long') as CustomError;
     e.code = EC.BAD_INPUT;
     throw e;
   }
@@ -122,17 +127,17 @@ function missionDescriptionValidity(description, maxlen = 400) {
 }
 
 // Helper function for mission target validity
-function missionTargetValidity(target, maxlen = 100) {
+function missionTargetValidity(target: string, maxlen = 100) {
   // check type of target
   if (typeof target !== 'string') {
-    const e = new Error('target must be a string');
+    const e = new Error('target must be a string') as CustomError;
     e.code = EC.BAD_INPUT;
     throw e;
   }
 
   // check target length
   if (target.length > maxlen) {
-    const e = new Error('target is too long');
+    const e = new Error('target is too long') as CustomError;
     e.code = EC.BAD_INPUT;
     throw e;
   }
@@ -141,7 +146,7 @@ function missionTargetValidity(target, maxlen = 100) {
 }
 
 // Helper function for checking if missionId is valid or invalid
-function missionIdCheck(missionId) {
+function missionIdCheck(missionId: number) {
   //missionId must be integer
   if (!Number.isInteger(missionId) || missionId < 0) {
     throw { error: 'missionId must be integer', errorCategory: EC.BAD_INPUT };
@@ -171,35 +176,33 @@ export {
 };
 
 // Normalize thrown errors (either Error or {error, errorCategory})
-export function normalizeError(err) {
-  if (err && typeof err === 'object') {
-    if ('error' in err || 'errorCategory' in err) {
-      let message = 'Unknown error';
-      if ('error' in err && err.error !== undefined && err.error !== null) {
-        message = err.error;
-      } else if ('message' in err && err.message !== undefined && err.message !== null) {
-        message = err.message;
-      }
+type NormalizedErrorSource = Partial<{
+  error: unknown;
+  errorCategory: unknown;
+  message: unknown;
+  code: unknown;
+}>;
 
-      let category = EC.UNKNOWN;
-      if ('errorCategory' in err && err.errorCategory !== undefined && err.errorCategory !== null) {
-        category = err.errorCategory;
-      } else if ('code' in err && err.code !== undefined && err.code !== null) {
-        category = err.code;
-      }
+function isNormalizedErrorSource(value: unknown): value is NormalizedErrorSource {
+  return typeof value === 'object' && value !== null;
+}
 
+export function normalizeError(err: unknown) {
+  if (isNormalizedErrorSource(err)) {
+    if (err.error !== undefined || err.errorCategory !== undefined) {
+      const message = err.error ?? err.message ?? 'Unknown error';
+      const category = err.errorCategory ?? err.code ?? EC.UNKNOWN;
       return {
         error: String(message),
-        errorCategory: category,
+        errorCategory: String(category),
       };
     }
-    if ('message' in err) {
-      let category = EC.UNKNOWN;
-      if ('code' in err && err.code !== undefined && err.code !== null) {
-        category = err.code;
-      }
-      return { error: String(err.message), errorCategory: category };
+
+    if (err.message !== undefined) {
+      const category = err.code ?? EC.UNKNOWN;
+      return { error: String(err.message), errorCategory: String(category) };
     }
   }
+
   return { error: String(err), errorCategory: EC.UNKNOWN };
 }

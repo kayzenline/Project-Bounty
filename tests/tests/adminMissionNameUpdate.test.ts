@@ -1,7 +1,7 @@
-import {adminMissionCreate,adminMissionNameUpdate} from '../mission.js';
-import {adminAuthRegister } from '../auth.js';
-import {missionNameValidity}from '../helper.js'
-import { clear } from '../other.js';
+import {adminMissionCreate,adminMissionNameUpdate} from '../../src/mission';
+import {adminAuthRegister } from '../../src/auth';
+import { missionNameValidity } from '../../src/helper';
+import { clear } from '../../src/other';
 describe('adminMissionNameUpdate',()=>{
   beforeEach(() => {
     clear();

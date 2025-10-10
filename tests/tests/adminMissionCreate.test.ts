@@ -1,10 +1,10 @@
-import { adminMissionCreate } from '../mission.js';
-import { adminAuthRegister } from '../auth.js';
-import { clear } from '../other.js';
-import { errorCategories as EC } from '../testSamples.js';
+import { adminMissionCreate } from '../../src/mission';
+import { adminAuthRegister } from '../../src/auth';
+import { clear } from '../../src/other';
+import { errorCategories as EC } from '../../src/testSamples';
 
 describe('adminMissionCreate', () => {
-  let controlUserId;
+  let controlUserId: number;
   // Each test starts from a clean state and a new user
   beforeEach(() => {
     clear();
@@ -32,6 +32,7 @@ describe('adminMissionCreate', () => {
     });
   });
   test('fails if controlUserId is not an integer', () => {
+    // @ts-expect-error intentional invalid argument for validation coverage
     const res = adminMissionCreate('abc', 'Apollo', 'Moon mission', 'Moon');
     expect(res).toEqual(expect.objectContaining({
       error: expect.any(String),
