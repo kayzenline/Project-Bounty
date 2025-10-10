@@ -1,0 +1,36 @@
+{
+  "auth.ts": [
+    "dataStore.ts",
+    "helper.ts",
+    "testSamples.js"
+  ],
+  "config.json": [],
+  "dataStore.ts": [],
+  "helper.ts": [
+    "dataStore.ts",
+    "testSamples.js"
+  ],
+  "mission.ts": [
+    "dataStore.ts",
+    "helper.ts",
+    "testSamples.js"
+  ],
+  "missionTransferExample.ts": [
+    "dataStore.ts",
+    "testSamples.js"
+  ],
+  "newecho.test.ts": [
+    "config.json"
+  ],
+  "newecho.ts": [],
+  "other.ts": [
+    "dataStore.ts"
+  ],
+  "server.ts": [
+    "config.json",
+    "missionTransferExample.ts",
+    "newecho.ts",
+    "testSamples.js"
+  ],
+  "testSamples.js": []
+}
