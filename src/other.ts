@@ -5,9 +5,8 @@ import { getData } from './dataStore';
 // Reset application state
 // Function to clear all data (for testing)
 
-
 export function clear() {
-  let data = getData();
+  const data = getData();
   data.controlUsers = [];
   data.spaceMissions = [];
   data.nextControlUserId = 1;
