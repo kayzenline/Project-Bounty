@@ -1,19 +1,17 @@
 import request from 'sync-request-curl';
-const port = config.port;
-const url = config.url;
+import config from '../../src/config.json';
 
+const { port, url } = config;
 const SERVER_URL = `${url}:${port}`;
 
-
-export function adminMissionTransferRequest(controlUserSessionId, missiondId, userEmail) {
-    let response = request(
-        'POST',
-        `${SERVER_URL}/v1/admin/mission/${missiondId}/tranfer`,
-        {
-            json : {userEmail},
-            headers: {controlUserSessionId}
-        }
-    );
-
-    return response;
+export function adminMissionTransferRequest(
+  controlUserSessionId: string,
+  missionId: number,
+  userEmail: string
+) {
+  let response = request('POST', `${SERVER_URL}/v1/admin/mission/${missionId}/transfer`, {
+    json: { userEmail },
+    headers: { controlusersessionid: controlUserSessionId }
+  });
+  return response;
 }
