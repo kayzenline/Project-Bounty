@@ -3,8 +3,8 @@
  * 分析所有函数定义与调用关系，输出 .dot 可视化文件
  * by Nikki + GPT
  */
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 // ✅ 自动识别 src 目录
 const dir = path.resolve(__dirname);
@@ -16,7 +16,7 @@ function getAllFiles(dirPath) {
   for (const e of entries) {
     const full = path.join(dirPath, e.name);
     if (e.isDirectory()) files.push(...getAllFiles(full));
-    else if (e.name.endsWith(".ts")) files.push(full);
+    else if (e.name.endsWith('.ts')) files.push(full);
   }
   return files;
 }
@@ -34,7 +34,7 @@ function extractFunctionsAndCalls(code) {
   // 匹配函数调用
   const calls = [];
   defs.forEach(f => {
-    const regex = new RegExp(`\\b${f}\\s*\\(`, "g");
+    const regex = new RegExp(`\\b${f}\\s*\\(`, 'g');
     const matches = code.match(regex);
     if (matches) {
       matches.forEach(() => {
@@ -48,10 +48,10 @@ function extractFunctionsAndCalls(code) {
 
 // 构建函数依赖图
 const files = getAllFiles(dir);
-let graph = "digraph FunctionDeps {\n  rankdir=LR;\n  node [shape=box, style=rounded, fillcolor=lightyellow];\n";
+let graph = 'digraph FunctionDeps {\n  rankdir=LR;\n  node [shape=box, style=rounded, fillcolor=lightyellow];\n';
 
 for (const file of files) {
-  const code = fs.readFileSync(file, "utf8");
+  const code = fs.readFileSync(file, 'utf8');
   const { defs, calls } = extractFunctionsAndCalls(code);
 
   defs.forEach(f => {
@@ -62,8 +62,8 @@ for (const file of files) {
   });
 }
 
-graph += "}\n";
-fs.writeFileSync("function_graph.dot", graph);
-console.log("✅ 函数依赖图已生成：function_graph.dot");
-console.log("➡️ 运行以下命令导出图片：");
-console.log("   dot -Tpng function_graph.dot -o function_graph.png");
+graph += '}\n';
+fs.writeFileSync('function_graph.dot', graph);
+console.log('✅ 函数依赖图已生成：function_graph.dot');
+console.log('➡️ 运行以下命令导出图片：');
+console.log('   dot -Tpng function_graph.dot -o function_graph.png');
