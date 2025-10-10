@@ -1,5 +1,5 @@
 import request from 'sync-request-curl';
-const SERVER_URL = 'http://localhost:3000';
+const SERVER_URL = "http://127.0.0.1:3200";
 describe('HTTP tests for ControlUserdetails', () => {
 
   test('header is invalid', () => {
@@ -20,14 +20,28 @@ describe('HTTP tests for ControlUserdetails', () => {
     expect(body.errorCategory).toBe('INVALID_CREDENTIALS'); 
   });
 
+  test('User not found', () => {
+    const res = request('GET', `${SERVER_URL}/v1/admin/controluser/details`, {
+      headers: { ControlUserSessionId: '999' } 
+    });
+    const body = JSON.parse(res.body.toString());
+    expect(res.statusCode).toBe(401);
+    expect(body.error).toBe('User not found');
+    expect(body.errorCategory).toBe('INVALID_CREDENTIALS'); 
+  });
+
   test('request successfully ', () => {
     const res = request('GET', `${SERVER_URL}/v1/admin/controluser/details`, {
       headers: { ControlUserSessionId: '1' } 
     });
     const body = JSON.parse(res.body.toString());
+    const user = body.user;
     expect(res.statusCode).toBe(200);
-    expect(body.user).toBeDefined();
-    expect(body.user.controlUserId).toBe(1);
+    expect(user.controlUserId).toBe(1);
+    expect(user.email).toBe('strongbeard@starfleet.com.au');
+    expect(user.name).toBe('Bill Ryker'); 
+    expect(user.numSuccessfulLogins).toBe(3);
+    expect(user.numFailedPasswordsSinceLastLogin).toBe(1);//wait db.json
   });
 
 });
