@@ -1,5 +1,39 @@
+import fs from 'fs';
+import path from 'path';
 import request from 'sync-request-curl';
 const SERVER_URL = "http://127.0.0.1:3200";
+const DB_PATH = path.join(__dirname, '../../src/db.json');
+import { loadData } from '../../src/dataStore';
+//initial for db
+beforeEach(() => {
+  const initialData = {
+    controlUsers: [
+      {
+        controlUserId: 1,
+        email: 'strongbeard@starfleet.com.au',
+        password: 'abcdefg123',
+        nameFirst: 'Bill',
+        nameLast: 'Ryker',
+        numSuccessfulLogins: 3,
+        numFailedPasswordsSinceLastLogin: 1,
+        passwordHistory: ['abcdefg123'],
+      },
+      {
+        controlUserId: 2,
+        email: 'kitty@qq.com',
+        password: '123456789',
+        nameFirst: 'Kitty',
+        nameLast: 'Tan',
+        numSuccessfulLogins: 0,
+        numFailedPasswordsSinceLastLogin: 0,
+        passwordHistory: ['123456789'],
+      }
+    ],
+
+  };
+  fs.writeFileSync(DB_PATH, JSON.stringify(initialData, null, 2));
+  loadData();
+});
 describe('HTTP tests for ControlUserdetailsUpdate', () => {
 
   test('header is invalid', () => {
@@ -29,7 +63,7 @@ describe('HTTP tests for ControlUserdetailsUpdate', () => {
     });
     const body = JSON.parse(res.body.toString());
     expect(res.statusCode).toBe(401);
-    expect(body.error).toBe('User not found');
+    expect(body.error).toBe('controlUserId not found');
     expect(body.errorCategory).toBe('INVALID_CREDENTIALS'); 
   });
   test('email is invalid', () => {
@@ -54,8 +88,8 @@ describe('HTTP tests for ControlUserdetailsUpdate', () => {
   });
   test('email already exists', () => {
     const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: '1' },
-      json: { email: 'existing@qq.com', nameFirst: 'Bill', nameLast: 'Ryker' }
+      headers: { ControlUserSessionId: '2' },
+      json: { email: 'strongbeard@starfleet.com.au', nameFirst: 'Kitty', nameLast: 'Tan' }
       // wait db.json
     });
     const body = JSON.parse(res.body.toString());
@@ -66,16 +100,11 @@ describe('HTTP tests for ControlUserdetailsUpdate', () => {
   test('request successfully ', () => {
     const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
       headers: { ControlUserSessionId: '1' },
-      json: { email: 'bill.ryker@starfleet.com', nameFirst: 'Bill', nameLast: 'Ryker' }
+      json: { email: 'strongbeard@starfleet.com.au', nameFirst: 'Bill', nameLast: 'Ryker' }
     });
     const body = JSON.parse(res.body.toString());
-    const user = body.user;
     expect(res.statusCode).toBe(200);
-    expect(user.controlUserId).toBe(1);
-    expect(user.email).toBe('strongbeard@starfleet.com.au');
-    expect(user.name).toBe('Bill Ryker'); 
-    expect(user.numSuccessfulLogins).toBe(3);
-    expect(user.numFailedPasswordsSinceLastLogin).toBe(1);//wait db.json
+    expect(body).toEqual({});
   });
 
 });

@@ -1,7 +1,31 @@
+import fs from 'fs';
+import path from 'path';
 import request from 'sync-request-curl';
 const SERVER_URL = "http://127.0.0.1:3200";
-describe('HTTP tests for ControlUserdetails', () => {
+const DB_PATH = path.join(__dirname, '../../src/db.json');
+import { loadData } from '../../src/dataStore';
+//initial for db
+beforeEach(() => {
+  const initialData = {
+    controlUsers: [
+      {
+        controlUserId: 1,
+        email: 'strongbeard@starfleet.com.au',
+        password: 'abcdefg123',
+        nameFirst: 'Bill',
+        nameLast: 'Ryker',
+        numSuccessfulLogins: 3,
+        numFailedPasswordsSinceLastLogin: 1,
+        passwordHistory: ['abcdefg123'],
+      },
+    ],
 
+  };
+  fs.writeFileSync(DB_PATH, JSON.stringify(initialData, null, 2));
+  loadData();
+});
+
+describe('HTTP tests for ControlUserdetails', () => {
   test('header is invalid', () => {
     const res = request('GET', `${SERVER_URL}/v1/admin/controluser/details`);
     const body = JSON.parse(res.body.toString());
@@ -41,7 +65,7 @@ describe('HTTP tests for ControlUserdetails', () => {
     expect(user.email).toBe('strongbeard@starfleet.com.au');
     expect(user.name).toBe('Bill Ryker'); 
     expect(user.numSuccessfulLogins).toBe(3);
-    expect(user.numFailedPasswordsSinceLastLogin).toBe(1);//wait db.json
+    expect(user.numFailedPasswordsSinceLastLogin).toBe(1);
   });
 
 });
