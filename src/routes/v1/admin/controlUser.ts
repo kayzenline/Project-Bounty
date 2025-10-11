@@ -3,7 +3,7 @@ import { adminControlUserDetails,adminControlUserDetailsUpdate,adminControlUserP
 import { errorCategories as EC } from '../../../testSamples';
 const router = Router();
 
-router.get('/v1/admin/controluser/details', (req,res)=>{
+router.get('/details', (req,res)=>{
   const Id=req.header('ControlUserSessionId');
   if(!Id){
     return res.status(401).json({error:'ControlUserSessionId is invalid',errorCategory:EC.INVALID_CREDENTIALS});
@@ -19,7 +19,7 @@ router.get('/v1/admin/controluser/details', (req,res)=>{
     return res.status(200).json({user:result.user});
   }
 });//if head is invalid(sessionid->NaN)
-router.put('/v1/admin/controluser/details', (req,res)=>{
+router.put('/details', (req,res)=>{
   const Id=req.header('ControlUserSessionId');
   if(!Id){
     return res.status(401).json({error:'ControlUserSessionId is invalid',errorCategory:EC.INVALID_CREDENTIALS});
@@ -39,7 +39,7 @@ router.put('/v1/admin/controluser/details', (req,res)=>{
     }
     return res.status(200).json({});
 });
-router.put('/v1/admin/controluser/password', (req,res)=>{
+router.put('/password', (req,res)=>{
   const Id=req.header('ControlUserSessionId');
   if(!Id){
     return res.status(401).json({error:'ControlUserSessionId is invalid',errorCategory:EC.INVALID_CREDENTIALS});

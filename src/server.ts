@@ -54,7 +54,7 @@ app.get('/echo', (req: Request, res: Response) => {
 });
 
 // Example SWAGGER Route request
-app.post('/v1/admin/mission/:missionid/transfer', (req: Request, res: Response) => {
+/*app.post('/v1/admin/mission/:missionid/transfer', (req: Request, res: Response) => {
   // 1. Prepare inputs (from header, body, query, path)
   // 2. check for 401 (INVALID_CREDENTIALS) or 403 (INACCESSIBLE_VALUES) errors
   // 3. Run your logic
@@ -83,7 +83,7 @@ app.post('/v1/admin/mission/:missionid/transfer', (req: Request, res: Response) 
 
     }
   }
-});
+});*/
 
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================

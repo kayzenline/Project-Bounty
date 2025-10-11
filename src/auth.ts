@@ -10,7 +10,7 @@ import {
   findUserById,
   normalizeError,
 } from './helper';
-import { getData } from './dataStore';
+import { getData,loadData } from './dataStore';
 import { errorCategories as EC } from './testSamples';
 
 // Register a mission control user
@@ -110,6 +110,7 @@ function adminAuthLogin(email: string, password: string) {
 }
 
 function adminControlUserDetails(controlUserId: number) {
+  loadData();
   const data = getData();
   const user = data.controlUsers.find(a => a.controlUserId === controlUserId);
   if (!user) {
@@ -143,7 +144,9 @@ function adminControlUserDetailsUpdate(controlUserId: number, email: string, nam
     }
 
     const data = getData();
-    const exists = data.controlUsers.some(User => User.email === email);
+    const exists = data.controlUsers.some(
+      User => User.email === email && User.controlUserId !== controlUserId
+    );
     if (exists) {
       // something woring here
       const e = new Error('excluding the current authorised user') as ErrorWithCode;
@@ -169,7 +172,7 @@ function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: stri
   if (!user) {
     return { error: 'invalid user', errorCategory: EC.INVALID_CREDENTIALS };
   }
-
+f
   if (user.password !== oldPassword) {
     return { error: 'wrong old password', errorCategory: 'BAD_INPUT' };
   }
