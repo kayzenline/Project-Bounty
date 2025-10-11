@@ -172,7 +172,6 @@ function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: stri
   if (!user) {
     return { error: 'invalid user', errorCategory: EC.INVALID_CREDENTIALS };
   }
-f
   if (user.password !== oldPassword) {
     return { error: 'wrong old password', errorCategory: 'BAD_INPUT' };
   }
@@ -181,6 +180,16 @@ f
     return { error: 'same as old', errorCategory: 'BAD_INPUT' };
   }
 
+  user.passwordHistory = user.passwordHistory || [];
+  if (!user.passwordHistory.includes(user.password)) {
+    user.passwordHistory.push(user.password);
+  }
+  const reused = data.controlUsers.some(u =>
+    (u.passwordHistory || []).includes(newPassword)
+  );
+  if (reused) {
+    return { error: 'password reused', errorCategory: EC.BAD_INPUT };
+  }
   const strong =
     typeof newPassword === 'string' &&
     newPassword.length >= 8 &&
@@ -188,11 +197,6 @@ f
     /[0-9]/.test(newPassword);
   if (!strong) {
     return { error: 'weak password', errorCategory: 'BAD_INPUT' };
-  }
-
-  user.passwordHistory = user.passwordHistory || [user.password];
-  if (user.passwordHistory.includes(newPassword)) {
-    return { error: 'password reused', errorCategory: 'BAD_INPUT' };
   }
 
   user.password = newPassword;
