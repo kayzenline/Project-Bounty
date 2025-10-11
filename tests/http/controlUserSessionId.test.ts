@@ -22,7 +22,7 @@ describe('POST /v1/admin/mission', () => {
   // status code 400 If any of the following are true:
   describe('invalid cases', () => {
     test('Name contains invalid characters. Valid characters are alphanumeric and spaces', () => {
-
+      
     })
 
     test('Name is either less than 3 characters long or more than 30 characters long', () => {
