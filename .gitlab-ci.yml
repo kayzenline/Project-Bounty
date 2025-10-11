@@ -19,12 +19,11 @@ tests:
     - main
     - merge_requests
   script:
-    - npm install ts-node typescript --save-dev
-    - export FORCE_STRING_EC=true
+   
     - SERVER_LOG=$(mktemp)
     - npm run start >& $SERVER_LOG &
     - timeout 10s grep -q "⚡️ Server started on port" <(tail -f $SERVER_LOG) || (cat $SERVER_LOG && exit 1)
-    - timeout -s SIGINT 180s npx ts-node --transpile-only node_modules/.bin/jest --testPathPattern=tests/http || (cat $SERVER_LOG && exit 1)
+    - timeout -s SIGINT 180s npx jest --testPathPattern=tests/http || (cat $SERVER_LOG && exit 1)
     - kill -SIGINT %1
     - sleep 2
     - cat $SERVER_LOG
