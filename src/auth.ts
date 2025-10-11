@@ -184,9 +184,7 @@ function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: stri
   if (!user.passwordHistory.includes(user.password)) {
     user.passwordHistory.push(user.password);
   }
-  const reused = data.controlUsers.some(u =>
-    (u.passwordHistory || []).includes(newPassword)
-  );
+  const reused = (user.passwordHistory || []).includes(newPassword);
   if (reused) {
     return { error: 'password reused', errorCategory: EC.BAD_INPUT };
   }

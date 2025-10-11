@@ -11,12 +11,12 @@ beforeEach(() => {
       {
         controlUserId: 1,
         email: 'strongbeard@starfleet.com.au',
-        password: 'abcdefg123',
+        password: 'StrongPass123',
         nameFirst: 'Bill',
         nameLast: 'Ryker',
         numSuccessfulLogins: 3,
         numFailedPasswordsSinceLastLogin: 1,
-        passwordHistory: ['abcdefg123'],
+        passwordHistory: ['123456789'],
       },
       {
         controlUserId: 2,
@@ -26,7 +26,7 @@ beforeEach(() => {
         nameLast: 'Tan',
         numSuccessfulLogins: 0,
         numFailedPasswordsSinceLastLogin: 0,
-        passwordHistory: ['123456789'],
+        passwordHistory: ['StrongerPass345'],
       }
     ],
 
@@ -79,7 +79,7 @@ describe('HTTP tests for ControlUserPasswordUpdate', () => {
   test('same as old', () => {
     const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/password`, {
       headers: { ControlUserSessionId: '1' },
-      json: { oldPassword:'abcdefg123',newPassword:'abcdefg123'}
+      json: { oldPassword:'StrongPass123',newPassword:'StrongPass123'}
     });
     const body = JSON.parse(res.body.toString());
     expect(res.statusCode).toBe(400);
@@ -89,7 +89,7 @@ describe('HTTP tests for ControlUserPasswordUpdate', () => {
   test('weak password', () => {
     const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/password`, {
       headers: { ControlUserSessionId: '1' },
-      json: { oldPassword:'abcdefg123',newPassword:'123'}
+      json: { oldPassword:'StrongPass123',newPassword:'000'}
     });
     const body = JSON.parse(res.body.toString());
     expect(res.statusCode).toBe(400);
@@ -99,7 +99,7 @@ describe('HTTP tests for ControlUserPasswordUpdate', () => {
   test('password reused', () => {
     const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/password`, {
       headers: { ControlUserSessionId: '1' },
-      json: { oldPassword:'abcdefg123',newPassword:'123456789'}
+      json: { oldPassword:'StrongPass123',newPassword:'123456789'}
     });
     const body = JSON.parse(res.body.toString());
     expect(res.statusCode).toBe(400);
@@ -109,7 +109,7 @@ describe('HTTP tests for ControlUserPasswordUpdate', () => {
   test('request successfully ', () => {
     const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/password`, {
       headers: { ControlUserSessionId: '1' },
-      json: { oldPassword:'abcdefg123',newPassword:'1234abcd!!@@kkk'}
+      json: { oldPassword:'StrongPass123',newPassword:'1234abcd!!@@kkk'}
     });
     const body = JSON.parse(res.body.toString());
     expect(res.statusCode).toBe(200);

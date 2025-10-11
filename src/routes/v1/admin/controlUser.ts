@@ -14,10 +14,12 @@ router.get('/details', (req,res)=>{
   }
   const result=adminControlUserDetails(sessionId);
   if('error' in result){
-    return res.status(401).json({error:result.error,errorCategory:result.errorCategory});
-  }else{
-    return res.status(200).json({user:result.user});
+    if (result.error === EC.BAD_INPUT || result.errorCategory==='BAD_INPUT') {
+      return res.status(400).json({ error: result.error, errorCategory: result.errorCategory });
+    }
+    return res.status(401).json({ error: result.error, errorCategory: result.errorCategory });
   }
+  return res.status(200).json({ user: result.user });
 });//if head is invalid(sessionid->NaN)
 router.put('/details', (req,res)=>{
   const Id=req.header('ControlUserSessionId');
@@ -31,11 +33,13 @@ router.put('/details', (req,res)=>{
     const {email,nameFirst,nameLast}=req.body;
     const result=adminControlUserDetailsUpdate(sessionId,email,nameFirst,nameLast);
     if('error' in result){
-      if(result.errorCategory===EC.BAD_INPUT){
-        return res.status(400).json({error:result.error,errorCategory:result.errorCategory});
-      }else{
-          return res.status(401).json({error:result.error,errorCategory:result.errorCategory})
+      if(result.errorCategory===EC.BAD_INPUT||result.errorCategory==='BAD_INPUT'){
+        return res.status(400).json({error:result.error,errorCategory:result.errorCategory})
+    }
+      if(result.errorCategory===EC.INVALID_CREDENTIALS||result.errorCategory==='INVALID_CREDENTIALS'){
+        return res.status(401).json({error:result.error,errorCategory:result.errorCategory});
       }
+      return res.status(400).json({error:result.error,errorCategory:result.errorCategory})
     }
     return res.status(200).json({});
 });
@@ -51,11 +55,13 @@ router.put('/password', (req,res)=>{
   const{oldPassword,newPassword}=req.body;
   const result=adminControlUserPasswordUpdate(sessionId,oldPassword,newPassword);
   if('error' in result){
-    if(result.errorCategory===EC.INVALID_CREDENTIALS){
+    if(result.errorCategory===EC.BAD_INPUT||result.errorCategory==='BAD_INPUT'){
+      return res.status(400).json({error:result.error,errorCategory:result.errorCategory})
+  }
+    if(result.errorCategory===EC.INVALID_CREDENTIALS||result.errorCategory==='INVALID_CREDENTIALS'){
       return res.status(401).json({error:result.error,errorCategory:result.errorCategory});
-    }else{
-        return res.status(400).json({error:result.error,errorCategory:result.errorCategory})
     }
+    return res.status(400).json({error:result.error,errorCategory:result.errorCategory})
   }
   return res.status(200).json({});
 });
