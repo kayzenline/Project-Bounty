@@ -15,3 +15,45 @@ export function adminMissionTransferRequest(
   });
   return response;
 }
+
+export function userRegister(
+  email: string,
+  passward: string,
+  nameFirst: string,
+  nameLast: string
+) {
+  const response = request('POST', `${SERVER_URL}/v1/admin/auth/register`, {
+    json: {
+      email,
+      passward,
+      nameFirst,
+      nameLast
+    }
+  });
+
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
+}
+
+export function controlUserSessionId(
+  sessionId: string,
+  name: string,
+  description: string,
+  target: string
+) {
+  const response = request('POST', `${SERVER_URL}/v1/admin/mission`, {
+    json: {
+      name,
+      description,
+      target
+    },
+    headers: { controlusersessionid: sessionId }
+  });
+
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
+}
