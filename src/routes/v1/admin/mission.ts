@@ -10,8 +10,8 @@ router.get('/list', notImplementedHandler);
 
 
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
-  const controlUserSessionId = (req.header('controlUserSessionId') || '').trim();
-  const { name, description, target } = req.body || {};
+  const controlUserSessionId = (req.header('controlUserSessionId'));
+  const { name, description, target } = req.body;
 
   try {
     if (!controlUserSessionId) {
@@ -25,7 +25,17 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 
     const result = adminMissionCreate(session.controlUserId, name, description, target);
     if ('error' in result) {
-      const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories] ?? 500;
+      let status: number;
+
+      if (result.errorCategory in httpToErrorCategories) {
+
+        status = httpToErrorCategories[
+          result.errorCategory as keyof typeof httpToErrorCategories
+        ];
+      } else {
+
+        status = 500;
+      }
       return res.status(status).json({ error: result.error });
     }
 
