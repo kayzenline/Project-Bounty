@@ -37,6 +37,25 @@ export function userRegister(
   };
 }
 
+export function userLogin(email: string, password: string) {
+  const res = request('POST', `${SERVER_URL}/v1/admin/auth/login`, {
+    json: {
+      email,
+      password,
+    },
+  });
+  return JSON.parse(res.body.toString())
+}
+
+export function userLogout(token: string) {
+  const res = request('POST', `${SERVER_URL}/v1/admin/auth/logout`, {
+    json: {
+      token,
+    },
+  });
+  return JSON.parse(res.body.toString())
+}
+
 export function controlUserSessionId(
   sessionId: string,
   name: string,
