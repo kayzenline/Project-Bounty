@@ -48,7 +48,4 @@ describe('adminMissionCreate', () => {
       errorCategory: EC.BAD_INPUT,
     });
   });
-
-
-
 });

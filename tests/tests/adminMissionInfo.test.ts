@@ -52,8 +52,5 @@ describe('adminMissionInfo', () => {
       error: expect.any(String),
       errorCategory: EC.INACCESSIBLE_VALUE
     });
-
-
   });
-
 });

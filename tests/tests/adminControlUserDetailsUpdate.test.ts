@@ -76,7 +76,7 @@ describe('adminMissionTargetUpdate', () => {
       { nameFirst: 'Tony', nameLast: '@Stark' }
     ];
 
-    for (let names of nameList) {
+    for (const names of nameList) {
       const result = adminControlUserDetailsUpdate(controlUserId, email, names.nameFirst, names.nameLast);
       expect(result.error).toContain('this name is invalid');
       // reset data before test
