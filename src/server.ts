@@ -116,3 +116,9 @@ process.on('SIGINT', () => {
     process.exit();
   });
 });
+
+export function stopServer() {
+  return new Promise<void>((resolve) => {
+    server.close(() => resolve());
+  });
+}
