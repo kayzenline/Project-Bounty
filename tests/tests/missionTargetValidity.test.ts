@@ -16,7 +16,7 @@ describe('missionTargetValidity (spec: string, empty allowed, <= 100 chars)', ()
   });
 
   test('non-string throws', () => {
-    expect(() => 
+    expect(() =>
       // @ts-expect-error testing invalid number argument
       missionTargetValidity(456)).toThrow('target must be a string');
     expect(() => missionTargetValidity(undefined)).toThrow('target must be a string');
