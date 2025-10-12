@@ -1,30 +1,44 @@
 import { adminAuthRegisterRequest } from './requestHelpers';
 import { v4 as uuid } from 'uuid';
 import config from '../../src/config.json';
-import { execSync } from 'child_process';
+// no need for curl/execSync; use fetch for readiness checks
 
 // Start server once for the test suite
-beforeAll(() => {
-  // Importing starts the server
-  require('../../src/server');
+let serverStartedByTest = false;
+
+beforeAll(async () => {
   const { url, port } = config as { url: string; port: string };
   const base = `${url}:${port}`;
-  // Poll until server responds
-  for (let i = 0; i < 20; i++) {
-    try {
-      execSync(`curl -s '${base}/echo?echo=ready'`, { stdio: 'pipe' });
-      break;
-    } catch {
-      // small delay
-      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 100);
+
+  // Check if server is already running
+  let reachable = false;
+  try {
+    const r = await fetch(`${base}/echo?echo=ready`);
+    reachable = r.ok;
+  } catch {
+    // unreachable; we'll start it below
+  }
+
+  if (!reachable) {
+    // Start server for tests
+    require('../../src/server');
+    serverStartedByTest = true;
+    // Poll until server responds
+    for (let i = 0; i < 40; i++) {
+      try {
+        const r = await fetch(`${base}/echo?echo=ready`);
+        if (r.ok) break;
+      } catch {}
+      await new Promise(res => setTimeout(res, 100));
     }
   }
 });
 
-
 afterAll(async () => {
-  const { stopServer } = require('../../src/server');
-  await stopServer();
+  if (serverStartedByTest) {
+    const { stopServer } = require('../../src/server');
+    await stopServer();
+  }
 });
 
 function uniqueEmail(prefix = 'user') {
