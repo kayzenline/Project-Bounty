@@ -196,6 +196,7 @@ function generateSessionId() {
 function findControlUserIdFromSession(controlUserSessionId: string) {
   return getData().sessions.find(s => s.controlUserSessionId === controlUserSessionId).controlUserId;
 }
+
 export {
   controlUserIdGen,
   isValidPassword,

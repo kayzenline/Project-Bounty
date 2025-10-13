@@ -1,5 +1,5 @@
+import request from 'sync-request-curl';
 import config from '../../src/config.json';
-
 const { port, url } = config;
 const SERVER_URL = `${url}:${port}`;
 
@@ -38,4 +38,71 @@ export async function adminAuthRegisterRequest(
   return httpRequest('POST', `${SERVER_URL}/v1/admin/auth/register`, {
     email, password, nameFirst, nameLast
   });
+}
+
+export function userRegister(
+  email: string,
+  password: string,
+  nameFirst: string,
+  nameLast: string
+) {
+  const response = request('POST', `${SERVER_URL}/v1/admin/auth/register`, {
+    json: {
+      email,
+      password,
+      nameFirst,
+      nameLast
+    }
+  });
+
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
+}
+
+/* export function userLogin(email: string, password: string) {
+  const res = request('POST', `${SERVER_URL}/v1/admin/auth/login`, {
+    json: {
+      email,
+      password,
+    },
+  });
+  return JSON.parse(res.body.toString())
+}
+
+export function userLogout(token: string) {
+  const res = request('POST', `${SERVER_URL}/v1/admin/auth/logout`, {
+    json: {
+      token,
+    },
+  });
+  return JSON.parse(res.body.toString())
+} */
+
+export function controlUserSessionId(
+  sessionId: string,
+  name: string,
+  description: string,
+  target: string
+) {
+  const response = request('POST', `${SERVER_URL}/v1/admin/mission`, {
+    json: {
+      name,
+      description,
+      target
+    },
+    headers: { controlusersessionid: sessionId }
+  });
+
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
+}
+
+
+export function clearRequest() {
+  const res = request('DELETE', `${SERVER_URL}/clear/v1`);
+  return res;
 }

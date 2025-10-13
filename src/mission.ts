@@ -13,8 +13,8 @@ import {
 } from './helper';
 import { errorCategories as EC } from './testSamples';
 
-function buildError(message: string, code: string) {
-  return new ServiceError(message, code);
+function buildError(message: string, code: string): never {
+  throw new ServiceError(message, code);
 }
 
 function adminMissionList(controlUserId: number) {
@@ -72,7 +72,7 @@ function adminMissionCreate(controlUserId: number, name: string, description: st
     );
     // check duplicated
     if (duplicate) {
-      buildError('mission name already exists', EC.BAD_INPUT);
+      throw buildError('mission name already exists', EC.BAD_INPUT);
     }
 
     const missionId = missionIdGen();
