@@ -8,7 +8,6 @@ const router = Router();
 
 router.get('/list', notImplementedHandler);
 
-
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
   const controlUserSessionId = (req.header('controlUserSessionId'));
   const { name, description, target } = req.body;
@@ -28,19 +27,16 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
       let status: number;
 
       if (result.errorCategory in httpToErrorCategories) {
-
         status = httpToErrorCategories[
           result.errorCategory as keyof typeof httpToErrorCategories
         ];
       } else {
-
         status = 500;
       }
       return res.status(status).json({ error: result.error });
     }
 
     res.status(200).json(result);
-
   } catch (error) {
     next(error);
   }
