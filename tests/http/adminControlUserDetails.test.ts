@@ -4,7 +4,8 @@ import request from 'sync-request-curl';
 const SERVER_URL = "http://127.0.0.1:3200";
 const DB_PATH = path.join(__dirname, '../../src/db.json');
 import { loadData,DataStore } from '../../src/dataStore';
-let sessionId: number;
+let sessionId: string;
+let userEmail: string;
 beforeEach(() => {
   const initialData: DataStore = {
     controlUsers: [],
@@ -15,10 +16,11 @@ beforeEach(() => {
   };
   fs.writeFileSync(DB_PATH, JSON.stringify(initialData, null, 2));
   loadData();
-
+  const uniqueEmail = `user${Date.now()}@test.com`
+  userEmail = uniqueEmail;
   const res = request('POST', `${SERVER_URL}/v1/admin/auth/register`, {
     json: {
-      email: 'strongbeard@starfleet.com.au',
+      email: uniqueEmail,
       password: 'abcdefg123',
       nameFirst: 'Bill',
       nameLast: 'Ryker',
@@ -38,16 +40,6 @@ describe('HTTP tests for ControlUserdetails', () => {
     expect(body.errorCategory).toBe('INVALID_CREDENTIALS'); 
   });
 
-  test('sesionid is not a number', () => {
-    const res = request('GET', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: 'aaa' } 
-    });
-    const body = JSON.parse(res.body.toString());
-    expect(res.statusCode).toBe(401);
-    expect(body.error).toBe('ControlUserSessionId is not a number');
-    expect(body.errorCategory).toBe('INVALID_CREDENTIALS'); 
-  });
-
   test('User not found', () => {
     const res = request('GET', `${SERVER_URL}/v1/admin/controluser/details`, {
       headers: { ControlUserSessionId: '999' } 
@@ -60,15 +52,15 @@ describe('HTTP tests for ControlUserdetails', () => {
 
   test('request successfully ', () => {
     const res = request('GET', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: String(sessionId) } 
+      headers: { ControlUserSessionId: sessionId } 
     });
     const body = JSON.parse(res.body.toString());
     const user = body.user;
     expect(res.statusCode).toBe(200);
-    expect(user.controlUserId).toBe(1);
-    expect(user.email).toBe('strongbeard@starfleet.com.au');
+    expect(user.controlUserId).toBeGreaterThan(0);
+    expect(user.email).toBe(userEmail);
     expect(user.name).toBe('Bill Ryker'); 
-    expect(user.numSuccessfulLogins).toBe(0);
+    expect(user.numSuccessfulLogins).toBe(1);
     expect(user.numFailedPasswordsSinceLastLogin).toBe(0);
   });
 

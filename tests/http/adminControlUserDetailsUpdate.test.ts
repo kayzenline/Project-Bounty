@@ -4,8 +4,10 @@ import request from 'sync-request-curl';
 const SERVER_URL = "http://127.0.0.1:3200";
 const DB_PATH = path.join(__dirname, '../../src/db.json');
 import { loadData,DataStore } from '../../src/dataStore';
-let sessionId1: number;
-let sessionId2: number;
+let sessionId1: string;
+let sessionId2: string;
+let userEmail1: string; 
+let userEmail2: string; 
 beforeEach(() => {
   const initialData :DataStore= {
     controlUsers: [],
@@ -17,9 +19,11 @@ beforeEach(() => {
 
   fs.writeFileSync(DB_PATH, JSON.stringify(initialData, null, 2));
   loadData();
+  const uniqueEmail = `user${Date.now()}@test.com`
+  userEmail1 = uniqueEmail;
   const res1 = request('POST', `${SERVER_URL}/v1/admin/auth/register`, {
     json: {
-      email: 'strongbeard@starfleet.com.au',
+      email: uniqueEmail,
       password: 'abcdefg123',
       nameFirst: 'Bill',
       nameLast: 'Ryker',
@@ -27,10 +31,12 @@ beforeEach(() => {
   });
   const body1 = JSON.parse(res1.body.toString());
   sessionId1 = body1.controlUserSessionId;
+  const uniqueEmail2 = `kitty${Date.now()}@qq.com`;
+  userEmail2 = uniqueEmail2; 
   const res2 = request('POST', `${SERVER_URL}/v1/admin/auth/register`, {
     json: {
-      email: 'kitty@qq.com',
-      password: '123456789',
+      email:uniqueEmail2,
+      password: 'Kitty123456',
       nameFirst: 'Kitty',
       nameLast: 'Tan',
     },
@@ -50,16 +56,6 @@ describe('HTTP tests for ControlUserdetailsUpdate', () => {
     expect(body.errorCategory).toBe('INVALID_CREDENTIALS'); 
   });
 
-  test('sesionid is not a number', () => {
-    const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: 'aaa' },
-      json:{email:'1234@qq.com',nameFirst:'Ka',nameLast:'Ka'}
-    });
-    const body = JSON.parse(res.body.toString());
-    expect(res.statusCode).toBe(401);
-    expect(body.error).toBe('ControlUserSessionId is not a number');
-    expect(body.errorCategory).toBe('INVALID_CREDENTIALS'); 
-  });
   test('User not found', () => {
     const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
       headers: { ControlUserSessionId: '999' } ,
@@ -72,7 +68,7 @@ describe('HTTP tests for ControlUserdetailsUpdate', () => {
   });
   test('email is invalid', () => {
     const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: String(sessionId1) },
+      headers: { ControlUserSessionId: sessionId1 },
       json: { email: 'emailxxx', nameFirst: 'Bill', nameLast: 'Ryker' }
     });
     const body = JSON.parse(res.body.toString());
@@ -82,7 +78,7 @@ describe('HTTP tests for ControlUserdetailsUpdate', () => {
   });
   test('name is invalid', () => {
     const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: String(sessionId1)},
+      headers: { ControlUserSessionId: sessionId1},
       json: { email: 'kitty123@qq.com', nameFirst: '', nameLast: '' }
     });
     const body = JSON.parse(res.body.toString());
@@ -92,19 +88,21 @@ describe('HTTP tests for ControlUserdetailsUpdate', () => {
   });
   test('email already exists', () => {
     const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: String(sessionId2)  },
-      json: { email: 'strongbeard@starfleet.com.au', nameFirst: 'Kitty', nameLast: 'Tan' }
+      headers: { ControlUserSessionId: sessionId2  },
+      json: { email: userEmail1, nameFirst: 'Kitty', nameLast: 'Tan' }
       // wait db.json
     });
     const body = JSON.parse(res.body.toString());
+  
     expect(res.statusCode).toBe(400);
     expect(body.error).toBe('excluding the current authorised user');
     expect(body.errorCategory).toBe('BAD_INPUT');
   });
   test('request successfully ', () => {
+    const uniqueNewEmail = `newemail${Date.now()}@test.com`;
     const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: String(sessionId2) },
-      json: { email: 'strongbeard@starfleet.com.au', nameFirst: 'Bill', nameLast: 'Ryker' }
+      headers: { ControlUserSessionId: sessionId2 },
+      json: { email: uniqueNewEmail, nameFirst: 'Bill', nameLast: 'Ryker' }
     });
     const body = JSON.parse(res.body.toString());
     expect(res.statusCode).toBe(200);
