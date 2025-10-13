@@ -1,4 +1,3 @@
-import request from 'sync-request-curl';
 import config from '../../src/config.json';
 
 const { port, url } = config;
