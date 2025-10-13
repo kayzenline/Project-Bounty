@@ -11,7 +11,7 @@ import {
   normalizeError,
   generateSessionId,
 } from './helper';
-import { getData,loadData,setData } from './dataStore';
+import { getData, loadData, setData } from './dataStore';
 import { errorCategories as EC } from './testSamples';
 
 // Register a mission control user
@@ -179,7 +179,7 @@ function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: stri
   const data = getData();
   const user = (data.controlUsers || []).find(u => u.controlUserId === controlUserId);
   if (!user) {
-    return { error: 'invalid user', errorCategory: EC.INVALID_CREDENTIALS };
+    return { error: 'invalid user', errorCategory: 'INVALID_CREDENTIALS' };
   }
   if (user.password !== oldPassword) {
     return { error: 'wrong old password', errorCategory: 'BAD_INPUT' };
@@ -195,7 +195,7 @@ function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: stri
   }
   const reused = (user.passwordHistory || []).includes(newPassword);
   if (reused) {
-    return { error: 'password reused', errorCategory: EC.BAD_INPUT };
+    return { error: 'password reused', errorCategory: 'BAD_INPUT' };
   }
   const strong =
     typeof newPassword === 'string' &&
