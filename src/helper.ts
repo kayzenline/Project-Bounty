@@ -1,5 +1,6 @@
 import { getData } from './dataStore';
 import { errorCategories as EC } from './testSamples';
+import { v4 as uuidGen } from 'uuid';
 // Helper function to generate unique control user ID
 function controlUserIdGen() {
   const data = getData();
@@ -28,6 +29,7 @@ function isValidName(name: string) {
 }
 
 // Helper function to validate email
+
 function isValidEmail(email: string) {
   // Basic email validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -46,27 +48,28 @@ function findUserById(controlUserId: number) {
   return data.controlUsers.find(user => user.controlUserId === controlUserId);
 }
 
+class ServiceError extends Error {
+  errorCategory: string;
+  constructor(error: string, errorCategory: string) {
+    super(error);
+    this.errorCategory = errorCategory;
+  }
+}
+
 // Helper function to check if control user's ID is valid or invalid
 function controlUserIdCheck(controlUserId: number) {
-  //user id must be integer
+  // user id must be integer
   if (!Number.isInteger(controlUserId) || controlUserId <= 0) {
-    throw {
-      error: 'controlUserId must be integer',
-      errorCategory: EC.BAD_INPUT,
-    };
+    throw new ServiceError('sofjds', EC.BAD_INPUT);
   }
 
   const data = getData();
 
-  //user id must correspond to an existing user
+  // user id must correspond to an existing user
   const user = data.controlUsers.find(u => u.controlUserId === controlUserId);
   if (!user) {
-    throw {
-      error: 'controlUserId not found',
-      errorCategory: EC.INVALID_CREDENTIALS,
-    };
+    throw new ServiceError('controlUserId not found', EC.INVALID_CREDENTIALS);
   }
-
 
   return user;
 }
@@ -74,24 +77,24 @@ function controlUserIdCheck(controlUserId: number) {
 // Validate mission name and return the trimmed value
 function missionNameValidity(name: string, { minLen = 3, maxLen = 30 } = {}) {
   if (typeof name !== 'string') {
-    throw { error: 'mission name must be a string', errorCategory: EC.BAD_INPUT };
+    throw new ServiceError('mission name must be a string', EC.BAD_INPUT);
   }
 
   const trimmed = name.trim();
   if (trimmed.length === 0) {
-    throw { error: 'mission name cannot be empty', errorCategory: EC.BAD_INPUT };
+    throw new ServiceError('mission name cannot be empty', EC.BAD_INPUT);
   }
 
   if (trimmed.length < minLen) {
-    throw { error: 'mission name is too short', errorCategory: EC.BAD_INPUT };
+    throw new ServiceError('mission name is too short', EC.BAD_INPUT);
   }
 
   if (trimmed.length > maxLen) {
-    throw { error: 'mission name is too long', errorCategory: EC.BAD_INPUT };
+    throw new ServiceError('mission name is too long', EC.BAD_INPUT);
   }
 
   if (!/^[a-zA-Z0-9\s\-']+$/.test(trimmed)) {
-    throw { error: 'mission name contains invalid characters', errorCategory: EC.BAD_INPUT };
+    throw new ServiceError('mission name contains invalid characters', EC.BAD_INPUT);
   }
 
   return trimmed;
@@ -118,9 +121,7 @@ function missionDescriptionValidity(description: string, maxlen = 400) {
 
   // check description length
   if (description.length > maxlen) {
-    const e = new Error('description is too long') as CustomError;
-    e.code = EC.BAD_INPUT;
-    throw e;
+    throw new ServiceError('desdjfiosdf', EC.BAD_INPUT);
   }
 
   return description;
@@ -130,16 +131,12 @@ function missionDescriptionValidity(description: string, maxlen = 400) {
 function missionTargetValidity(target: string, maxlen = 100) {
   // check type of target
   if (typeof target !== 'string') {
-    const e = new Error('target must be a string') as CustomError;
-    e.code = EC.BAD_INPUT;
-    throw e;
+    throw new ServiceError('target must be a string', EC.BAD_INPUT);
   }
 
   // check target length
   if (target.length > maxlen) {
-    const e = new Error('target is too long') as CustomError;
-    e.code = EC.BAD_INPUT;
-    throw e;
+    throw new ServiceError('target is too long', EC.BAD_INPUT);
   }
 
   return target;
@@ -147,34 +144,19 @@ function missionTargetValidity(target: string, maxlen = 100) {
 
 // Helper function for checking if missionId is valid or invalid
 function missionIdCheck(missionId: number) {
-  //missionId must be integer
+  // missionId must be integer
   if (!Number.isInteger(missionId) || missionId < 0) {
-    throw { error: 'missionId must be integer', errorCategory: EC.BAD_INPUT };
+    throw new ServiceError('missionId must be integer', EC.BAD_INPUT);
   }
+
   const data = getData();
-  //missionId must correspond to an existing spaceMission
+  // missionId must correspond to an existing spaceMission
   const mission = data.spaceMissions.find(sm => sm.missionId === missionId);
   if (!mission) {
-    throw { error: 'missionId not found', errorCategory: EC.INACCESSIBLE_VALUE };
+    throw new ServiceError('missionId not found', EC.INACCESSIBLE_VALUE);
   }
   return mission;
 }
-
-export {
-  controlUserIdGen,
-  isValidPassword,
-  isValidName,
-  isValidEmail,
-  findUserByEmail,
-  findUserById,
-  controlUserIdCheck,
-  missionNameValidity,
-  missionIdGen,
-  missionDescriptionValidity,
-  missionTargetValidity,
-  missionIdCheck,
-};
-
 // Normalize thrown errors (either Error or {error, errorCategory})
 type NormalizedErrorSource = Partial<{
   error: unknown;
@@ -187,7 +169,7 @@ function isNormalizedErrorSource(value: unknown): value is NormalizedErrorSource
   return typeof value === 'object' && value !== null;
 }
 
-export function normalizeError(err: unknown) {
+function normalizeError(err: unknown) {
   if (isNormalizedErrorSource(err)) {
     if (err.error !== undefined || err.errorCategory !== undefined) {
       const message = err.error ?? err.message ?? 'Unknown error';
@@ -206,3 +188,29 @@ export function normalizeError(err: unknown) {
 
   return { error: String(err), errorCategory: EC.UNKNOWN };
 }
+
+function generateSessionId() {
+  return uuidGen();
+}
+
+function findControlUserIdFromSession(controlUserSessionId: string) {
+  return getData().sessions.find(s => s.controlUserSessionId === controlUserSessionId).controlUserId;
+}
+export {
+  controlUserIdGen,
+  isValidPassword,
+  isValidName,
+  isValidEmail,
+  findUserByEmail,
+  findUserById,
+  controlUserIdCheck,
+  missionNameValidity,
+  missionIdGen,
+  missionDescriptionValidity,
+  missionTargetValidity,
+  missionIdCheck,
+  normalizeError,
+  generateSessionId,
+  ServiceError,
+  findControlUserIdFromSession
+};

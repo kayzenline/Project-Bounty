@@ -9,11 +9,12 @@ import {
   missionTargetValidity,
   missionIdGen,
   normalizeError,
+  ServiceError
 } from './helper';
 import { errorCategories as EC } from './testSamples';
 
 function buildError(message: string, code: string) {
-  throw { error: message, errorCategory: code };
+  return new ServiceError(message, code);
 }
 
 function adminMissionList(controlUserId: number) {
@@ -37,7 +38,7 @@ function adminMissionList(controlUserId: number) {
   }
 }
 
-//remove mission
+// remove mission
 function adminMissionRemove(controlUserId: number, missionId: number) {
   try {
     const user = controlUserIdCheck(controlUserId);
@@ -98,7 +99,6 @@ function adminMissionCreate(controlUserId: number, name: string, description: st
   }
 }
 
-
 function adminMissionInfo(controlUserId: number, missionId: number) {
   try {
     const user = controlUserIdCheck(controlUserId);
@@ -121,11 +121,10 @@ function adminMissionInfo(controlUserId: number, missionId: number) {
   }
 }
 
-//Update mission name
+// Update mission name
 function adminMissionNameUpdate(controlUserId: number, missionId: number, name: string) {
   try {
     const user = controlUserIdCheck(controlUserId);
-    const mission = missionIdCheck(missionId);
     const validname = missionNameValidity(name);
     const data = getData();
     const missiontarget = data.spaceMissions.find(m => m.missionId === missionId);
@@ -136,7 +135,7 @@ function adminMissionNameUpdate(controlUserId: number, missionId: number, name: 
     const duplicate = data.spaceMissions.some(m =>
       m.controlUserId === user.controlUserId &&
       m.missionId !== missionId &&
-      m.name.toLowerCase() === validname.toLowerCase(),
+      m.name.toLowerCase() === validname.toLowerCase()
     );
     if (duplicate) {
       buildError('mission name already exists', EC.BAD_INPUT);
@@ -149,8 +148,6 @@ function adminMissionNameUpdate(controlUserId: number, missionId: number, name: 
     return normalizeError(e);
   }
 }
-
-
 
 // Update mission target
 function adminMissionTargetUpdate(controlUserId: number, missionId: number, target: string) {

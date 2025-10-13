@@ -9,8 +9,9 @@ import {
   controlUserIdCheck,
   findUserById,
   normalizeError,
+  generateSessionId,
 } from './helper';
-import { getData,loadData } from './dataStore';
+import { getData,loadData,setData } from './dataStore';
 import { errorCategories as EC } from './testSamples';
 
 // Register a mission control user
@@ -74,13 +75,21 @@ function adminAuthRegister(email: string, password: string, nameFirst: string, n
 
   data.controlUsers.push(newUser);
 
-  return { controlUserId };
+  const controlUserSessionId = generateSessionId();
+  const newSession = {
+    controlUserSessionId: controlUserSessionId,
+    controlUserId: controlUserId,
+  };
+  data.sessions.push(newSession);
+  setData(data);
+  return { controlUserSessionId };
 }
 
 // Login a mission control user
 function adminAuthLogin(email: string, password: string) {
   // Validate password is provided
   if (!password || password === '') {
+    // wo sh sb
     return { error: 'Password is required', errorCategory: EC.BAD_INPUT };
   }
 
@@ -202,7 +211,6 @@ function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: stri
   return {};
 }
 
-
 export {
   adminAuthRegister,
   adminAuthLogin,
@@ -210,4 +218,3 @@ export {
   adminControlUserDetailsUpdate,
   adminControlUserPasswordUpdate,
 };
-

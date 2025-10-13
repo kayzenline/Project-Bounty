@@ -3,41 +3,34 @@ import path from 'path';
 import request from 'sync-request-curl';
 const SERVER_URL = "http://127.0.0.1:3200";
 const DB_PATH = path.join(__dirname, '../../src/db.json');
-import { loadData } from '../../src/dataStore';
-//initial for db
+import { loadData,DataStore } from '../../src/dataStore';
+let sessionId1: number;
 beforeEach(() => {
-  const initialData = {
-    controlUsers: [
-      {
-        controlUserId: 1,
-        email: 'strongbeard@starfleet.com.au',
-        password: 'StrongPass123',
-        nameFirst: 'Bill',
-        nameLast: 'Ryker',
-        numSuccessfulLogins: 3,
-        numFailedPasswordsSinceLastLogin: 1,
-        passwordHistory: ['123456789'],
-      },
-      {
-        controlUserId: 2,
-        email: 'kitty@qq.com',
-        password: '123456789',
-        nameFirst: 'Kitty',
-        nameLast: 'Tan',
-        numSuccessfulLogins: 0,
-        numFailedPasswordsSinceLastLogin: 0,
-        passwordHistory: ['StrongerPass345'],
-      }
-    ],
-
+  const initialData :DataStore= {
+    controlUsers: [],
+    spaceMissions: [],
+    nextControlUserId: 1,
+    nextMissionId: 1,
+    sessions: [],
   };
+
   fs.writeFileSync(DB_PATH, JSON.stringify(initialData, null, 2));
   loadData();
+  const res1 = request('POST', `${SERVER_URL}/v1/admin/auth/register`, {
+    json: {
+      email: 'strongbeard@starfleet.com.au',
+      password: 'StrongPass123',
+      nameFirst: 'Bill',
+      nameLast: 'Ryker',
+    },
+  });
+  const body1 = JSON.parse(res1.body.toString());
+  sessionId1 = body1.controlUserSessionId;
 });
 describe('HTTP tests for ControlUserPasswordUpdate', () => {
 
   test('header is invalid', () => {
-    const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`,{
+    const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/password`,{
       json:{email:'1234@qq.com',nameFirst:'Ka',nameLast:'Ka'}
     });
     const body = JSON.parse(res.body.toString());
@@ -68,7 +61,7 @@ describe('HTTP tests for ControlUserPasswordUpdate', () => {
   });
   test('wrong old password', () => {
     const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/password`, {
-      headers: { ControlUserSessionId: '1' },
+      headers: { ControlUserSessionId: String(sessionId1) },
       json: { oldPassword:'abcdefg111',newPassword:'1234%$#@ac'}
     });
     const body = JSON.parse(res.body.toString());
@@ -78,7 +71,7 @@ describe('HTTP tests for ControlUserPasswordUpdate', () => {
   });
   test('same as old', () => {
     const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/password`, {
-      headers: { ControlUserSessionId: '1' },
+      headers: { ControlUserSessionId: String(sessionId1) },
       json: { oldPassword:'StrongPass123',newPassword:'StrongPass123'}
     });
     const body = JSON.parse(res.body.toString());
@@ -88,7 +81,7 @@ describe('HTTP tests for ControlUserPasswordUpdate', () => {
   });
   test('weak password', () => {
     const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/password`, {
-      headers: { ControlUserSessionId: '1' },
+      headers: { ControlUserSessionId: String(sessionId1) },
       json: { oldPassword:'StrongPass123',newPassword:'000'}
     });
     const body = JSON.parse(res.body.toString());
@@ -98,7 +91,7 @@ describe('HTTP tests for ControlUserPasswordUpdate', () => {
   });
   test('password reused', () => {
     const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/password`, {
-      headers: { ControlUserSessionId: '1' },
+      headers: { ControlUserSessionId: String(sessionId1) },
       json: { oldPassword:'StrongPass123',newPassword:'123456789'}
     });
     const body = JSON.parse(res.body.toString());
@@ -108,7 +101,7 @@ describe('HTTP tests for ControlUserPasswordUpdate', () => {
   });
   test('request successfully ', () => {
     const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/password`, {
-      headers: { ControlUserSessionId: '1' },
+      headers: { ControlUserSessionId: String(sessionId1) },
       json: { oldPassword:'StrongPass123',newPassword:'1234abcd!!@@kkk'}
     });
     const body = JSON.parse(res.body.toString());

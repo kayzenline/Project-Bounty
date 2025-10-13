@@ -9,7 +9,7 @@ describe('adminMissionTargetUpdate', () => {
       missionId: 1,
       controlUserId: 1,
       name: 'Mercury',
-      description: "Place a manned spacecraft in orbital flight around the earth. Investigate a persons performance capabilities and their ability to function in the environment of space. Recover the person and the spacecraft safely",
+      description: 'Place a manned spacecraft in orbital flight around the earth. Investigate a persons performance capabilities and their ability to function in the environment of space. Recover the person and the spacecraft safely',
       target: 'Earth orbit',
       timeCreated: 1683125870,
       timeLastEdited: 1683125871,
