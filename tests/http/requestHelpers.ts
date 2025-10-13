@@ -102,6 +102,19 @@ export function controlUserSessionId(
   };
 }
 
+export function missionDelete(
+  sessionId: string,
+  missionId: number
+) {
+  const response = request('DELETE', `${SERVER_URL}/v1/admin/mission/${missionId}`, {
+    headers: { controlusersessionid: sessionId }
+  });
+
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
+}
 
 export function clearRequest() {
   const res = request('DELETE', `${SERVER_URL}/clear/v1`);
