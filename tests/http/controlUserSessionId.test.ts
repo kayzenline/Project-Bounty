@@ -1,13 +1,14 @@
 import { afterAll, beforeEach, describe, expect, test } from '@jest/globals';
 import { clear } from '../../src/other';
-import { controlUserSessionId as missionCreate, userRegister } from './requestHelpers';
+import { controlUserSessionId as missionCreate, userRegister, clearRequest } from './requestHelpers';
 
 beforeEach(() => {
-  clear();
+  const clearRes = clearRequest();
+  expect(clearRes.statusCode).toBe(200);
   //register a user and get the token
-  const res = userRegister('test@example.com', 'ValidPass123', 'John', 'Doe');
-  expect(res.statusCode).toBe(200);
-  token = res.body.controlUserSessionId;
+  const registerRes = userRegister('test@example.com', 'ValidPass123', 'John', 'Doe');
+  expect(registerRes.statusCode).toBe(200);
+  token = registerRes.body.controlUserSessionId;
 });
 
 afterAll(() => {

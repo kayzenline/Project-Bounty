@@ -1,3 +1,4 @@
+import request from 'sync-request-curl';
 import config from '../../src/config.json';
 
 const { port, url } = config;
@@ -42,14 +43,14 @@ export async function adminAuthRegisterRequest(
 
 export function userRegister(
   email: string,
-  passward: string,
+  password: string,
   nameFirst: string,
   nameLast: string
 ) {
   const response = request('POST', `${SERVER_URL}/v1/admin/auth/register`, {
     json: {
       email,
-      passward,
+      password,
       nameFirst,
       nameLast
     }
@@ -61,7 +62,7 @@ export function userRegister(
   };
 }
 
-export function userLogin(email: string, password: string) {
+/* export function userLogin(email: string, password: string) {
   const res = request('POST', `${SERVER_URL}/v1/admin/auth/login`, {
     json: {
       email,
@@ -78,7 +79,7 @@ export function userLogout(token: string) {
     },
   });
   return JSON.parse(res.body.toString())
-}
+} */
 
 export function controlUserSessionId(
   sessionId: string,
@@ -99,4 +100,10 @@ export function controlUserSessionId(
     statusCode: response.statusCode,
     body: JSON.parse(response.body.toString())
   };
+}
+
+
+export function clearRequest() {
+  const res = request('DELETE', `${SERVER_URL}/clear/v1`);
+  return res;
 }
