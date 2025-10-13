@@ -1,7 +1,7 @@
 // This file should contain your functions relating to:
 // - clear
 import { getData, setData } from './dataStore';
-
+import type { Request, Response } from 'express';
 // Reset application state
 // Function to clear all data (for testing)
 
@@ -14,4 +14,9 @@ export function clear() {
   data.nextMissionId = 1;
   setData(data);
   return {};
+}
+
+export function clearHandler(_req: Request, res: Response) {
+  clear();
+  return res.status(200).json({});
 }
