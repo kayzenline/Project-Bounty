@@ -173,7 +173,8 @@ function normalizeError(err: unknown) {
   if (isNormalizedErrorSource(err)) {
     if (err.error !== undefined || err.errorCategory !== undefined) {
       const message = err.error ?? err.message ?? 'Unknown error';
-      const category = err.errorCategory ?? err.code ?? EC.UNKNOWN;
+      let category = err.errorCategory ?? err.code ?? EC.UNKNOWN;
+      category = String(category).toUpperCase().trim();
       return {
         error: String(message),
         errorCategory: String(category),
@@ -181,12 +182,13 @@ function normalizeError(err: unknown) {
     }
 
     if (err.message !== undefined) {
-      const category = err.code ?? EC.UNKNOWN;
+      let category = err.code ?? EC.UNKNOWN;
+      category = String(category).toUpperCase().trim();
       return { error: String(err.message), errorCategory: String(category) };
     }
   }
 
-  return { error: String(err), errorCategory: EC.UNKNOWN };
+  return { error: String(err), errorCategory: 'BAD_INPUT' };
 }
 
 function generateSessionId() {
@@ -196,6 +198,7 @@ function generateSessionId() {
 function findControlUserIdFromSession(controlUserSessionId: string) {
   return getData().sessions.find(s => s.controlUserSessionId === controlUserSessionId).controlUserId;
 }
+
 export {
   controlUserIdGen,
   isValidPassword,

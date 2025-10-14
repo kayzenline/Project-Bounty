@@ -11,7 +11,7 @@ import {
   normalizeError,
   generateSessionId,
 } from './helper';
-import { getData } from './dataStore';
+import { getData, setData } from './dataStore';
 import { errorCategories as EC } from './testSamples';
 
 // Register a mission control user
@@ -81,6 +81,7 @@ function adminAuthRegister(email: string, password: string, nameFirst: string, n
     controlUserId: controlUserId,
   };
   data.sessions.push(newSession);
+  setData(data);
   return { controlUserSessionId };
 }
 
@@ -114,14 +115,39 @@ function adminAuthLogin(email: string, password: string) {
   user.numSuccessfulLogins++;
   user.numFailedPasswordsSinceLastLogin = 0;
 
-  return { controlUserId: user.controlUserId };
+  const controlUserSessionId = generateSessionId();
+  const newSession = {
+    controlUserSessionId,
+    controlUserId: user.controlUserId,
+  };
+  data.sessions.push(newSession);
+  setData(data);
+  return { controlUserSessionId };
+}
+
+// Logout a mission control user session
+function adminAuthLogout(controlUserSessionId: string) {
+  const data = getData();
+
+  if (!controlUserSessionId || typeof controlUserSessionId !== 'string') {
+    return { error: 'ControlUserSessionId is empty or invalid', errorCategory: EC.INVALID_CREDENTIALS };
+  }
+
+  const index = data.sessions.findIndex(s => s.controlUserSessionId === controlUserSessionId);
+  if (index === -1) {
+    return { error: 'ControlUserSessionId is empty or invalid', errorCategory: EC.INVALID_CREDENTIALS };
+  }
+
+  // Invalidate session
+  data.sessions.splice(index, 1);
+  return {};
 }
 
 function adminControlUserDetails(controlUserId: number) {
   const data = getData();
   const user = data.controlUsers.find(a => a.controlUserId === controlUserId);
   if (!user) {
-    return { error: 'User not found', errorCategory: EC.INVALID_CREDENTIALS };
+    return { error: 'User not found', errorCategory: 'INVALID_CREDENTIALS' };
   }
   return {
     user: {
@@ -141,21 +167,23 @@ function adminControlUserDetailsUpdate(controlUserId: number, email: string, nam
     controlUserIdCheck(controlUserId);
     if (!isValidEmail(email)) {
       const e = new Error('this email is invalid') as ErrorWithCode;
-      e.code = EC.BAD_INPUT;
+      e.code = 'BAD_INPUT';
       throw e;
     }
     if (!(isValidName(nameFirst) && isValidName(nameLast))) {
       const e = new Error('this name is invalid') as ErrorWithCode;
-      e.code = EC.BAD_INPUT;
+      e.code = 'BAD_INPUT';
       throw e;
     }
 
     const data = getData();
-    const exists = data.controlUsers.some(User => User.email === email);
+    const exists = data.controlUsers.some(
+      User => User.email === email && User.controlUserId !== controlUserId
+    );
     if (exists) {
       // something woring here
       const e = new Error('excluding the current authorised user') as ErrorWithCode;
-      e.code = EC.BAD_INPUT;
+      e.code = 'BAD_INPUT';
       throw e;
       //
     } else {
@@ -164,10 +192,11 @@ function adminControlUserDetailsUpdate(controlUserId: number, email: string, nam
       theUser.nameFirst = nameFirst;
       theUser.nameLast = nameLast;
     }
+    setData(data);
     return {};
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    return { error: ne.error, errorCategory: ne.errorCategory || 'BAD_INPUT' };
   }
 }
 
@@ -175,9 +204,8 @@ function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: stri
   const data = getData();
   const user = (data.controlUsers || []).find(u => u.controlUserId === controlUserId);
   if (!user) {
-    return { error: 'invalid user', errorCategory: EC.INVALID_CREDENTIALS };
+    return { error: 'invalid user', errorCategory: 'INVALID_CREDENTIALS' };
   }
-
   if (user.password !== oldPassword) {
     return { error: 'wrong old password', errorCategory: 'BAD_INPUT' };
   }
@@ -185,7 +213,6 @@ function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: stri
   if (oldPassword === newPassword) {
     return { error: 'same as old', errorCategory: 'BAD_INPUT' };
   }
-
   const strong =
     typeof newPassword === 'string' &&
     newPassword.length >= 8 &&
@@ -194,20 +221,22 @@ function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: stri
   if (!strong) {
     return { error: 'weak password', errorCategory: 'BAD_INPUT' };
   }
-
-  user.passwordHistory = user.passwordHistory || [user.password];
+  user.passwordHistory = user.passwordHistory || [];
   if (user.passwordHistory.includes(newPassword)) {
     return { error: 'password reused', errorCategory: 'BAD_INPUT' };
   }
-
+  if (!user.passwordHistory.includes(user.password)) {
+    user.passwordHistory.push(user.password);
+  }
   user.password = newPassword;
-  user.passwordHistory.push(newPassword);
+
   return {};
 }
 
 export {
   adminAuthRegister,
   adminAuthLogin,
+  adminAuthLogout,
   adminControlUserDetails,
   adminControlUserDetailsUpdate,
   adminControlUserPasswordUpdate,

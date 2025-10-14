@@ -13,11 +13,8 @@ import process from 'process';
 import config from './config.json';
 // import your logic calls - add further items as required
 import { echo } from './newecho';
-import { errorCategories } from './testSamples';
-import { adminMissionTransfer } from './missionTransferExample';
 import { loadData } from './dataStore';
 import router from './routes';
-import { findControlUserIdFromSession } from './helper';
 
 // Set up web app
 const app = express();
@@ -55,7 +52,7 @@ app.get('/echo', (req: Request, res: Response) => {
 });
 
 // Example SWAGGER Route request
-app.post('/v1/admin/mission/:missionid/transfer', (req: Request, res: Response) => {
+/* app.post('/v1/admin/mission/:missionid/transfer', (req: Request, res: Response) => {
   // 1. Prepare inputs (from header, body, query, path)
   // 2. check for 401 (INVALID_CREDENTIALS) or 403 (INACCESSIBLE_VALUES) errors
   // 3. Run your logic
@@ -67,7 +64,7 @@ app.post('/v1/admin/mission/:missionid/transfer', (req: Request, res: Response) 
 
   const controlUserId = findControlUserIdFromSession(controlUserSessionId);
 
-  const result = adminMissionTransfer(controlUserId, missionId, userEmail);
+  const result = adminMissionTransfer(controlUserSessionId, missionId, userEmail);
   if ('error' in result) {
     switch (result.errorCategory) {
       case errorCategories.INVALID_CREDENTIALS:
@@ -82,7 +79,7 @@ app.post('/v1/admin/mission/:missionid/transfer', (req: Request, res: Response) 
       default:
     }
   }
-});
+}); */
 
 // ====================================================================
 //  ================= WORK IS DONE ABOVE THIS LINE ===================
