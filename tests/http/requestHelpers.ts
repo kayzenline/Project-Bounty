@@ -74,6 +74,16 @@ export function userLogin(email: string, password: string) {
   };
 }
 
+export function userLogout(sessionId: string) {
+  const response = request('POST', `${SERVER_URL}/v1/admin/auth/logout`, {
+    headers: { controlusersessionid: sessionId }
+  });
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString()),
+  };
+}
+
 /* export function userLogin(email: string, password: string) {
   const res = request('POST', `${SERVER_URL}/v1/admin/auth/login`, {
     json: {
