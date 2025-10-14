@@ -1,6 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { notImplementedHandler } from '../../utils';
-import { adminMissionNameUpdate, adminMissionTargetUpdate, adminMissionDescriptionUpdate } from '../../../mission';
 import { getData } from '../../../dataStore';
 import { adminMissionCreate, adminMissionRemove } from '../../../mission';
 import { httpToErrorCategories } from '../../../testSamples';
