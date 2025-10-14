@@ -14,7 +14,7 @@ router.get('/list', (req: Request, res: Response, next: NextFunction) => {
       return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
     }
     const data = getData();
-    const session = data.sessions?.find(s => s.controlUserSessionId === controlUserSessionId);
+    const session = data.sessions.find(s => s.controlUserSessionId === controlUserSessionId);
     if (!session) {
       return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
     }
