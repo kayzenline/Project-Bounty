@@ -145,7 +145,8 @@ function adminMissionNameUpdate(controlUserId: number, missionId: number, name: 
     setData(data);
     return {};
   } catch (e) {
-    return normalizeError(e);
+    const ne = normalizeError(e);
+    return { error: ne.error, errorCategory: ne.errorCategory };
   }
 }
 
