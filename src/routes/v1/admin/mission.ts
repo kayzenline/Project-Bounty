@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { notImplementedHandler } from '../../utils';
 import { getData } from '../../../dataStore';
-import { adminMissionNameUpdate, adminMissionTargetUpdate, adminMissionDescriptionUpdate, adminMissionRemove, adminMissionCreate   } from '../../../mission';
+import { adminMissionNameUpdate, adminMissionTargetUpdate, adminMissionDescriptionUpdate, adminMissionRemove, adminMissionCreate } from '../../../mission';
 import { httpToErrorCategories } from '../../../testSamples';
 
 const router = Router();
@@ -43,9 +43,6 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get('/:missionid', notImplementedHandler);
-
-
-
 
 router.delete('/:missionid', (req: Request, res: Response, next: NextFunction) => {
   const controlUserSessionId = req.header('controlUserSessionId');
@@ -113,8 +110,6 @@ router.put('/:missionid/description', (req, res) => {
   return res.status(200).json({});
 });
 
-
-
 router.put('/:missionid/target', (req, res) => {
   const { controlUserSessionId, missionId, target } = req.body || {};
 
@@ -129,7 +124,9 @@ router.put('/:missionid/target', (req, res) => {
 });
 
 router.post('/:missionid/transfer', notImplementedHandler);
+
 router.post('/:missionid/assign/:astronautid', notImplementedHandler);
+
 router.delete('/:missionid/assign/:astronautid', notImplementedHandler);
 
 export default router;
