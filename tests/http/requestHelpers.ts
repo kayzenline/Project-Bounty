@@ -61,6 +61,19 @@ export function userRegister(
   };
 }
 
+export function userLogin(email: string, password: string) {
+  const response = request('POST', `${SERVER_URL}/v1/admin/auth/login`, {
+    json: {
+      email,
+      password,
+    },
+  });
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString()),
+  };
+}
+
 /* export function userLogin(email: string, password: string) {
   const res = request('POST', `${SERVER_URL}/v1/admin/auth/login`, {
     json: {
@@ -101,8 +114,7 @@ export function controlUserSessionId(
   };
 }
 
-
 export function clearRequest() {
-  const res = request('DELETE', `${SERVER_URL}/clear/v1`);
+  const res = request('DELETE', `${SERVER_URL}/clear`);
   return res;
 }
