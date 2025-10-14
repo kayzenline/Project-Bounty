@@ -26,7 +26,7 @@ router.post('/login', (req, res) => {
     return res.status(status).json({ error: result.error });
   }
 
-  return res.status(200).json({ controlUserId: result.controlUserId });
+  return res.status(200).json({ controlUserSessionId: result.controlUserSessionId });
 });
 router.post('/logout', (req, res) => {
   // Header names are case-insensitive; Express normalizes internally

@@ -17,7 +17,7 @@ describe('POST /v1/admin/auth/login', () => {
     expect(reg.statusCode).toBe(200);
     const res = userLogin(email, 'Abcd1234');
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual({ controlUserId: expect.any(Number) });
+    expect(res.body).toEqual({ controlUserSessionId: expect.any(String) });
   });
 
   test('error: missing password', () => {
