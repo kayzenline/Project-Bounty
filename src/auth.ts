@@ -117,6 +117,24 @@ function adminAuthLogin(email: string, password: string) {
   return { controlUserId: user.controlUserId };
 }
 
+// Logout a mission control user session
+function adminAuthLogout(controlUserSessionId: string) {
+  const data = getData();
+
+  if (!controlUserSessionId || typeof controlUserSessionId !== 'string') {
+    return { error: 'ControlUserSessionId is empty or invalid', errorCategory: EC.INVALID_CREDENTIALS };
+  }
+
+  const index = data.sessions.findIndex(s => s.controlUserSessionId === controlUserSessionId);
+  if (index === -1) {
+    return { error: 'ControlUserSessionId is empty or invalid', errorCategory: EC.INVALID_CREDENTIALS };
+  }
+
+  // Invalidate session
+  data.sessions.splice(index, 1);
+  return {};
+}
+
 function adminControlUserDetails(controlUserId: number) {
   const data = getData();
   const user = data.controlUsers.find(a => a.controlUserId === controlUserId);
@@ -208,6 +226,7 @@ function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: stri
 export {
   adminAuthRegister,
   adminAuthLogin,
+  adminAuthLogout,
   adminControlUserDetails,
   adminControlUserDetailsUpdate,
   adminControlUserPasswordUpdate,
