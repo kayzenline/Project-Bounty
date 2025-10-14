@@ -1,44 +1,9 @@
-import { adminAuthRegisterRequest } from './requestHelpers';
 import { v4 as uuid } from 'uuid';
-import config from '../../src/config.json';
-// no need for curl/execSync; use fetch for readiness checks
+import { userRegister, clearRequest } from './requestHelpers';
 
-// Start server once for the test suite
-let serverStartedByTest = false;
-
-beforeAll(async () => {
-  const { url, port } = config as { url: string; port: string };
-  const base = `${url}:${port}`;
-
-  // Check if server is already running
-  let reachable = false;
-  try {
-    const r = await fetch(`${base}/echo?echo=ready`);
-    reachable = r.ok;
-  } catch {
-    // unreachable; we'll start it below
-  }
-
-  if (!reachable) {
-    // Start server for tests
-    require('../../src/server');
-    serverStartedByTest = true;
-    // Poll until server responds
-    for (let i = 0; i < 40; i++) {
-      try {
-        const r = await fetch(`${base}/echo?echo=ready`);
-        if (r.ok) break;
-      } catch {}
-      await new Promise(res => setTimeout(res, 100));
-    }
-  }
-});
-
-afterAll(async () => {
-  if (serverStartedByTest) {
-    const { stopServer } = require('../../src/server');
-    await stopServer();
-  }
+beforeEach(() => {
+  const res = clearRequest();
+  expect(res.statusCode).toBe(200);
 });
 
 function uniqueEmail(prefix = 'user') {
@@ -46,78 +11,68 @@ function uniqueEmail(prefix = 'user') {
 }
 
 describe('POST /v1/admin/auth/register', () => {
-  test('success: returns controlUserSessionId', async () => {
+  test('success: returns controlUserSessionId', () => {
     const email = uniqueEmail('success');
-    const res = await adminAuthRegisterRequest(email, 'abc12345', 'John', 'Doe');
-    const body = JSON.parse(res.getBody());
+    const res = userRegister(email, 'abc12345', 'John', 'Doe');
     expect(res.statusCode).toBe(200);
-    expect(body).toEqual({ controlUserSessionId: expect.any(String) });
+    expect(res.body).toEqual({ controlUserSessionId: expect.any(String) });
   });
 
-  test('error: invalid email format', async () => {
-    const res = await adminAuthRegisterRequest('invalid-email', 'abc12345', 'John', 'Doe');
-    const body = JSON.parse(res.getBody());
+  test('error: invalid email format', () => {
+    const res = userRegister('invalid-email', 'abc12345', 'John', 'Doe');
     expect(res.statusCode).toBe(400);
-    expect(body).toEqual({ error: expect.any(String) });
+    expect(res.body).toEqual({ error: expect.any(String) });
   });
 
-  test('error: duplicate email', async () => {
+  test('error: duplicate email', () => {
     const email = uniqueEmail('dup');
-    const first = await adminAuthRegisterRequest(email, 'abc12345', 'John', 'Doe');
+    const first = userRegister(email, 'abc12345', 'John', 'Doe');
     expect(first.statusCode).toBe(200);
-    const res = await adminAuthRegisterRequest(email, 'abc12345', 'John', 'Doe');
-    const body = JSON.parse(res.getBody());
+    const res = userRegister(email, 'abc12345', 'John', 'Doe');
     expect(res.statusCode).toBe(400);
-    expect(body).toEqual({ error: expect.any(String) });
+    expect(res.body).toEqual({ error: expect.any(String) });
   });
 
-  test('error: nameFirst invalid characters', async () => {
-    const res = await adminAuthRegisterRequest(uniqueEmail('nfchars'), 'abc12345', 'John!', 'Doe');
-    const body = JSON.parse(res.getBody());
+  test('error: nameFirst invalid characters', () => {
+    const res = userRegister(uniqueEmail('nfchars'), 'abc12345', 'John!', 'Doe');
     expect(res.statusCode).toBe(400);
-    expect(body).toEqual({ error: expect.any(String) });
+    expect(res.body).toEqual({ error: expect.any(String) });
   });
 
-  test('error: nameFirst too short', async () => {
-    const res = await adminAuthRegisterRequest(uniqueEmail('nfshort'), 'abc12345', 'A', 'Doe');
-    const body = JSON.parse(res.getBody());
+  test('error: nameFirst too short', () => {
+    const res = userRegister(uniqueEmail('nfshort'), 'abc12345', 'A', 'Doe');
     expect(res.statusCode).toBe(400);
-    expect(body).toEqual({ error: expect.any(String) });
+    expect(res.body).toEqual({ error: expect.any(String) });
   });
 
-  test('error: nameLast invalid characters', async () => {
-    const res = await adminAuthRegisterRequest(uniqueEmail('nlchars'), 'abc12345', 'John', 'Doe!');
-    const body = JSON.parse(res.getBody());
+  test('error: nameLast invalid characters', () => {
+    const res = userRegister(uniqueEmail('nlchars'), 'abc12345', 'John', 'Doe!');
     expect(res.statusCode).toBe(400);
-    expect(body).toEqual({ error: expect.any(String) });
+    expect(res.body).toEqual({ error: expect.any(String) });
   });
 
-  test('error: nameLast too long', async () => {
+  test('error: nameLast too long', () => {
     const longName = 'A'.repeat(21);
-    const res = await adminAuthRegisterRequest(uniqueEmail('nllong'), 'abc12345', 'John', longName);
-    const body = JSON.parse(res.getBody());
+    const res = userRegister(uniqueEmail('nllong'), 'abc12345', 'John', longName);
     expect(res.statusCode).toBe(400);
-    expect(body).toEqual({ error: expect.any(String) });
+    expect(res.body).toEqual({ error: expect.any(String) });
   });
 
-  test('error: password too short', async () => {
-    const res = await adminAuthRegisterRequest(uniqueEmail('pshort'), 'a1b2c3', 'John', 'Doe');
-    const body = JSON.parse(res.getBody());
+  test('error: password too short', () => {
+    const res = userRegister(uniqueEmail('pshort'), 'a1b2c3', 'John', 'Doe');
     expect(res.statusCode).toBe(400);
-    expect(body).toEqual({ error: expect.any(String) });
+    expect(res.body).toEqual({ error: expect.any(String) });
   });
 
-  test('error: password lacks number', async () => {
-    const res = await adminAuthRegisterRequest(uniqueEmail('pnonum'), 'abcdefgh', 'John', 'Doe');
-    const body = JSON.parse(res.getBody());
+  test('error: password lacks number', () => {
+    const res = userRegister(uniqueEmail('pnonum'), 'abcdefgh', 'John', 'Doe');
     expect(res.statusCode).toBe(400);
-    expect(body).toEqual({ error: expect.any(String) });
+    expect(res.body).toEqual({ error: expect.any(String) });
   });
 
-  test('error: password lacks letter', async () => {
-    const res = await adminAuthRegisterRequest(uniqueEmail('pnolet'), '12345678', 'John', 'Doe');
-    const body = JSON.parse(res.getBody());
+  test('error: password lacks letter', () => {
+    const res = userRegister(uniqueEmail('pnolet'), '12345678', 'John', 'Doe');
     expect(res.statusCode).toBe(400);
-    expect(body).toEqual({ error: expect.any(String) });
+    expect(res.body).toEqual({ error: expect.any(String) });
   });
 });

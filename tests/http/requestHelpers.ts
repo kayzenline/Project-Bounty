@@ -101,8 +101,7 @@ export function controlUserSessionId(
   };
 }
 
-
 export function clearRequest() {
-  const res = request('DELETE', `${SERVER_URL}/clear/v1`);
+  const res = request('DELETE', `${SERVER_URL}/clear`);
   return res;
 }

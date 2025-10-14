@@ -5,7 +5,7 @@ import { controlUserSessionId as missionCreate, userRegister, clearRequest } fro
 beforeEach(() => {
   const clearRes = clearRequest();
   expect(clearRes.statusCode).toBe(200);
-  //register a user and get the token
+  // register a user and get the token
   const registerRes = userRegister('test@example.com', 'ValidPass123', 'John', 'Doe');
   expect(registerRes.statusCode).toBe(200);
   token = registerRes.body.controlUserSessionId;
@@ -20,7 +20,6 @@ let token: string;
  * This is test for CUS
  */
 describe('POST /v1/admin/mission', () => {
-
   describe('valid cases', () => {
     test('successful create a new space mission', () => {
       const res = missionCreate(token, 'Test mission', 'A test session', 'Low Earth Orbit');
