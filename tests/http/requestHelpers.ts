@@ -124,6 +124,61 @@ export function controlUserSessionId(
   };
 }
 
+export function deleteMission(
+  sessionId: string,
+  missionId: number
+) {
+  const res = request('DELETE', `${SERVER_URL}/v1/admin/mission/${missionId}`, {
+    headers: { controlUserSessionId: sessionId }
+  });
+
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString())
+  }
+}
+
+export function createAstronautId(
+  sessionId: string,
+  nameFirst: string,
+  nameLast: string,
+  rank: string,
+  age: number,
+  weight: number,
+  height: number
+) {
+  const res = request('POST', `${SERVER_URL}/v1/admin/astronaut`, {
+    headers: { controlUserSessionId: sessionId },
+    json: {
+      nameFirst,
+      nameLast,
+      rank,
+      age,
+      weight,
+      height,
+    }
+  });
+
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString())
+  }
+}
+
+export function assignAstronaut(
+  controlUserSessionId: string,
+  astronautid: number,
+  missionid: number,
+) {
+  const res = request('POST', `${SERVER_URL}/v1/admin/mission/${missionid}/assign/${astronautid}`, {
+    headers: { controlUserSessionId: controlUserSessionId },
+  })
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString())
+  }
+}
+
 export function clearRequest() {
   const res = request('DELETE', `${SERVER_URL}/clear`);
   return res;
