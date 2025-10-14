@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { adminControlUserDetails, adminControlUserDetailsUpdate, adminControlUserPasswordUpdate } from '../../../auth';
 import { errorCategories as EC } from '../../../testSamples';
-import { getData ,loadData,setData} from '../../../../src/dataStore';
+import { getData, loadData, setData } from '../../../../src/dataStore';
 const router = Router();
 
 router.get('/details', (req, res) => {
@@ -25,7 +25,6 @@ router.get('/details', (req, res) => {
     } else {
       return res.status(401).json(result);
     }
-    
   }
   return res.status(200).json({ user: result.user });
 });// if head is invalid(sessionid->NaN)
@@ -50,7 +49,7 @@ router.put('/details', (req, res) => {
     } else {
       return res.status(401).json(result);
     }
-  }  
+  }
   return res.status(200).json({});
 });
 router.put('/password', (req, res) => {
@@ -66,7 +65,7 @@ router.put('/password', (req, res) => {
   const data = getData();
   const session = data.sessions.find(s => String(s.controlUserSessionId) === String(Id));
   if (!session) {
-    return res.status(401).json({ error: 'invalid user', errorCategory: 'INVALID_CREDENTIALS'});
+    return res.status(401).json({ error: 'invalid user', errorCategory: 'INVALID_CREDENTIALS' });
   }
   const controlUserId = session.controlUserId;
   const { oldPassword, newPassword } = req.body;
@@ -78,7 +77,7 @@ router.put('/password', (req, res) => {
       return res.status(401).json(result);
     }
   }
-  setData(data); 
+  setData(data);
   return res.status(200).json({});
 });
 

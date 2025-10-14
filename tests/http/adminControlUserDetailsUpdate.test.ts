@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import request from 'sync-request-curl';
-const SERVER_URL = "http://127.0.0.1:3200";
+const SERVER_URL = "http://127.0.0.1:4900";
 const DB_PATH = path.join(__dirname, '../../src/db.json');
 import { loadData,DataStore } from '../../src/dataStore';
 let sessionId1: string;

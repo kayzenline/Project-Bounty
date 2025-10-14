@@ -13,11 +13,8 @@ import process from 'process';
 import config from './config.json';
 // import your logic calls - add further items as required
 import { echo } from './newecho';
-import { errorCategories } from './testSamples';
-import { adminMissionTransfer } from './missionTransferExample';
 import { loadData } from './dataStore';
 import router from './routes';
-import { findControlUserIdFromSession } from './helper';
 
 // Set up web app
 const app = express();

@@ -11,7 +11,7 @@ import {
   normalizeError,
   generateSessionId,
 } from './helper';
-import { getData, loadData, setData,saveData } from './dataStore';
+import { getData, setData } from './dataStore';
 import { errorCategories as EC } from './testSamples';
 
 // Register a mission control user
@@ -125,6 +125,24 @@ function adminAuthLogin(email: string, password: string) {
   return { controlUserSessionId };
 }
 
+// Logout a mission control user session
+function adminAuthLogout(controlUserSessionId: string) {
+  const data = getData();
+
+  if (!controlUserSessionId || typeof controlUserSessionId !== 'string') {
+    return { error: 'ControlUserSessionId is empty or invalid', errorCategory: EC.INVALID_CREDENTIALS };
+  }
+
+  const index = data.sessions.findIndex(s => s.controlUserSessionId === controlUserSessionId);
+  if (index === -1) {
+    return { error: 'ControlUserSessionId is empty or invalid', errorCategory: EC.INVALID_CREDENTIALS };
+  }
+
+  // Invalidate session
+  data.sessions.splice(index, 1);
+  return {};
+}
+
 function adminControlUserDetails(controlUserId: number) {
   const data = getData();
   const user = data.controlUsers.find(a => a.controlUserId === controlUserId);
@@ -174,11 +192,11 @@ function adminControlUserDetailsUpdate(controlUserId: number, email: string, nam
       theUser.nameFirst = nameFirst;
       theUser.nameLast = nameLast;
     }
-    setData(data); 
+    setData(data);
     return {};
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory ||'BAD_INPUT'};
+    return { error: ne.error, errorCategory: ne.errorCategory || 'BAD_INPUT' };
   }
 }
 
@@ -211,13 +229,14 @@ function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: stri
     user.passwordHistory.push(user.password);
   }
   user.password = newPassword;
-  
+
   return {};
 }
 
 export {
   adminAuthRegister,
   adminAuthLogin,
+  adminAuthLogout,
   adminControlUserDetails,
   adminControlUserDetailsUpdate,
   adminControlUserPasswordUpdate,

@@ -183,7 +183,7 @@ function normalizeError(err: unknown) {
 
     if (err.message !== undefined) {
       let category = err.code ?? EC.UNKNOWN;
-      category = String(category).toUpperCase().trim(); 
+      category = String(category).toUpperCase().trim();
       return { error: String(err.message), errorCategory: String(category) };
     }
   }
@@ -198,6 +198,7 @@ function generateSessionId() {
 function findControlUserIdFromSession(controlUserSessionId: string) {
   return getData().sessions.find(s => s.controlUserSessionId === controlUserSessionId).controlUserId;
 }
+
 export {
   controlUserIdGen,
   isValidPassword,

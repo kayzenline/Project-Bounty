@@ -69,7 +69,6 @@ export function saveData() {
   fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
 }
 
-
 export {
   Mission,
   MissionControlUser,
