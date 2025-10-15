@@ -25,7 +25,7 @@ export async function adminMissionTransferRequest(
     'POST',
     `${SERVER_URL}/v1/admin/mission/${missionId}/transfer`,
     { userEmail },
-    { controlusersessionid: controlUserSessionId }
+    { controlUserSessionId } 
   );
 }
 
@@ -115,7 +115,7 @@ export function controlUserSessionId(
       description,
       target
     },
-    headers: { controlusersessionid: sessionId }
+      headers: { controlUserSessionId: sessionId }
   });
 
   return {
