@@ -145,26 +145,41 @@ router.put('/:missionid/target', (req, res) => {
   return res.status(200).json({});
 });
 
-router.post('/mission/:missionid/transfer', (req, res) => {
+router.post('/:missionid/transfer', (req: Request, res: Response, next: NextFunction) => {
+  const controlUserSessionId = req.header('controlUserSessionId');
   const missionId = Number(req.params.missionid);
-  const sessionId = req.headers.controlusersessionid as string;
   const { userEmail } = req.body;
 
-  const data = getData();
-  const session = data.sessions.find((s: any) => s.sessionId === sessionId);
-  if (!session) {
-    return res.status(401).json({ error: 'Invalid or missing session' });
+  try {
+    if (!controlUserSessionId) {
+      return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
+    }
+
+    const data = getData();
+    const sessions = (data.sessions || []) as { controlUserSessionId: string; controlUserId: number }[];
+    const session = sessions.find(s => s.controlUserSessionId === controlUserSessionId);
+    if (!session) {
+      return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
+    }
+
+    type TransferError = {
+      error: string;
+      errorCategory: keyof typeof httpToErrorCategories;
+    };
+    type TransferSuccess = Record<string, never>;
+    type TransferResult = TransferError | TransferSuccess;
+
+    const result: TransferResult = adminMissionTransfer(session.controlUserId, missionId, userEmail);
+
+    if ('error' in result) {
+      const status = httpToErrorCategories[result.errorCategory] ?? 400;
+      return res.status(status).json({ error: result.error });
+    }
+
+    return res.status(200).json(result);
+  } catch (err) {
+    return next(err);
   }
-
-const result = adminMissionTransfer(session.controlUserId, missionId, userEmail);
-
-if ('error' in result) {
-    const category = (result as { errorCategory?: string }).errorCategory;
-    const status = category === 'BAD_INPUT' ? 400 : 403;
-    return res.status(status).json({ error: (result as { error: string }).error });
-  }
-
-  return res.status(200).json(result);
 });
 
 router.post('/:missionid/assign/:astronautid', notImplementedHandler);
