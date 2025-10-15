@@ -30,7 +30,6 @@ router.get('/list', (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
   const controlUserSessionId = (req.header('controlUserSessionId'));
   const { name, description, target } = req.body;
