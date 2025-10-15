@@ -1,7 +1,78 @@
 {
-  "controlUsers": [],
-  "spaceMissions": [],
-  "nextControlUserId": 1,
-  "nextMissionId": 1,
-  "sessions": []
+  "controlUsers": [
+    {
+      "controlUserId": 1,
+      "email": "user1@example.com",
+      "password": "abc12345",
+      "nameFirst": "John",
+      "nameLast": "Doe",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abc12345"
+      ]
+    },
+    {
+      "controlUserId": 2,
+      "email": "user2@example.com",
+      "password": "abc12345",
+      "nameFirst": "Jane",
+      "nameLast": "Smith",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abc12345"
+      ]
+    }
+  ],
+  "spaceMissions": [
+    {
+      "missionId": 1,
+      "controlUserId": 1,
+      "name": "MissionOne",
+      "description": "Test Description",
+      "target": "Mars",
+      "timeCreated": 1760496064,
+      "timeLastEdited": 1760496064
+    },
+    {
+      "missionId": 2,
+      "controlUserId": 1,
+      "name": "MissionTwo",
+      "description": "Test Description",
+      "target": "Moon",
+      "timeCreated": 1760496064,
+      "timeLastEdited": 1760496064
+    },
+    {
+      "missionId": 3,
+      "controlUserId": 2,
+      "name": "MissionThree",
+      "description": "Test Description",
+      "target": "ISS",
+      "timeCreated": 1760496064,
+      "timeLastEdited": 1760496064
+    },
+    {
+      "missionId": 4,
+      "controlUserId": 2,
+      "name": "MissionTwo",
+      "description": "other",
+      "target": "other",
+      "timeCreated": 1760496064,
+      "timeLastEdited": 1760496064
+    }
+  ],
+  "nextControlUserId": 3,
+  "nextMissionId": 5,
+  "sessions": [
+    {
+      "controlUserSessionId": "fda4e070-b3d9-420c-9232-b1c53b6f7d07",
+      "controlUserId": 1
+    },
+    {
+      "controlUserSessionId": "85961133-99ee-4f3a-8318-e2f73a2b47f0",
+      "controlUserId": 2
+    }
+  ]
 }
