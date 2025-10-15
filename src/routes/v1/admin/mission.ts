@@ -159,9 +159,9 @@ router.post('/mission/:missionid/transfer', (req, res) => {
 const result = adminMissionTransfer(session.controlUserId, missionId, userEmail);
 
 if ('error' in result) {
-  const category = (result as { errorCategory?: string }).errorCategory;
-  const status = category === 'BAD_INPUT' ? 400 : 403;
-  return res.status(status).json({ error: (result as { error: string }).error });
+    const category = (result as { errorCategory?: string }).errorCategory;
+    const status = category === 'BAD_INPUT' ? 400 : 403;
+    return res.status(status).json({ error: (result as { error: string }).error });
   }
 
   return res.status(200).json(result);
