@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { notImplementedHandler } from '../../utils';
 import { getData } from '../../../dataStore';
-import { adminMissionNameUpdate, adminMissionTargetUpdate, adminMissionDescriptionUpdate, adminMissionRemove, adminMissionCreate, adminMissionList } from '../../../mission';
+import { adminMissionNameUpdate, adminMissionTargetUpdate, adminMissionDescriptionUpdate, adminMissionRemove, adminMissionCreate, adminMissionList, adminMissionTransfer } from '../../../mission';
 import { httpToErrorCategories } from '../../../testSamples';
 
 const router = Router();
@@ -145,7 +145,42 @@ router.put('/:missionid/target', (req, res) => {
   return res.status(200).json({});
 });
 
-router.post('/:missionid/transfer', notImplementedHandler);
+router.post('/:missionid/transfer', (req: Request, res: Response, next: NextFunction) => {
+  const controlUserSessionId = req.header('controlUserSessionId');
+  const missionId = Number(req.params.missionid);
+  const { userEmail } = req.body;
+
+  try {
+    if (!controlUserSessionId) {
+      return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
+    }
+
+    const data = getData();
+    const sessions = (data.sessions || []) as { controlUserSessionId: string; controlUserId: number }[];
+    const session = sessions.find(s => s.controlUserSessionId === controlUserSessionId);
+    if (!session) {
+      return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
+    }
+
+    type TransferError = {
+      error: string;
+      errorCategory: keyof typeof httpToErrorCategories;
+    };
+    type TransferSuccess = Record<string, never>;
+    type TransferResult = TransferError | TransferSuccess;
+
+    const result: TransferResult = adminMissionTransfer(session.controlUserId, missionId, userEmail);
+
+    if ('error' in result) {
+      const status = httpToErrorCategories[result.errorCategory] ?? 400;
+      return res.status(status).json({ error: result.error });
+    }
+
+    return res.status(200).json(result);
+  } catch (err) {
+    return next(err);
+  }
+});
 
 router.post('/:missionid/assign/:astronautid', notImplementedHandler);
 
