@@ -216,7 +216,7 @@ function adminMissionTransfer(controlUserId: number, missionId: number, userEmai
     // Find target user
     const data = getData();
     const controlUsers = data.controlUsers || [];
-    const target = controlUsers.find((u: any) => u.email === userEmail);
+    const target = controlUsers.find((u: { email: string; controlUserId: number }) => u.email === userEmail);
     if (!target) {
       buildError('Target user does not exist', EC.BAD_INPUT);
     }
@@ -228,7 +228,8 @@ function adminMissionTransfer(controlUserId: number, missionId: number, userEmai
 
     // Check duplicate mission name
     const fixedName = mission.name.trim().toLowerCase();
-    const duplicate = (data.spaceMissions || []).some((m: any) =>
+    type MissionRow = { controlUserId: number; name: string };
+    const duplicate = (data.spaceMissions || []).some((m: MissionRow) =>
       m.controlUserId === target.controlUserId &&
       (m.name ?? '').trim().toLowerCase() === fixedName
     );
@@ -255,5 +256,5 @@ export {
   adminMissionNameUpdate,
   adminMissionTargetUpdate,
   adminMissionDescriptionUpdate,
-  adminMissionTransfer,   
+  adminMissionTransfer,
 };
