@@ -180,6 +180,6 @@ export function assignAstronaut(
 }
 
 export function clearRequest() {
-  const res = request('DELETE', `${SERVER_URL}/clear`);
+  const res = request('DELETE', `${SERVER_URL}/v1/clear`);
   return res;
 }
