@@ -123,7 +123,6 @@ router.put('/:missionid/target', (req, res) => {
   return res.status(200).json({});
 });
 
-
 router.post('/:missionid/transfer', (req: Request, res: Response, next: NextFunction) => {
   const controlUserSessionId = req.header('controlUserSessionId');
   const missionId = Number(req.params.missionid);
@@ -134,7 +133,9 @@ router.post('/:missionid/transfer', (req: Request, res: Response, next: NextFunc
       return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
     }
 
-    const session = getData().sessions.find(s => s.controlUserSessionId === controlUserSessionId);
+    const data = getData();
+    const session = ((data.sessions || []) as { controlUserSessionId: string; controlUserId: number }[])
+      .find(s => s.controlUserSessionId === controlUserSessionId);
     if (!session) {
       return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
     }

@@ -256,5 +256,5 @@ export {
   adminMissionNameUpdate,
   adminMissionTargetUpdate,
   adminMissionDescriptionUpdate,
-  adminMissionTransfer, 
+  adminMissionTransfer,
 };
