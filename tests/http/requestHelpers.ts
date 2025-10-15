@@ -179,6 +179,21 @@ export function assignAstronaut(
   }
 }
 
+
+
+export function missionList(
+  controlUserSessionId: string
+){
+  const res = request('GET', `${SERVER_URL}/v1/admin/mission/list`, {
+    headers: { controlUserSessionId: controlUserSessionId },
+  })
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString())
+  }
+}
+
+
 export function clearRequest() {
   const res = request('DELETE', `${SERVER_URL}/clear`);
   return res;

@@ -1,12 +1,34 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { notImplementedHandler } from '../../utils';
 import { getData } from '../../../dataStore';
-import { adminMissionNameUpdate, adminMissionTargetUpdate, adminMissionDescriptionUpdate, adminMissionRemove, adminMissionCreate } from '../../../mission';
+import { adminMissionNameUpdate, adminMissionTargetUpdate, adminMissionDescriptionUpdate, adminMissionRemove, adminMissionCreate, adminMissionList } from '../../../mission';
 import { httpToErrorCategories } from '../../../testSamples';
 
 const router = Router();
 
-router.get('/list', notImplementedHandler);
+router.get('/list', (req: Request, res: Response, next: NextFunction) => {
+  const controlUserSessionId = req.header('controlUserSessionId');
+
+  try {
+    if (!controlUserSessionId) {
+      return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
+    }
+    const data = getData();
+    const session = data.sessions.find(s => s.controlUserSessionId === controlUserSessionId);
+    if (!session) {
+      return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
+    }
+    const result = adminMissionList(session.controlUserId);
+    if ('error' in result) {
+      const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
+      return res.status(status).json({ error: result.error });
+    }
+
+    return res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.post('/', (req: Request, res: Response, next: NextFunction) => {
   const controlUserSessionId = (req.header('controlUserSessionId'));
