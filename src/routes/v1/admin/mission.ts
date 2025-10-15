@@ -162,11 +162,10 @@ if ('error' in result) {
   const category = (result as { errorCategory?: string }).errorCategory;
   const status = category === 'BAD_INPUT' ? 400 : 403;
   return res.status(status).json({ error: (result as { error: string }).error });
-}
+  }
 
-return res.status(200).json(result);
+  return res.status(200).json(result);
 });
-
 
 router.post('/:missionid/assign/:astronautid', notImplementedHandler);
 
