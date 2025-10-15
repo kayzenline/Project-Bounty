@@ -25,7 +25,7 @@ export async function adminMissionTransferRequest(
     'POST',
     `${SERVER_URL}/v1/admin/mission/${missionId}/transfer`,
     { userEmail },
-    { controlUserSessionId } 
+    { controlusersessionid: controlUserSessionId }
   );
 }
 
@@ -115,7 +115,7 @@ export function controlUserSessionId(
       description,
       target
     },
-      headers: { controlUserSessionId: sessionId }
+    headers: { controlusersessionid: sessionId }
   });
 
   return {
@@ -180,6 +180,6 @@ export function assignAstronaut(
 }
 
 export function clearRequest() {
-  const res = request('DELETE', `${SERVER_URL}/v1/clear`);
+  const res = request('DELETE', `${SERVER_URL}/clear`);
   return res;
 }
