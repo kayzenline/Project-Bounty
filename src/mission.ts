@@ -196,6 +196,56 @@ function adminMissionDescriptionUpdate(controlUserId: number, missionId: number,
     return { error: ne.error, errorCategory: ne.errorCategory };
   }
 }
+// Transfer mission ownership to another control user by email
+function adminMissionTransfer(controlUserId: number, missionId: number, userEmail: string) {
+  try {
+    // Validate user and mission
+    const user = controlUserIdCheck(controlUserId);
+    const mission = missionIdCheck(missionId);
+
+    // Check mission ownership
+    if (mission.controlUserId !== user.controlUserId) {
+      buildError('Mission does not belong to this user', EC.INACCESSIBLE_VALUE);
+    }
+
+    // Validate email
+    if (!userEmail || typeof userEmail !== 'string') {
+      buildError('Missing userEmail', EC.BAD_INPUT);
+    }
+
+    // Find target user
+    const data = getData();
+    const controlUsers = data.controlUsers || [];
+    const target = controlUsers.find((u: any) => u.email === userEmail);
+    if (!target) {
+      buildError('Target user does not exist', EC.BAD_INPUT);
+    }
+
+    // Prevent self-transfer
+    if (target.controlUserId === user.controlUserId) {
+      buildError('Cannot transfer to yourself', EC.INACCESSIBLE_VALUE);
+    }
+
+    // Check duplicate mission name
+    const fixedName = mission.name.trim().toLowerCase();
+    const duplicate = (data.spaceMissions || []).some((m: any) =>
+      m.controlUserId === target.controlUserId &&
+      (m.name ?? '').trim().toLowerCase() === fixedName
+    );
+    if (duplicate) {
+      buildError('Duplicate mission name for target user', EC.INACCESSIBLE_VALUE);
+    }
+
+    // Transfer ownership
+    mission.controlUserId = target.controlUserId;
+    mission.timeLastEdited = Math.floor(Date.now() / 1000);
+    setData(data);
+
+    return {};
+  } catch (e) {
+    return normalizeError(e);
+  }
+}
 
 export {
   adminMissionList,
@@ -205,4 +255,5 @@ export {
   adminMissionNameUpdate,
   adminMissionTargetUpdate,
   adminMissionDescriptionUpdate,
+  adminMissionTransfer,   
 };

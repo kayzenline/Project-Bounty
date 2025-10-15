@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { notImplementedHandler } from '../../utils';
 import { getData } from '../../../dataStore';
-import { adminMissionNameUpdate, adminMissionTargetUpdate, adminMissionDescriptionUpdate, adminMissionRemove, adminMissionCreate, adminMissionList } from '../../../mission';
+import { adminMissionNameUpdate, adminMissionTargetUpdate, adminMissionDescriptionUpdate, adminMissionRemove, adminMissionCreate, adminMissionList, adminMissionTransfer } from '../../../mission';
 import { httpToErrorCategories } from '../../../testSamples';
 
 const router = Router();
@@ -145,7 +145,28 @@ router.put('/:missionid/target', (req, res) => {
   return res.status(200).json({});
 });
 
-router.post('/:missionid/transfer', notImplementedHandler);
+router.post('/mission/:missionid/transfer', (req, res) => {
+  const missionId = Number(req.params.missionid);
+  const sessionId = req.headers.controlusersessionid as string;
+  const { userEmail } = req.body;
+
+  const data = getData();
+  const session = data.sessions.find((s: any) => s.sessionId === sessionId);
+  if (!session) {
+    return res.status(401).json({ error: 'Invalid or missing session' });
+  }
+
+const result = adminMissionTransfer(session.controlUserId, missionId, userEmail);
+
+if ('error' in result) {
+  const category = (result as { errorCategory?: string }).errorCategory;
+  const status = category === 'BAD_INPUT' ? 400 : 403;
+  return res.status(status).json({ error: (result as { error: string }).error });
+}
+
+return res.status(200).json(result);
+});
+
 
 router.post('/:missionid/assign/:astronautid', notImplementedHandler);
 
