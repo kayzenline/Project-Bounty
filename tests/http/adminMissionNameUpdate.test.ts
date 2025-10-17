@@ -2,9 +2,8 @@ import { v4 as uuid } from 'uuid';
 import { adminMissionCreate, adminMissionInfo } from '../../src/mission';
 import { adminAuthRegister, adminAuthLogin } from '../../src/auth';
 import { findSessionFromSessionId, generateSessionId } from '../../src/helper';
-import { missionNameUpdate, clearRequest, controlUserSessionId } from './requestHelpers';
+import { missionNameUpdate, clearRequest } from './requestHelpers';
 import { getData } from '../../src/dataStore';
-import { stringify } from 'querystring';
 
 const { promisify } = require('util');
 const missionCreateAsync = promisify(adminMissionCreate);
