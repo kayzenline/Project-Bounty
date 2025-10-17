@@ -13,7 +13,7 @@ function uniqueEmail(prefix = 'user') {
   return `${prefix}.${uuid()}@example.com`;
 }
 
-describe('HTTP tests for MissionNameUpdate', () => {
+describe('HTTP tests for MissionDescriptionUpdate', () => {
   let missionId: number;
 
   // use async...await (use the missionId in the test) <-- solve this problem
