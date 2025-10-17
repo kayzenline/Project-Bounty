@@ -124,6 +124,60 @@ export function controlUserSessionId(
   };
 }
 
+export function missionNameUpdate(
+  controlUserId: number,
+  missionId: number,
+  name: string
+) {
+  const response = request('PUT', `${SERVER_URL}/v1/admin/mission/${missionId}/name`, {
+    json: {
+      controlUserId,
+      name
+    }
+  });
+
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
+}
+
+export function missionTargetUpdate(
+  controlUserId: number,
+  missionId: number,
+  target: string
+) {
+  const response = request('PUT', `${SERVER_URL}/v1/admin/mission/${missionId}/target`, {
+    json: {
+      controlUserId,
+      target
+    }
+  });
+
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
+}
+
+export function missionDescriptionUpdate(
+  controlUserId: number,
+  missionId: number,
+  description: string
+) {
+  const response = request('PUT', `${SERVER_URL}/v1/admin/mission/${missionId}/description`, {
+    json: {
+      controlUserId,
+      description
+    }
+  });
+
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
+}
+
 export function deleteMission(
   sessionId: string,
   missionId: number
