@@ -1,18 +1,12 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { setData } from '../../dataStore';
+import { clear } from '../../other'; 
 
 const router = Router();
 
 router.delete('/', (_req: Request, res: Response, next: NextFunction) => {
   try {
-    setData({
-      controlUsers: [],
-      spaceMissions: [],
-      sessions: [],
-      nextControlUserId: 1,
-      nextMissionId: 1,
-    });
-    return res.status(200).json({});
+    const result = clear();
+    return res.status(200).json(result); 
   } catch (err) {
     return next(err);
   }
