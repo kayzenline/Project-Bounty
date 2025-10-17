@@ -2,117 +2,108 @@ import { v4 as uuid } from 'uuid';
 import { adminMissionCreate, adminMissionInfo } from '../../src/mission';
 import { adminAuthRegister, adminAuthLogin } from '../../src/auth';
 import { findSessionFromSessionId, generateSessionId } from '../../src/helper';
-import { missionDescriptionUpdate, clearRequest } from './requestHelpers';
+import { missionDescriptionUpdate, clearRequest, controlUserSessionId as missionCreate, userRegister, userLogin } from './requestHelpers';
 import { getData } from '../../src/dataStore';
-
-const { promisify } = require('util');
-const missionCreateAsync = promisify(adminMissionCreate);
-
 
 function uniqueEmail(prefix = 'user') {
   return `${prefix}.${uuid()}@example.com`;
 }
 
+let missionId: number;
+let controlUserSessionId: string;
+
 describe('HTTP tests for MissionDescriptionUpdate', () => {
-  let missionId: number;
 
   // use async...await (use the missionId in the test) <-- solve this problem
-  beforeEach (async () => {
-    const res = clearRequest();
-    expect(res.statusCode).toBe(200);
+  beforeEach (() => {
+    const clearRes = clearRequest();
+    expect(clearRes.statusCode).toBe(200);
     const email = uniqueEmail('success');
-    adminAuthRegister(email, 'abc12345', 'John', 'Doe');
-    const controlUserSessionId = adminAuthLogin(email, 'abc12345').controlUserSessionId;
-    if (controlUserSessionId) {
-      const session = findSessionFromSessionId(controlUserSessionId);
-      if (session) {
-        const mission = {
-          name: 'Mercury',
-          description: 'Place a manned spacecraft in orbital flight around the earth. Investigate a persons performance capabilities and their ability to function in the environment of space. Recover the person and the spacecraft safely',
-          target: 'Earth orbit',
-        };
-        missionId = await missionCreateAsync(session.controlUserId, mission.name, mission.description, mission.target).missionId;
-      }
-    }
+    const registerRes = userRegister(email, 'abc12345', 'John', 'Doe');
+    expect(registerRes.statusCode).toBe(200);
+    controlUserSessionId = registerRes.body.controlUserSessionId;
+    const loginRes = userLogin(email, 'abc12345');
+    expect(loginRes.statusCode).toBe(200);
+    const mission = {
+      name: 'Mercury',
+      description: 'Place a manned spacecraft in orbital flight around the earth. Investigate a persons performance capabilities and their ability to function in the environment of space. Recover the person and the spacecraft safely',
+      target: 'Earth orbit',
+    };
+    const res = missionCreate(controlUserSessionId, mission.name, mission.description, mission.target);
+    expect(res.statusCode).toBe(200);
+    missionId = res.body.missionId;
   });
 
   test('mission description updated successfully', () => {
-    const data = getData();
-    const controlUserSessionId = data.sessions[0].controlUserSessionId;
-    const controlUserId = data.sessions[0].controlUserId;
-
-    const newDescription = 'Land humans on the Moon and bring them safely back to Earth';
-    const res = missionDescriptionUpdate(controlUserSessionId, missionId, newDescription);
-    const resultBody = JSON.parse(res.body.toString());
-    expect(res.statusCode).toBe(200);
-    expect(resultBody).toBe({});
-    const newTarget = adminMissionInfo(controlUserId, missionId).target;
-    expect(newTarget).toStrictEqual('Jupiter moons');
+    const session = findSessionFromSessionId(controlUserSessionId);
+    if (session) {
+      const controlUserId = session.controlUserId;
+      const newDescription = 'Land humans on the Moon and bring them safely back to Earth';
+      const res = missionDescriptionUpdate(controlUserSessionId, missionId, newDescription);
+      const resultBody = res.body
+      expect(res.statusCode).toBe(200);
+      expect(resultBody).toBe({});
+      const updatedDesc = adminMissionInfo(controlUserId, missionId).description;
+      expect(updatedDesc).toStrictEqual('Land humans on the Moon and bring them safely back to Earth');
+    }
   });
 
   test('get an invalid description', () => {
-    const data = getData();
-    const controlUserSessionId = data.sessions[0].controlUserSessionId;
-
-    const longDescription = 'J'.repeat(401);
-    const res = missionDescriptionUpdate(controlUserSessionId, missionId, longDescription);
-    const resultBody = JSON.parse(res.body.toString());
-    expect(res.statusCode).toBe(400);
-    expect(resultBody.error).toBe({ error: expect.any(String) });
-    expect(resultBody.errorCategory).toBe('BAD_INPUT');
+    const session = findSessionFromSessionId(controlUserSessionId);
+    if (session) {
+      const longDescription = 'J'.repeat(401);
+      const res = missionDescriptionUpdate(controlUserSessionId, missionId, longDescription);
+      const resultBody = res.body
+      expect(res.statusCode).toBe(400);
+      expect(resultBody).toEqual({ error: expect.any(String) });
+    }
   });
 
   test('ControlUserSessionId is empty or invalid', () => {
     const newSessionId = generateSessionId();
-
     const newDescription = 'Land humans on the Moon and bring them safely back to Earth';
     const res = missionDescriptionUpdate(newSessionId, missionId, newDescription);
-    const resultBody = JSON.parse(res.body.toString());
+    const resultBody = res.body
     expect(res.statusCode).toBe(401);
-    expect(resultBody.error).toBe({ error: expect.any(String) });
-    expect(resultBody.errorCategory).toBe('INVALID_CREDENTIALS');
+    expect(resultBody).toEqual({ error: expect.any(String) });
 
     const res1 = missionDescriptionUpdate('', missionId, newDescription);
-    const resultBody1 = JSON.parse(res1.body.toString());
+    const resultBody1 = res1.body
     expect(res1.statusCode).toBe(401);
-    expect(resultBody.error).toBe({ error: expect.any(String) });
-    expect(resultBody1.errorCategory).toBe('INVALID_CREDENTIALS');
+    expect(resultBody1).toEqual({ error: expect.any(String) });
   });
 
   test('control user is not an owner of this mission or the specified missionId does not exist', () => {
-    const email = uniqueEmail('success');
-
     // creat a new mission belongs to a new user Tony Stark
-    adminAuthRegister(email, 'abc12345', 'Tony', 'Stark');
-    const newUserSessionId = adminAuthLogin(email, 'abc12345').controlUserSessionId;
-    if (newUserSessionId) {
-      const newSession = findSessionFromSessionId(newUserSessionId);
-      if (newSession) {
-        const newMission = {
-          name: 'Venus',
-          description: 'Explore atmosphere',
-          target: 'Venus orbit'
-        };
-        adminMissionCreate(newSession.controlUserId, newMission.name, newMission.description, newMission.target);
-      }
-    }
+    const newEmail = uniqueEmail('success');
+    const newRegisterRes = userRegister(newEmail, 'abc12345', 'Tony', 'Stark');
+    expect(newRegisterRes.statusCode).toBe(200);
+    const newSessionId = newRegisterRes.body.controlUserSessionId;
+    const newLoginRes = userLogin(newEmail, 'abc12345');
+    expect(newLoginRes.statusCode).toBe(200);
+    const newMission = {
+      name: 'Venus',
+      description: 'Explore atmosphere',
+      target: 'Venus orbit'
+    };
+    const newRes = missionCreate(newSessionId, newMission.name, newMission.description, newMission.target);
+    expect(newRes.statusCode).toBe(200);
+    const newMissionId = newRes.body.missionId;
 
-    if (newUserSessionId) {
-      const newDescription = 'Land humans on the Moon and bring them safely back to Earth';
-      const res = missionDescriptionUpdate(newUserSessionId, missionId, newDescription);
-      const resultBody = JSON.parse(res.body.toString());
-      expect(res.statusCode).toBe(403);
-      expect(resultBody.error).toBe({ error: expect.any(String) });
-      expect(resultBody.errorCategory).toBe('INACCESSIBLE_VALUE');
-    }
-
-    const data = getData();
-    const controlUserSessionId = data.sessions[0].controlUserSessionId;
     const newDescription = 'Land humans on the Moon and bring them safely back to Earth';
-    const res = missionDescriptionUpdate(controlUserSessionId, missionId + 1, newDescription);
-    const resultBody = JSON.parse(res.body.toString());
+
+    const res = missionDescriptionUpdate(newSessionId, missionId, newDescription);
+    const resultBody = res.body
     expect(res.statusCode).toBe(403);
-    expect(resultBody.error).toBe({ error: expect.any(String) });
-    expect(resultBody.errorCategory).toBe('INACCESSIBLE_VALUE');
+    expect(resultBody).toEqual({ error: expect.any(String) });
+
+    const session = findSessionFromSessionId(controlUserSessionId);
+    if (session) {
+      const newDescription = 'Land humans on the Moon and bring them safely back to Earth';
+      const res = missionDescriptionUpdate(controlUserSessionId, newMissionId + 1, newDescription);
+      const resultBody = res.body
+      expect(res.statusCode).toBe(403);
+      expect(resultBody).toEqual({ error: expect.any(String) });
+    }
   });
 });

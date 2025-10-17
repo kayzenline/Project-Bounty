@@ -125,13 +125,13 @@ export function controlUserSessionId(
 }
 
 export function missionNameUpdate(
-  controlUserId: number,
+  controlUserSessionId: string,
   missionId: number,
   name: string
 ) {
   const response = request('PUT', `${SERVER_URL}/v1/admin/mission/${missionId}/name`, {
+    headers: { controlUserSessionId: controlUserSessionId },
     json: {
-      controlUserId,
       name
     }
   });
@@ -143,13 +143,13 @@ export function missionNameUpdate(
 }
 
 export function missionTargetUpdate(
-  controlUserId: number,
+  controlUserSessionId: string,
   missionId: number,
   target: string
 ) {
   const response = request('PUT', `${SERVER_URL}/v1/admin/mission/${missionId}/target`, {
+    headers: { controlUserSessionId: controlUserSessionId },
     json: {
-      controlUserId,
       target
     }
   });
@@ -161,13 +161,13 @@ export function missionTargetUpdate(
 }
 
 export function missionDescriptionUpdate(
-  controlUserId: number,
+  controlUserSessionId: string,
   missionId: number,
   description: string
 ) {
   const response = request('PUT', `${SERVER_URL}/v1/admin/mission/${missionId}/description`, {
+    headers: { controlUserSessionId: controlUserSessionId },
     json: {
-      controlUserId,
       description
     }
   });

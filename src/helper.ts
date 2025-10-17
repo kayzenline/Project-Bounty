@@ -143,6 +143,7 @@ function missionTargetValidity(target: string, maxlen = 100) {
 }
 
 // Helper function for checking if missionId is valid or invalid
+
 function missionIdCheck(missionId: number) {
   // missionId must be integer
   if (!Number.isInteger(missionId) || missionId < 0) {
@@ -196,8 +197,7 @@ function generateSessionId() {
 }
 
 function findSessionFromSessionId(controlUserSessionId: string) {
-  const session = getData().sessions.find(s => s.controlUserSessionId === controlUserSessionId);
-  return session;
+  return getData().sessions.find(s => s.controlUserSessionId === controlUserSessionId);
 }
 
 export {

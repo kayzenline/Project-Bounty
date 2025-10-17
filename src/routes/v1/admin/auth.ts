@@ -14,7 +14,7 @@ router.post('/register', (req, res) => {
     return res.status(status).json({ error: result.error });
   }
   const controlUserSessionId = adminAuthLogin(email, password);
-  return res.status(200).json({ controlUserId: controlUserSessionId });
+  return res.status(200).json({ controlUserSessionId: controlUserSessionId.controlUserSessionId });
 });
 router.post('/login', (req, res) => {
   const { email, password } = req.body || {};

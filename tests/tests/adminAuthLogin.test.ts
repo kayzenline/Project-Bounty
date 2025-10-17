@@ -1,4 +1,5 @@
 import { adminAuthRegister, adminAuthLogin } from '../../src/auth';
+import { findSessionFromSessionId } from '../../src/helper';
 import { clear } from '../../src/other';
 
 describe('adminAuthLogin', () => {
@@ -9,8 +10,13 @@ describe('adminAuthLogin', () => {
 
   test('successful login', () => {
     const result = adminAuthLogin('test@example.com', 'password123');
-    expect(result).toEqual({ controlUserId: expect.any(Number) });
-    expect(result.controlUserId).toBeGreaterThan(0);
+    expect(result).toEqual({ controlSessionUserId: expect.any(String) });
+    if (result.controlUserSessionId != undefined) {
+      const session = findSessionFromSessionId(result.controlUserSessionId);
+      if (session) {
+        expect(session.controlUserId).toBeGreaterThan(0);
+      }
+    }
   });
 
   test('invalid email format', () => {

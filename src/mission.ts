@@ -125,9 +125,14 @@ function adminMissionInfo(controlUserId: number, missionId: number) {
 function adminMissionNameUpdate(controlUserId: number, missionId: number, name: string) {
   try {
     const user = controlUserIdCheck(controlUserId);
+    const mission = missionIdCheck(missionId);
     const validname = missionNameValidity(name);
     const data = getData();
     const missiontarget = data.spaceMissions.find(m => m.missionId === missionId);
+    if (!mission) {
+      buildError('The specified missionId does not exist', EC.INACCESSIBLE_VALUE);
+    }
+
     if (missiontarget.controlUserId !== user.controlUserId) {
       buildError('Mission does not belong to this user', EC.INACCESSIBLE_VALUE);
     }
@@ -157,6 +162,10 @@ function adminMissionTargetUpdate(controlUserId: number, missionId: number, targ
     const mission = missionIdCheck(missionId);
     const validTarget = missionTargetValidity(target);
 
+    if (!mission) {
+      buildError('The specified missionId does not exist', EC.INACCESSIBLE_VALUE);
+    }
+    
     if (mission.controlUserId !== user.controlUserId) {
       buildError('Mission does not belong to this user', EC.INACCESSIBLE_VALUE);
     }
@@ -180,6 +189,10 @@ function adminMissionDescriptionUpdate(controlUserId: number, missionId: number,
     const user = controlUserIdCheck(controlUserId);
     const mission = missionIdCheck(missionId);
     const validDescription = missionDescriptionValidity(description);
+
+    if (!mission) {
+      buildError('Mission does not belong to this user', EC.INACCESSIBLE_VALUE);
+    }
 
     if (mission.controlUserId !== user.controlUserId) {
       buildError('Mission does not belong to this user', EC.INACCESSIBLE_VALUE);

@@ -44,7 +44,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
     if (!session) {
       return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
     }
-
+  
     const result = adminMissionCreate(session.controlUserId, name, description, target);
     if ('error' in result) {
       let status: number;
@@ -95,49 +95,67 @@ router.delete('/:missionid', (req: Request, res: Response, next: NextFunction) =
   }
 });
 
-router.put('/:missionid/name', (req, res) => {
-  const { controlUserSessionId, missionId, name } = req.body || {};
-  const session = findSessionFromSessionId(controlUserSessionId);
-  if (!session) {
+router.put('/:missionId/name', (req: Request, res: Response) => {
+  const controlUserSessionId = req.header('controlUserSessionId');
+  const missionId = Number(req.params.missionid);
+  const name = req.body || {};
+
+  if (!controlUserSessionId) {
     return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
   }
-  const controlUserId = session.controlUserId;
-  const result = adminMissionNameUpdate(controlUserId, missionId, name);
-  if ('error' in result) {
-    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories] || 400;
-    return res.status(status).json({ error: result.error });
-  }
-  return res.status(200).json({});
-});
-
-router.put('/:missionid/description', (req, res) => {
-  const { controlUserSessionId, missionId, description } = req.body || {};
   const session = findSessionFromSessionId(controlUserSessionId);
-  if (!session) {
+  if (session === undefined) {
     return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
   }
 
   const controlUserId = session.controlUserId;
-  const result = adminMissionDescriptionUpdate(controlUserSessionId, missionId, description);
+  const result = adminMissionDescriptionUpdate(controlUserId, missionId, name);
   if ('error' in result) {
-    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories] || 400;
+    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories] ?? 400;
     return res.status(status).json({ error: result.error });
   }
 
   return res.status(200).json({});
 });
 
-router.put('/:missionid/target', (req, res) => {
-  const { controlUserSessionId, missionId, target } = req.body || {};
+router.put('/:missionId/description', (req: Request, res: Response) => {
+  const controlUserSessionId = req.header('controlUserSessionId');
+  const missionId = Number(req.params.missionid);
+  const description = req.body || {};
+  if (!controlUserSessionId) {
+    return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
+  }
+  const session = findSessionFromSessionId(controlUserSessionId);
+  if (session === undefined) {
+    return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
+  }
+
+  const controlUserId = session.controlUserId;
+  const result = adminMissionDescriptionUpdate(controlUserId, missionId, description);
+  if ('error' in result) {
+    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories] ?? 400;
+    return res.status(status).json({ error: result.error });
+  }
+
+  return res.status(200).json({});
+});
+
+router.put('/:missionid/target', (req: Request, res: Response) => {
+  const controlUserSessionId = req.header('controlUserSessionId');
+  const missionId = Number(req.params.missionid);
+  const target = req.body || {};
+  if (!controlUserSessionId) {
+    return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
+  }
   const session = findSessionFromSessionId(controlUserSessionId);
   if (!session) {
     return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
   }
 
   const controlUserId = session.controlUserId;
-  const result = adminMissionTargetUpdate(controlUserSessionId, missionId, target);
+  const result = adminMissionTargetUpdate(controlUserId, missionId, target);
   if ('error' in result) {
-    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories] || 400;
+    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories] ?? 400;
     return res.status(status).json({ error: result.error });
   }
 
