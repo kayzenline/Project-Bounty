@@ -82,6 +82,7 @@ function adminAuthRegister(email: string, password: string, nameFirst: string, n
   };
   data.sessions.push(newSession);
   setData(data);
+
   return { controlUserSessionId };
 }
 

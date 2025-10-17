@@ -3,6 +3,7 @@ import { notImplementedHandler } from '../../utils';
 import { getData } from '../../../dataStore';
 import { adminMissionNameUpdate, adminMissionTargetUpdate, adminMissionDescriptionUpdate, adminMissionRemove, adminMissionCreate, adminMissionList, adminMissionTransfer } from '../../../mission';
 import { httpToErrorCategories } from '../../../testSamples';
+import { findSessionFromSessionId } from '../../../helper';
 
 const router = Router();
 
@@ -39,7 +40,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
       return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
     }
 
-    const session = getData().sessions.find(s => s.controlUserSessionId === controlUserSessionId);
+    const session = findSessionFromSessionId(controlUserSessionId);
     if (!session) {
       return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
     }
@@ -75,7 +76,7 @@ router.delete('/:missionid', (req: Request, res: Response, next: NextFunction) =
       return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
     }
 
-    const session = getData().sessions.find(s => s.controlUserSessionId === controlUserSessionId);
+    const session = findSessionFromSessionId(controlUserSessionId);
     if (!session) {
       return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
     }

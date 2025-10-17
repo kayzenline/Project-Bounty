@@ -195,8 +195,9 @@ function generateSessionId() {
   return uuidGen();
 }
 
-function findControlUserIdFromSession(controlUserSessionId: string) {
-  return getData().sessions.find(s => s.controlUserSessionId === controlUserSessionId).controlUserId;
+function findSessionFromSessionId(controlUserSessionId: string) {
+  const session = getData().sessions.find(s => s.controlUserSessionId === controlUserSessionId);
+  return session;
 }
 
 export {
@@ -215,5 +216,5 @@ export {
   normalizeError,
   generateSessionId,
   ServiceError,
-  findControlUserIdFromSession
+  findSessionFromSessionId
 };
