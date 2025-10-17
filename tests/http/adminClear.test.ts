@@ -2,19 +2,12 @@ import fs from 'fs';
 import path from 'path';
 import request from 'sync-request-curl';
 import config from '../../src/config.json';
+import { clearRequest } from './requestHelpers';
 const { port, url } = config;
 const SERVER_URL = `${url}:${port}`;
 const DB_PATH = path.join(__dirname, '../../src/db.json');
 
 const readDb = () => JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-
-export function clearRequest() {
-  const res = request('DELETE', `${SERVER_URL}/v1/clear`);
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString()),
-  };
-}
 
 describe('DELETE /v1/clear', () => {
   beforeEach(() => {

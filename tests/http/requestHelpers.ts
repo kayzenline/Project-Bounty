@@ -196,5 +196,8 @@ export function missionList(
 
 export function clearRequest() {
   const res = request('DELETE', `${SERVER_URL}/v1/clear`);
-  return { statusCode: res.statusCode, body: res.body.toString() };
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString()),
+  };
 }
