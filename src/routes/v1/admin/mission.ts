@@ -3,7 +3,7 @@ import { notImplementedHandler } from '../../utils';
 import { getData } from '../../../dataStore';
 import { adminMissionNameUpdate, adminMissionTargetUpdate, adminMissionDescriptionUpdate, adminMissionRemove, adminMissionCreate, adminMissionList, adminMissionTransfer } from '../../../mission';
 import { httpToErrorCategories } from '../../../testSamples';
-import { findSessionFromSessionId } from '../../../helper'
+import { findSessionFromSessionId } from '../../../helper';
 
 const router = Router();
 
