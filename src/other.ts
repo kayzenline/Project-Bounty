@@ -17,6 +17,5 @@ export function clear() {
 }
 
 export function clearHandler(_req: Request, res: Response) {
-  clear();
-  return res.status(200).json({});
+  return res.status(200).json(clear());
 }

@@ -5,8 +5,7 @@ const router = Router();
 
 router.delete('/', (_req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = clear();
-    return res.status(200).json(result);
+    return res.status(200).json(clear());
   } catch (err) {
     return next(err);
   }
