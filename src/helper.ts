@@ -146,6 +146,7 @@ function missionTargetValidity(target: string, maxlen = 100) {
 
 function missionIdCheck(missionId: number) {
   // missionId must be integer
+  
   if (!Number.isInteger(missionId) || missionId < 0) {
     throw new ServiceError('missionId must be integer', EC.BAD_INPUT);
   }
