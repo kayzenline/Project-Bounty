@@ -44,7 +44,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
     if (!session) {
       return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
     }
-  
+
     const result = adminMissionCreate(session.controlUserId, name, description, target);
     if ('error' in result) {
       let status: number;
