@@ -1,9 +1,7 @@
 import { v4 as uuid } from 'uuid';
-import { adminMissionCreate, adminMissionInfo } from '../../src/mission';
-import { adminAuthRegister, adminAuthLogin } from '../../src/auth';
+import { adminMissionInfo } from '../../src/mission';
 import { findSessionFromSessionId, generateSessionId } from '../../src/helper';
 import { missionTargetUpdate, clearRequest, controlUserSessionId as missionCreate, userRegister, userLogin } from './requestHelpers';
-import { getData } from '../../src/dataStore';
 
 function uniqueEmail(prefix = 'user') {
   return `${prefix}.${uuid()}@example.com`;
@@ -60,12 +58,12 @@ describe('HTTP tests for MissionTargetUpdate', () => {
     const newSessionId = generateSessionId();
 
     const res = missionTargetUpdate(newSessionId, missionId, 'Jupiter moons');
-    const resultBody = res.body
+    const resultBody = res.body;
     expect(res.statusCode).toBe(401);
     expect(resultBody).toEqual({ error: expect.any(String) });
 
     const res1 = missionTargetUpdate('', missionId, 'Jupiter moons');
-    const resultBody1 = res1.body
+    const resultBody1 = res1.body;
     expect(res1.statusCode).toBe(401);
     expect(resultBody1).toEqual({ error: expect.any(String) });
   });
@@ -87,17 +85,14 @@ describe('HTTP tests for MissionTargetUpdate', () => {
     expect(newRes.statusCode).toBe(200);
     const newMissionId = newRes.body.missionId;
 
-    const res = missionTargetUpdate(controlUserSessionId, missionId, 'Jupiter moons');
+    const res = missionTargetUpdate(newSessionId, missionId, 'Jupiter moons');
     const resultBody = res.body;
     expect(res.statusCode).toBe(403);
     expect(resultBody).toEqual({ error: expect.any(String) });
 
-    const session = findSessionFromSessionId(controlUserSessionId);
-    if (session) {
-      const res = missionTargetUpdate(controlUserSessionId, missionId, 'Jupiter moons');
-      const resultBody = res.body;
-      expect(res.statusCode).toBe(403);
-      expect(resultBody).toEqual({ error: expect.any(String) });
-    }
+    const res1 = missionTargetUpdate(controlUserSessionId, newMissionId + 1, 'Jupiter moons');
+    const resultBody1 = res1.body;
+    expect(res1.statusCode).toBe(403);
+    expect(resultBody1).toEqual({ error: expect.any(String) });
   });
 });
