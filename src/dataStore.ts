@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import { string } from 'yaml/dist/schema/common/string';
 
 // Global data store
 interface MissionControlUser {
