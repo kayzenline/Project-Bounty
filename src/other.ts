@@ -9,9 +9,11 @@ export function clear() {
   const data = getData();
   data.controlUsers = [];
   data.spaceMissions = [];
+  data.astronauts = [];
   data.sessions = [];
   data.nextControlUserId = 1;
   data.nextMissionId = 1;
+  data.nextAstronautId = 1;
   setData(data);
   return {};
 }

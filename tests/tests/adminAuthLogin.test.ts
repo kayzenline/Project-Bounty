@@ -9,8 +9,8 @@ describe('adminAuthLogin', () => {
 
   test('successful login', () => {
     const result = adminAuthLogin('test@example.com', 'password123');
-    expect(result).toEqual({ controlUserId: expect.any(Number) });
-    expect(result.controlUserId).toBeGreaterThan(0);
+    expect(result).toEqual({ controlUserSessionId: expect.any(String) });
+    expect(result.controlUserSessionId).toBeDefined();
   });
 
   test('invalid email format', () => {

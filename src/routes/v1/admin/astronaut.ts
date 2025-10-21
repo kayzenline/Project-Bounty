@@ -2,12 +2,14 @@ import { Router, Request, Response } from 'express';
 import { adminAstronautCreate, adminAstronautInfo } from '../../../astronaut';
 import { findSessionFromSessionId } from '../../../helper';
 import { errorCategories as EC } from '../../../testSamples';
+import { loadData } from '../../../dataStore';
 
 const router = Router();
 
 // POST /v1/admin/astronaut - Create new astronaut
 router.post('/', (req: Request, res: Response) => {
-  const { controlUserSessionId } = req.headers;
+  loadData();
+  const controlUserSessionId = req.header('controlUserSessionId');
 
   // Check session
   if (!controlUserSessionId || typeof controlUserSessionId !== 'string') {
@@ -32,7 +34,8 @@ router.post('/', (req: Request, res: Response) => {
 
 // GET /v1/admin/astronaut/:astronautid - Get astronaut info
 router.get('/:astronautid', (req: Request, res: Response) => {
-  const { controlUserSessionId } = req.headers;
+  loadData();
+  const controlUserSessionId = req.header('controlUserSessionId');
 
   // Check session
   if (!controlUserSessionId || typeof controlUserSessionId !== 'string') {

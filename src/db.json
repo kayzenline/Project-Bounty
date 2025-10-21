@@ -1,32 +1,612 @@
 {
-  "controlUsers": [],
-  "spaceMissions": [
+  "controlUsers": [
     {
-      "missionId": 1,
       "controlUserId": 1,
-      "name": "Mercury",
-      "description": "Test mission",
-      "target": "Earth Orbit",
-      "timeCreated": 1761016170,
-      "timeLastEdited": 1761016170
-    }
-  ],
-  "astronauts": [
+      "email": "user1761018411182@test.com",
+      "password": "abcdefg123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abcdefg123"
+      ]
+    },
     {
-      "astronautId": 1,
-      "nameFirst": "James",
-      "nameLast": "Kirk",
-      "rank": "Captain",
-      "age": 30,
-      "weight": 70,
-      "height": 180,
-      "timeAdded": 1761016170,
-      "timeLastEdited": 1761016170,
-      "assignedMissionId": 1
+      "controlUserId": 2,
+      "email": "kitty1761018411183@qq.com",
+      "password": "Kitty123456",
+      "nameFirst": "Kitty",
+      "nameLast": "Tan",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "Kitty123456"
+      ]
+    },
+    {
+      "controlUserId": 3,
+      "email": "user1761018411186@test.com",
+      "password": "abcdefg123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abcdefg123"
+      ]
+    },
+    {
+      "controlUserId": 4,
+      "email": "kitty1761018411187@qq.com",
+      "password": "Kitty123456",
+      "nameFirst": "Kitty",
+      "nameLast": "Tan",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "Kitty123456"
+      ]
+    },
+    {
+      "controlUserId": 5,
+      "email": "user1761018411189@test.com",
+      "password": "abcdefg123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abcdefg123"
+      ]
+    },
+    {
+      "controlUserId": 6,
+      "email": "kitty1761018411190@qq.com",
+      "password": "Kitty123456",
+      "nameFirst": "Kitty",
+      "nameLast": "Tan",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "Kitty123456"
+      ]
+    },
+    {
+      "controlUserId": 7,
+      "email": "user1761018411193@test.com",
+      "password": "abcdefg123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abcdefg123"
+      ]
+    },
+    {
+      "controlUserId": 8,
+      "email": "kitty1761018411193@qq.com",
+      "password": "Kitty123456",
+      "nameFirst": "Kitty",
+      "nameLast": "Tan",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "Kitty123456"
+      ]
+    },
+    {
+      "controlUserId": 9,
+      "email": "user1761018411195@test.com",
+      "password": "abcdefg123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abcdefg123"
+      ]
+    },
+    {
+      "controlUserId": 10,
+      "email": "kitty1761018411196@qq.com",
+      "password": "Kitty123456",
+      "nameFirst": "Kitty",
+      "nameLast": "Tan",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "Kitty123456"
+      ]
+    },
+    {
+      "controlUserId": 11,
+      "email": "user1761018411198@test.com",
+      "password": "abcdefg123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abcdefg123"
+      ]
+    },
+    {
+      "controlUserId": 12,
+      "email": "newemail1761018411199@test.com",
+      "password": "Kitty123456",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "Kitty123456"
+      ]
+    },
+    {
+      "controlUserId": 13,
+      "email": "user1761018411219@test.com",
+      "password": "abcdefg123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abcdefg123"
+      ]
+    },
+    {
+      "controlUserId": 14,
+      "email": "user1761018411222@test.com",
+      "password": "abcdefg123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abcdefg123"
+      ]
+    },
+    {
+      "controlUserId": 15,
+      "email": "user1761018411225@test.com",
+      "password": "abcdefg123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abcdefg123"
+      ]
+    },
+    {
+      "controlUserId": 16,
+      "email": "user1761021009911@test.com",
+      "password": "StrongPass123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "StrongPass123"
+      ]
+    },
+    {
+      "controlUserId": 17,
+      "email": "user1761021009922@test.com",
+      "password": "StrongPass123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "StrongPass123"
+      ]
+    },
+    {
+      "controlUserId": 18,
+      "email": "user1761021009924@test.com",
+      "password": "StrongPass123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "StrongPass123"
+      ]
+    },
+    {
+      "controlUserId": 19,
+      "email": "user1761021009926@test.com",
+      "password": "StrongPass123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "StrongPass123"
+      ]
+    },
+    {
+      "controlUserId": 20,
+      "email": "user1761021009928@test.com",
+      "password": "StrongPass123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "StrongPass123"
+      ]
+    },
+    {
+      "controlUserId": 21,
+      "email": "user1761021009931@test.com",
+      "password": "Abcd1234567!!",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 2,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "StrongPass123"
+      ]
+    },
+    {
+      "controlUserId": 22,
+      "email": "user1761021009935@test.com",
+      "password": "1234abcd!!@@kkk",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 2,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "StrongPass123",
+        "Abcd1234567!!"
+      ]
+    },
+    {
+      "controlUserId": 23,
+      "email": "user1761021009956@test.com",
+      "password": "abcdefg123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abcdefg123"
+      ]
+    },
+    {
+      "controlUserId": 24,
+      "email": "kitty1761021009957@qq.com",
+      "password": "Kitty123456",
+      "nameFirst": "Kitty",
+      "nameLast": "Tan",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "Kitty123456"
+      ]
+    },
+    {
+      "controlUserId": 25,
+      "email": "user1761021009959@test.com",
+      "password": "abcdefg123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abcdefg123"
+      ]
+    },
+    {
+      "controlUserId": 26,
+      "email": "kitty1761021009960@qq.com",
+      "password": "Kitty123456",
+      "nameFirst": "Kitty",
+      "nameLast": "Tan",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "Kitty123456"
+      ]
+    },
+    {
+      "controlUserId": 27,
+      "email": "user1761021009962@test.com",
+      "password": "abcdefg123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abcdefg123"
+      ]
+    },
+    {
+      "controlUserId": 28,
+      "email": "kitty1761021009962@qq.com",
+      "password": "Kitty123456",
+      "nameFirst": "Kitty",
+      "nameLast": "Tan",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "Kitty123456"
+      ]
+    },
+    {
+      "controlUserId": 29,
+      "email": "user1761021009965@test.com",
+      "password": "abcdefg123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abcdefg123"
+      ]
+    },
+    {
+      "controlUserId": 30,
+      "email": "kitty1761021009965@qq.com",
+      "password": "Kitty123456",
+      "nameFirst": "Kitty",
+      "nameLast": "Tan",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "Kitty123456"
+      ]
+    },
+    {
+      "controlUserId": 31,
+      "email": "user1761021009967@test.com",
+      "password": "abcdefg123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abcdefg123"
+      ]
+    },
+    {
+      "controlUserId": 32,
+      "email": "kitty1761021009968@qq.com",
+      "password": "Kitty123456",
+      "nameFirst": "Kitty",
+      "nameLast": "Tan",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "Kitty123456"
+      ]
+    },
+    {
+      "controlUserId": 33,
+      "email": "user1761021009970@test.com",
+      "password": "abcdefg123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abcdefg123"
+      ]
+    },
+    {
+      "controlUserId": 34,
+      "email": "newemail1761021009974@test.com",
+      "password": "Kitty123456",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "Kitty123456"
+      ]
+    },
+    {
+      "controlUserId": 35,
+      "email": "user1761021010111@test.com",
+      "password": "abcdefg123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abcdefg123"
+      ]
+    },
+    {
+      "controlUserId": 36,
+      "email": "user1761021010115@test.com",
+      "password": "abcdefg123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abcdefg123"
+      ]
+    },
+    {
+      "controlUserId": 37,
+      "email": "user1761021010117@test.com",
+      "password": "abcdefg123",
+      "nameFirst": "Bill",
+      "nameLast": "Ryker",
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "abcdefg123"
+      ]
     }
   ],
-  "nextControlUserId": 1,
+  "spaceMissions": [],
+  "astronauts": [],
+  "nextControlUserId": 38,
   "nextMissionId": 1,
-  "nextAstronautId": 2,
-  "sessions": []
+  "nextAstronautId": 1,
+  "sessions": [
+    {
+      "controlUserSessionId": "e9d1a7f5-a677-42ba-b618-dae4a97cb380",
+      "controlUserId": 1
+    },
+    {
+      "controlUserSessionId": "fa8f11a6-688e-4dec-9201-d9ec3f11884e",
+      "controlUserId": 2
+    },
+    {
+      "controlUserSessionId": "12d73a5c-e007-43ee-9b92-68952c4f7d3e",
+      "controlUserId": 3
+    },
+    {
+      "controlUserSessionId": "20cf2fa9-269a-47b5-a63e-5215eadc776c",
+      "controlUserId": 4
+    },
+    {
+      "controlUserSessionId": "1ef88bd6-b8d2-4bab-840f-554f0eb562c2",
+      "controlUserId": 5
+    },
+    {
+      "controlUserSessionId": "12d93b24-5359-4225-8470-d06b3078bef7",
+      "controlUserId": 6
+    },
+    {
+      "controlUserSessionId": "a9492a50-3ed3-4c9d-bfcf-019e668d4406",
+      "controlUserId": 7
+    },
+    {
+      "controlUserSessionId": "48b0e219-4b2b-4d6b-ab06-158921ba1533",
+      "controlUserId": 8
+    },
+    {
+      "controlUserSessionId": "b19d1fbd-0e19-47be-8782-97b95cc73301",
+      "controlUserId": 9
+    },
+    {
+      "controlUserSessionId": "494ab48b-eae6-4841-aa30-ceb650c87ea3",
+      "controlUserId": 10
+    },
+    {
+      "controlUserSessionId": "73843847-0a99-4d90-93f2-9ac15e8cc6bc",
+      "controlUserId": 11
+    },
+    {
+      "controlUserSessionId": "dc0dc4f4-8e5d-4286-a2eb-99c9a4adad15",
+      "controlUserId": 12
+    },
+    {
+      "controlUserSessionId": "b1414d03-145e-47a4-93e8-610f3903b429",
+      "controlUserId": 13
+    },
+    {
+      "controlUserSessionId": "ed09e0b6-ac4f-4521-a2b2-54ab1415dfd8",
+      "controlUserId": 14
+    },
+    {
+      "controlUserSessionId": "64f6c3a1-a5c2-4312-ba44-63211dcf51e8",
+      "controlUserId": 15
+    },
+    {
+      "controlUserSessionId": "d13f3b1b-25a2-48aa-ae3b-1181bb135d87",
+      "controlUserId": 16
+    },
+    {
+      "controlUserSessionId": "d6ac2b88-4136-40c4-8224-9475850abe37",
+      "controlUserId": 17
+    },
+    {
+      "controlUserSessionId": "b75b1baf-0e8a-4bc0-9352-7d3aa2c125f3",
+      "controlUserId": 18
+    },
+    {
+      "controlUserSessionId": "b92f0fee-54f7-4d24-9f23-d316491f15e4",
+      "controlUserId": 19
+    },
+    {
+      "controlUserSessionId": "657b08e2-f5a7-4758-84c2-f85183c7959e",
+      "controlUserId": 20
+    },
+    {
+      "controlUserSessionId": "fe47e0b6-04ae-41fc-8584-1780cfecf0ce",
+      "controlUserId": 21
+    },
+    {
+      "controlUserSessionId": "7bad0455-fa57-44df-9d7a-5e42767c5de0",
+      "controlUserId": 21
+    },
+    {
+      "controlUserSessionId": "284937ce-b360-4abb-a54e-413106afa134",
+      "controlUserId": 22
+    },
+    {
+      "controlUserSessionId": "07d88731-afff-4d5f-8dc7-ea58d4baabf8",
+      "controlUserId": 22
+    },
+    {
+      "controlUserSessionId": "74a53c73-48a1-4537-a2b6-76b391ce66a9",
+      "controlUserId": 23
+    },
+    {
+      "controlUserSessionId": "0de85a0f-77aa-4e77-9012-a500889346ec",
+      "controlUserId": 24
+    },
+    {
+      "controlUserSessionId": "3d6a4795-4c3c-4c1e-947e-73baff54ba69",
+      "controlUserId": 25
+    },
+    {
+      "controlUserSessionId": "18ad58e7-5089-45a7-9a4a-311a93f93231",
+      "controlUserId": 26
+    },
+    {
+      "controlUserSessionId": "fd4c47aa-1dbc-40bb-8599-23bd9369ac9d",
+      "controlUserId": 27
+    },
+    {
+      "controlUserSessionId": "276e529f-f09f-4aca-a8d7-8eb797ed2d4c",
+      "controlUserId": 28
+    },
+    {
+      "controlUserSessionId": "3e801f9d-cce2-4cbd-b2be-bdc3d122bf02",
+      "controlUserId": 29
+    },
+    {
+      "controlUserSessionId": "e17fcd1f-5cdc-4ec6-a4c1-b3752c9ff704",
+      "controlUserId": 30
+    },
+    {
+      "controlUserSessionId": "6c246e3f-f59e-4f77-93bd-9b212a51cfcf",
+      "controlUserId": 31
+    },
+    {
+      "controlUserSessionId": "269c5ff7-cbfa-417c-ae44-2b0699428ae5",
+      "controlUserId": 32
+    },
+    {
+      "controlUserSessionId": "c117f6e8-6029-4626-9149-8f8d099e5492",
+      "controlUserId": 33
+    },
+    {
+      "controlUserSessionId": "735feced-69a5-4386-902f-859c02457888",
+      "controlUserId": 34
+    },
+    {
+      "controlUserSessionId": "5eb614a2-d095-4c19-872e-c1fa54074289",
+      "controlUserId": 35
+    },
+    {
+      "controlUserSessionId": "6a07e5f2-c64d-42b4-aeea-745b1bedd3fa",
+      "controlUserId": 36
+    },
+    {
+      "controlUserSessionId": "eaeec83b-b85d-4b87-9f12-0f8a97505369",
+      "controlUserId": 37
+    }
+  ]
 }

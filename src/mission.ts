@@ -125,6 +125,7 @@ function adminMissionInfo(controlUserId: number, missionId: number) {
 function adminMissionNameUpdate(controlUserId: number, missionId: number, name: string) {
   try {
     const user = controlUserIdCheck(controlUserId);
+    missionIdCheck(missionId);
     const validname = missionNameValidity(name);
     const data = getData();
     const missiontarget = data.spaceMissions.find(m => m.missionId === missionId);
