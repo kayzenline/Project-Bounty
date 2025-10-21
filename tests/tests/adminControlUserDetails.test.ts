@@ -6,10 +6,17 @@ describe('adminControlUserDetails', () => {
   });
   test('check function return correct object', () => {
     const result = adminAuthRegister('rosielover@gmail.com', 'a!b@AB1234', 'Kitty', 'Tan');
-    // adminAuthRegister return {controluserid}
-    const userid = result.controlUserId;
+    // adminAuthRegister return {controlUserSessionId}
+    const sessionId = result.controlUserSessionId;
+
+    // Get controlUserId from session
+    const { getData } = require('../../src/dataStore');
+    const data = getData();
+    const session = data.sessions.find(s => s.controlUserSessionId === sessionId);
+    const userid = session.controlUserId;
+
     const userdetails = adminControlUserDetails(userid);// return{user:{}}
-    expect(result.controlUserId).toEqual(userid);
+    expect(session.controlUserId).toEqual(userid);
     expect(userdetails.user.name).toEqual('Kitty Tan');
     expect(userdetails.user.email).toEqual('rosielover@gmail.com');
     expect(userdetails.user.numSuccessfulLogins).toEqual(1);

@@ -1,63 +1,37 @@
-import fs from 'fs';
-import path from 'path';
-import request from 'sync-request-curl';
-const SERVER_URL = 'http://127.0.0.1:4900';
-const DB_PATH = path.join(__dirname, '../../src/db.json');
-import { loadData, DataStore } from '../../src/dataStore';
+import { userRegister, getControlUserDetails, clearRequest } from './requestHelpers';
+
 let sessionId: string;
 let userEmail: string;
+
 beforeEach(() => {
-  const initialData: DataStore = {
-    controlUsers: [],
-    spaceMissions: [],
-    astronauts: [],
-    nextControlUserId: 1,
-    nextMissionId: 1,
-    nextAstronautId: 1,
-    sessions: [],
-  };
-  fs.writeFileSync(DB_PATH, JSON.stringify(initialData, null, 2));
-  loadData();
+  // Clear the database using the API
+  clearRequest();
+
+  // Register a new user for testing
   const uniqueEmail = `user${Date.now()}@test.com`;
   userEmail = uniqueEmail;
-  const res = request('POST', `${SERVER_URL}/v1/admin/auth/register`, {
-    json: {
-      email: uniqueEmail,
-      password: 'abcdefg123',
-      nameFirst: 'Bill',
-      nameLast: 'Ryker',
-    },
-  });
-
-  const body = JSON.parse(res.body.toString());
-  sessionId = body.controlUserSessionId;
+  const res = userRegister(uniqueEmail, 'abcdefg123', 'Bill', 'Ryker');
+  sessionId = res.body.controlUserSessionId;
 });
 
 describe('HTTP tests for ControlUserdetails', () => {
   test('header is invalid', () => {
-    const res = request('GET', `${SERVER_URL}/v1/admin/controluser/details`);
-    const body = JSON.parse(res.body.toString());
+    const res = getControlUserDetails('');
     expect(res.statusCode).toBe(401);
-    expect(body.error).toBe('ControlUserSessionId is invalid');
-    expect(body.errorCategory).toBe('INVALID_CREDENTIALS');
+    expect(res.body.error).toBe('ControlUserSessionId is invalid');
+    expect(res.body.errorCategory).toBe('INVALID_CREDENTIALS');
   });
 
   test('User not found', () => {
-    const res = request('GET', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: '999' }
-    });
-    const body = JSON.parse(res.body.toString());
+    const res = getControlUserDetails('999');
     expect(res.statusCode).toBe(401);
-    expect(body.error).toBe('User not found');
-    expect(body.errorCategory).toBe('INVALID_CREDENTIALS');
+    expect(res.body.error).toBe('User not found');
+    expect(res.body.errorCategory).toBe('INVALID_CREDENTIALS');
   });
 
   test('request successfully ', () => {
-    const res = request('GET', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: sessionId }
-    });
-    const body = JSON.parse(res.body.toString());
-    const user = body.user;
+    const res = getControlUserDetails(sessionId);
+    const user = res.body.user;
     expect(res.statusCode).toBe(200);
     expect(user.controlUserId).toBeGreaterThan(0);
     expect(user.email).toBe(userEmail);

@@ -1,112 +1,62 @@
-import fs from 'fs';
-import path from 'path';
-import request from 'sync-request-curl';
-const SERVER_URL = 'http://127.0.0.1:4900';
-const DB_PATH = path.join(__dirname, '../../src/db.json');
-import { loadData, DataStore } from '../../src/dataStore';
+import { userRegister, updateControlUserDetails, clearRequest } from './requestHelpers';
+
 let sessionId1: string;
 let sessionId2: string;
 let userEmail1: string;
 let userEmail2: string;
-beforeEach(() => {
-  const initialData :DataStore = {
-    controlUsers: [],
-    spaceMissions: [],
-    astronauts: [],
-    nextControlUserId: 1,
-    nextMissionId: 1,
-    nextAstronautId: 1,
-    sessions: [],
-  };
 
-  fs.writeFileSync(DB_PATH, JSON.stringify(initialData, null, 2));
-  loadData();
+beforeEach(() => {
+  // Clear the database using the API
+  clearRequest();
+
+  // Register first user
   const uniqueEmail = `user${Date.now()}@test.com`;
   userEmail1 = uniqueEmail;
-  const res1 = request('POST', `${SERVER_URL}/v1/admin/auth/register`, {
-    json: {
-      email: uniqueEmail,
-      password: 'abcdefg123',
-      nameFirst: 'Bill',
-      nameLast: 'Ryker',
-    },
-  });
-  const body1 = JSON.parse(res1.body.toString());
-  sessionId1 = body1.controlUserSessionId;
+  const res1 = userRegister(uniqueEmail, 'abcdefg123', 'Bill', 'Ryker');
+  sessionId1 = res1.body.controlUserSessionId;
+
+  // Register second user
   const uniqueEmail2 = `kitty${Date.now()}@qq.com`;
   userEmail2 = uniqueEmail2;
-  const res2 = request('POST', `${SERVER_URL}/v1/admin/auth/register`, {
-    json: {
-      email: uniqueEmail2,
-      password: 'Kitty123456',
-      nameFirst: 'Kitty',
-      nameLast: 'Tan',
-    },
-  });
-  const body2 = JSON.parse(res2.body.toString());
-  sessionId2 = body2.controlUserSessionId;
+  const res2 = userRegister(uniqueEmail2, 'Kitty123456', 'Kitty', 'Tan');
+  sessionId2 = res2.body.controlUserSessionId;
 });
 describe('HTTP tests for ControlUserdetailsUpdate', () => {
   test('header is invalid', () => {
-    const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
-      json: { email: '1234@qq.com', nameFirst: 'Ka', nameLast: 'Ka' }
-    });
-    const body = JSON.parse(res.body.toString());
+    const res = updateControlUserDetails('', '1234@qq.com', 'Ka', 'Ka');
     expect(res.statusCode).toBe(401);
-    expect(body.error).toBe('ControlUserSessionId is invalid');
-    expect(body.errorCategory).toBe('INVALID_CREDENTIALS');
+    expect(res.body.error).toBe('ControlUserSessionId is invalid');
+    expect(res.body.errorCategory).toBe('INVALID_CREDENTIALS');
   });
 
   test('User not found', () => {
-    const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: '999' },
-      json: { email: '1234@qq.com', nameFirst: 'Ka', nameLast: 'Ka' }
-    });
-    const body = JSON.parse(res.body.toString());
+    const res = updateControlUserDetails('999', '1234@qq.com', 'Ka', 'Ka');
     expect(res.statusCode).toBe(401);
-    expect(body.error).toBe('controlUserId not found');
-    expect(body.errorCategory).toBe('INVALID_CREDENTIALS');
+    expect(res.body.error).toBe('controlUserId not found');
+    expect(res.body.errorCategory).toBe('INVALID_CREDENTIALS');
   });
   test('email is invalid', () => {
-    const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: sessionId1 },
-      json: { email: 'emailxxx', nameFirst: 'Bill', nameLast: 'Ryker' }
-    });
-    const body = JSON.parse(res.body.toString());
+    const res = updateControlUserDetails(sessionId1, 'emailxxx', 'Bill', 'Ryker');
     expect(res.statusCode).toBe(400);
-    expect(body.error).toBe('this email is invalid');
-    expect(body.errorCategory).toBe('BAD_INPUT');
+    expect(res.body.error).toBe('this email is invalid');
+    expect(res.body.errorCategory).toBe('BAD_INPUT');
   });
   test('name is invalid', () => {
-    const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: sessionId1 },
-      json: { email: 'kitty123@qq.com', nameFirst: '', nameLast: '' }
-    });
-    const body = JSON.parse(res.body.toString());
+    const res = updateControlUserDetails(sessionId1, 'kitty123@qq.com', '', '');
     expect(res.statusCode).toBe(400);
-    expect(body.error).toBe('this name is invalid');
-    expect(body.errorCategory).toBe('BAD_INPUT');
+    expect(res.body.error).toBe('this name is invalid');
+    expect(res.body.errorCategory).toBe('BAD_INPUT');
   });
   test('email already exists', () => {
-    const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: sessionId2 },
-      json: { email: userEmail1, nameFirst: 'Kitty', nameLast: 'Tan' }
-      // wait db.json
-    });
-    const body = JSON.parse(res.body.toString());
-
+    const res = updateControlUserDetails(sessionId2, userEmail1, 'Kitty', 'Tan');
     expect(res.statusCode).toBe(400);
-    expect(body.error).toBe('excluding the current authorised user');
-    expect(body.errorCategory).toBe('BAD_INPUT');
+    expect(res.body.error).toBe('excluding the current authorised user');
+    expect(res.body.errorCategory).toBe('BAD_INPUT');
   });
   test('request successfully ', () => {
     const uniqueNewEmail = `newemail${Date.now()}@test.com`;
-    const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: sessionId2 },
-      json: { email: uniqueNewEmail, nameFirst: 'Bill', nameLast: 'Ryker' }
-    });
-    const body = JSON.parse(res.body.toString());
+    const res = updateControlUserDetails(sessionId2, uniqueNewEmail, 'Bill', 'Ryker');
     expect(res.statusCode).toBe(200);
-    expect(body).toEqual({});
+    expect(res.body).toEqual({});
   });
 });

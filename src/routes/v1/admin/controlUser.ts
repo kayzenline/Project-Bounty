@@ -6,7 +6,7 @@ const router = Router();
 
 router.get('/details', (req, res) => {
   loadData();
-  const Id = req.header('ControlUserSessionId');
+  const Id = req.header('controlUserSessionId');
   if (!Id) {
     return res.status(401).json({ error: 'ControlUserSessionId is invalid', errorCategory: EC.INVALID_CREDENTIALS });
   }
@@ -30,7 +30,7 @@ router.get('/details', (req, res) => {
 });// if head is invalid(sessionid->NaN)
 router.put('/details', (req, res) => {
   loadData();
-  const Id = req.header('ControlUserSessionId');
+  const Id = req.header('controlUserSessionId');
   if (!Id) {
     return res.status(401).json({ error: 'ControlUserSessionId is invalid', errorCategory: EC.INVALID_CREDENTIALS });
   }
@@ -54,7 +54,7 @@ router.put('/details', (req, res) => {
 });
 router.put('/password', (req, res) => {
   loadData();
-  const Id = req.header('ControlUserSessionId');
+  const Id = req.header('controlUserSessionId');
   if (!Id) {
     return res.status(401).json({
       error: 'ControlUserSessionId is invalid',

@@ -3,7 +3,7 @@ import config from '../../src/config.json';
 const { port, url } = config;
 const SERVER_URL = `${url}:${port}`;
 
-async function httpRequest(method: string, url: string, body?: any, headers: Record<string, string> = {}) {
+async function httpRequest(method: string, url: string, body?: Record<string, unknown>, headers: Record<string, string> = {}) {
   const res = await fetch(url, {
     method,
     headers: { 'Content-Type': 'application/json', ...headers },
@@ -76,7 +76,7 @@ export function userLogin(email: string, password: string) {
 
 export function userLogout(sessionId: string) {
   const response = request('POST', `${SERVER_URL}/v1/admin/auth/logout`, {
-    headers: { controlusersessionid: sessionId }
+    headers: { controlUserSessionId: sessionId }
   });
   return {
     statusCode: response.statusCode,
@@ -196,5 +196,56 @@ export function clearRequest() {
   return {
     statusCode: res.statusCode,
     body: JSON.parse(res.body.toString()),
+  };
+}
+
+export function getControlUserDetails(sessionId: string) {
+  const res = request('GET', `${SERVER_URL}/v1/admin/controluser/details`, {
+    headers: { controlUserSessionId: sessionId }
+  });
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString())
+  };
+}
+
+export function updateControlUserDetails(
+  sessionId: string,
+  email: string,
+  nameFirst: string,
+  nameLast: string
+) {
+  const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
+    headers: { controlUserSessionId: sessionId },
+    json: { email, nameFirst, nameLast }
+  });
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString())
+  };
+}
+
+export function updateControlUserPassword(
+  sessionId: string,
+  oldPassword: string,
+  newPassword: string
+) {
+  const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/password`, {
+    headers: { controlUserSessionId: sessionId },
+    json: { oldPassword, newPassword }
+  });
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString())
+  };
+}
+
+export function getAstronautInfo(sessionId: string, astronautId: number) {
+  const res = request('GET', `${SERVER_URL}/v1/admin/astronaut/${astronautId}`, {
+    headers: { controlUserSessionId: sessionId }
+  });
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString())
   };
 }

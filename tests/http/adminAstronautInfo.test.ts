@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import request from 'sync-request-curl';
-import { userLogin, userRegister, clearRequest, createAstronautId } from './requestHelpers';
+import { userLogin, userRegister, clearRequest, createAstronautId, getAstronautInfo } from './requestHelpers';
 import config from '../../src/config.json';
 
 const { port, url } = config;
@@ -22,16 +22,6 @@ function createUserAndLogin() {
   const login = userLogin(email, 'Abcd1234');
   expect(login.statusCode).toBe(200);
   return login.body.controlUserSessionId;
-}
-
-function getAstronautInfo(sessionId: string, astronautId: number) {
-  const response = request('GET', `${SERVER_URL}/v1/admin/astronaut/${astronautId}`, {
-    headers: { controlUserSessionId: sessionId }
-  });
-  return {
-    statusCode: response.statusCode,
-    body: JSON.parse(response.body.toString())
-  };
 }
 
 describe('GET /v1/admin/astronaut/:astronautid', () => {
@@ -70,7 +60,7 @@ describe('GET /v1/admin/astronaut/:astronautid', () => {
   test('error: invalid astronaut ID - not a number', () => {
     const sessionId = createUserAndLogin();
     const response = request('GET', `${SERVER_URL}/v1/admin/astronaut/invalid`, {
-      headers: { controlUserSessionId: sessionId }
+      headers: { ControlUserSessionId: sessionId }
     });
     expect(response.statusCode).toBe(400);
     const body = JSON.parse(response.body.toString());
