@@ -102,6 +102,41 @@ function adminAstronautCreate(
   }
 }
 
+// Get astronaut information by ID
+function adminAstronautInfo(astronautId: number) {
+  try {
+    const astronaut = astronautIdCheck(astronautId);
+
+    // Get assigned mission info if exists
+    let assignedMission = null;
+    if (astronaut.assignedMissionId) {
+      const data = getData();
+      const mission = data.spaceMissions.find(m => m.missionId === astronaut.assignedMissionId);
+      if (mission) {
+        assignedMission = {
+          missionId: mission.missionId,
+          objective: `[${mission.target}] ${mission.name}`
+        };
+      }
+    }
+
+    return {
+      astronautId: astronaut.astronautId,
+      designation: `${astronaut.rank} ${astronaut.nameFirst} ${astronaut.nameLast}`,
+      timeAdded: astronaut.timeAdded,
+      timeLastEdited: astronaut.timeLastEdited,
+      age: astronaut.age,
+      weight: astronaut.weight,
+      height: astronaut.height,
+      assignedMission
+    };
+  } catch (e) {
+    const ne = normalizeError(e);
+    return { error: ne.error, errorCategory: ne.errorCategory };
+  }
+}
+
 export {
   adminAstronautCreate,
+  adminAstronautInfo
 };
