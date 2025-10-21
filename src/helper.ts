@@ -200,6 +200,61 @@ function findSessionFromSessionId(controlUserSessionId: string) {
   return session;
 }
 
+// Helper function to generate unique astronaut ID
+function astronautIdGen() {
+  const data = getData();
+  return data.nextAstronautId++;
+}
+
+// Helper function to validate astronaut rank
+function isValidRank(rank: string) {
+  if (typeof rank !== 'string') {
+    return false;
+  }
+  const trimmedRank = rank.trim();
+  if (trimmedRank.length < 5 || trimmedRank.length > 50) {
+    return false;
+  }
+  // Rank can only contain letters, spaces, hyphens, round brackets, apostrophes, or periods
+  return /^[a-zA-Z\s\-()'\.]+$/.test(trimmedRank);
+}
+
+// Helper function to validate astronaut age
+function isValidAge(age: number) {
+  return Number.isInteger(age) && age >= 20 && age <= 60;
+}
+
+// Helper function to validate astronaut weight
+function isValidWeight(weight: number) {
+  return typeof weight === 'number' && weight > 0 && weight <= 100;
+}
+
+// Helper function to validate astronaut height
+function isValidHeight(height: number) {
+  return typeof height === 'number' && height >= 150 && height <= 200;
+}
+
+// Helper function to check if astronaut ID is valid
+function astronautIdCheck(astronautId: number) {
+  if (!Number.isInteger(astronautId) || astronautId <= 0) {
+    throw new ServiceError('Invalid astronaut ID', EC.BAD_INPUT);
+  }
+
+  const data = getData();
+  const astronaut = data.astronauts.find(a => a.astronautId === astronautId);
+  if (!astronaut) {
+    throw new ServiceError('Astronaut not found', EC.BAD_INPUT);
+  }
+
+  return astronaut;
+}
+
+// Helper function to find astronaut by ID
+function findAstronautById(astronautId: number) {
+  const data = getData();
+  return data.astronauts.find(a => a.astronautId === astronautId);
+}
+
 export {
   controlUserIdGen,
   isValidPassword,
@@ -216,5 +271,12 @@ export {
   normalizeError,
   generateSessionId,
   ServiceError,
-  findSessionFromSessionId
+  findSessionFromSessionId,
+  astronautIdGen,
+  isValidRank,
+  isValidAge,
+  isValidWeight,
+  isValidHeight,
+  astronautIdCheck,
+  findAstronautById
 };

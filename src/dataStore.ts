@@ -23,11 +23,26 @@ interface Mission {
   timeLastEdited: number;
 }
 
+interface Astronaut {
+  astronautId: number;
+  nameFirst: string;
+  nameLast: string;
+  rank: string;
+  age: number;
+  weight: number;
+  height: number;
+  timeAdded: number;
+  timeLastEdited: number;
+  assignedMissionId?: number;
+}
+
 interface DataStore {
   controlUsers: MissionControlUser[];
   spaceMissions: Mission[];
+  astronauts: Astronaut[];
   nextControlUserId: number;
   nextMissionId: number;
+  nextAstronautId: number;
   sessions: Session[];
 }
 
@@ -40,8 +55,10 @@ const DB_PATH = path.join(__dirname, 'db.json');
 let data: DataStore = {
   controlUsers: [],
   spaceMissions: [],
+  astronauts: [],
   nextControlUserId: 1,
   nextMissionId: 1,
+  nextAstronautId: 1,
   sessions: []
 };
 
@@ -72,6 +89,7 @@ export function saveData() {
 export {
   Mission,
   MissionControlUser,
+  Astronaut,
   DataStore,
   Session
 };

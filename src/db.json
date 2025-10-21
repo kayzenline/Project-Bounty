@@ -1,7 +1,32 @@
 {
   "controlUsers": [],
-  "spaceMissions": [],
-  "sessions": [],
+  "spaceMissions": [
+    {
+      "missionId": 1,
+      "controlUserId": 1,
+      "name": "Mercury",
+      "description": "Test mission",
+      "target": "Earth Orbit",
+      "timeCreated": 1761016170,
+      "timeLastEdited": 1761016170
+    }
+  ],
+  "astronauts": [
+    {
+      "astronautId": 1,
+      "nameFirst": "James",
+      "nameLast": "Kirk",
+      "rank": "Captain",
+      "age": 30,
+      "weight": 70,
+      "height": 180,
+      "timeAdded": 1761016170,
+      "timeLastEdited": 1761016170,
+      "assignedMissionId": 1
+    }
+  ],
   "nextControlUserId": 1,
-  "nextMissionId": 1
+  "nextMissionId": 1,
+  "nextAstronautId": 2,
+  "sessions": []
 }
