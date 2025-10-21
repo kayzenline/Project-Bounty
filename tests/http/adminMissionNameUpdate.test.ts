@@ -1,9 +1,7 @@
 import { v4 as uuid } from 'uuid';
-import { adminMissionCreate, adminMissionInfo } from '../../src/mission';
-import { adminAuthRegister, adminAuthLogin } from '../../src/auth';
+import { adminMissionInfo } from '../../src/mission';
 import { findSessionFromSessionId, generateSessionId } from '../../src/helper';
 import { missionNameUpdate, clearRequest, controlUserSessionId as missionCreate, userRegister, userLogin } from './requestHelpers';
-import { getData } from '../../src/dataStore';
 
 function uniqueEmail(prefix = 'user') {
   return `${prefix}.${uuid()}@example.com`;
@@ -50,7 +48,7 @@ describe('HTTP tests for MissionNameUpdate', () => {
     'Mar s',
     'M',
     'M'.repeat(31)
-  ]
+  ];
   test.each(testCases)('get an invalid name', (name) => {
     const session = findSessionFromSessionId(controlUserSessionId);
     if (session) {
@@ -96,10 +94,9 @@ describe('HTTP tests for MissionNameUpdate', () => {
     const resultBody = res.body;
     expect(res.statusCode).toBe(403);
     expect(resultBody).toEqual({ error: expect.any(String) });
-
-
+  
     const res1 = missionNameUpdate(controlUserSessionId, newMissionId + 1, 'Mars');
-    const resultBody1 = res.body;
+    const resultBody1 = res1.body;
     expect(res1.statusCode).toBe(403);
     expect(resultBody1).toEqual({ error: expect.any(String) });
   });
