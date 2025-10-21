@@ -72,18 +72,10 @@ function adminAuthRegister(email: string, password: string, nameFirst: string, n
     numFailedPasswordsSinceLastLogin: 0,
     passwordHistory: [password],
   };
-
   data.controlUsers.push(newUser);
-
-  const controlUserSessionId = generateSessionId();
-  const newSession = {
-    controlUserSessionId: controlUserSessionId,
-    controlUserId: controlUserId,
-  };
-  data.sessions.push(newSession);
   setData(data);
 
-  return { controlUserSessionId };
+  return { controlUserId };
 }
 
 // Login a mission control user

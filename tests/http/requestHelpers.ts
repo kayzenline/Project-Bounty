@@ -124,6 +124,60 @@ export function controlUserSessionId(
   };
 }
 
+export function missionNameUpdate(
+  controlUserSessionId: string,
+  missionId: number,
+  name: string
+) {
+  const response = request('PUT', `${SERVER_URL}/v1/admin/mission/${missionId}/name`, {
+    headers: { controlUserSessionId: controlUserSessionId },
+    json: {
+      name
+    }
+  });
+
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
+}
+
+export function missionTargetUpdate(
+  controlUserSessionId: string,
+  missionId: number,
+  target: string
+) {
+  const response = request('PUT', `${SERVER_URL}/v1/admin/mission/${missionId}/target`, {
+    headers: { controlUserSessionId: controlUserSessionId },
+    json: {
+      target
+    }
+  });
+
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
+}
+
+export function missionDescriptionUpdate(
+  controlUserSessionId: string,
+  missionId: number,
+  description: string
+) {
+  const response = request('PUT', `${SERVER_URL}/v1/admin/mission/${missionId}/description`, {
+    headers: { controlUserSessionId: controlUserSessionId },
+    json: {
+      description
+    }
+  });
+
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
+}
+
 export function deleteMission(
   sessionId: string,
   missionId: number
@@ -199,5 +253,5 @@ export function clearRequest() {
   return {
     statusCode: res.statusCode,
     body: JSON.parse(res.body.toString()),
-  };
-}
+  }
+};

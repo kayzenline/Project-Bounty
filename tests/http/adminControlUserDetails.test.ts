@@ -60,7 +60,7 @@ describe('HTTP tests for ControlUserdetails', () => {
     expect(user.controlUserId).toBeGreaterThan(0);
     expect(user.email).toBe(userEmail);
     expect(user.name).toBe('Bill Ryker'); 
-    expect(user.numSuccessfulLogins).toBe(1);
+    expect(user.numSuccessfulLogins).toBe(2);
     expect(user.numFailedPasswordsSinceLastLogin).toBe(0);
   });
 

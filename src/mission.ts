@@ -124,24 +124,23 @@ function adminMissionInfo(controlUserId: number, missionId: number) {
 // Update mission name
 function adminMissionNameUpdate(controlUserId: number, missionId: number, name: string) {
   try {
-    const user = controlUserIdCheck(controlUserId);
+    controlUserIdCheck(controlUserId);
+    const mission = missionIdCheck(missionId);
     const validname = missionNameValidity(name);
     const data = getData();
-    const missiontarget = data.spaceMissions.find(m => m.missionId === missionId);
-    if (missiontarget.controlUserId !== user.controlUserId) {
+
+    if (mission.controlUserId !== controlUserId) {
       buildError('Mission does not belong to this user', EC.INACCESSIBLE_VALUE);
     }
 
     const duplicate = data.spaceMissions.some(m =>
-      m.controlUserId === user.controlUserId &&
-      m.missionId !== missionId &&
       m.name.toLowerCase() === validname.toLowerCase()
     );
     if (duplicate) {
       buildError('mission name already exists', EC.BAD_INPUT);
     }
-    missiontarget.name = validname;
-    missiontarget.timeLastEdited = Math.floor(Date.now() / 1000);
+    mission.name = validname;
+    mission.timeLastEdited = Math.floor(Date.now() / 1000);
     setData(data);
     return {};
   } catch (e) {
@@ -153,18 +152,18 @@ function adminMissionNameUpdate(controlUserId: number, missionId: number, name: 
 // Update mission target
 function adminMissionTargetUpdate(controlUserId: number, missionId: number, target: string) {
   try {
-    const user = controlUserIdCheck(controlUserId);
+    controlUserIdCheck(controlUserId);
     const mission = missionIdCheck(missionId);
     const validTarget = missionTargetValidity(target);
+    const data = getData();
 
-    if (mission.controlUserId !== user.controlUserId) {
+    if (mission.controlUserId !== controlUserId) {
+      console.log('done');
       buildError('Mission does not belong to this user', EC.INACCESSIBLE_VALUE);
     }
 
-    const data = getData();
-    const foundMission = data.spaceMissions.find(missionObj => missionObj.missionId === missionId);
-    foundMission.target = validTarget;
-    foundMission.timeLastEdited = Math.floor(Date.now() / 1000);
+    mission.target = validTarget;
+    mission.timeLastEdited = Math.floor(Date.now() / 1000);
     setData(data);
     return {};
   } catch (e) {
@@ -177,18 +176,17 @@ function adminMissionTargetUpdate(controlUserId: number, missionId: number, targ
 function adminMissionDescriptionUpdate(controlUserId: number, missionId: number, description: string) {
   try {
     // create check condition
-    const user = controlUserIdCheck(controlUserId);
+    controlUserIdCheck(controlUserId);
     const mission = missionIdCheck(missionId);
     const validDescription = missionDescriptionValidity(description);
+    const data = getData();
 
-    if (mission.controlUserId !== user.controlUserId) {
+    if (mission.controlUserId !== controlUserId) {
       buildError('Mission does not belong to this user', EC.INACCESSIBLE_VALUE);
     }
 
-    const data = getData();
-    const foundMission = data.spaceMissions.find(missionObj => missionObj.missionId === missionId);
-    foundMission.description = validDescription;
-    foundMission.timeLastEdited = Math.floor(Date.now() / 1000);
+    mission.description = validDescription;
+    mission.timeLastEdited = Math.floor(Date.now() / 1000);
     setData(data);
     return {};
   } catch (e) {

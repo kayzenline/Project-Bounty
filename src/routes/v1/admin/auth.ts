@@ -13,8 +13,8 @@ router.post('/register', (req, res) => {
     const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories] || 400;
     return res.status(status).json({ error: result.error });
   }
-
-  return res.status(200).json({ controlUserSessionId: result.controlUserSessionId });
+  const controlUserSessionId = adminAuthLogin(email, password);
+  return res.status(200).json({ controlUserSessionId: controlUserSessionId.controlUserSessionId });
 });
 router.post('/login', (req, res) => {
   const { email, password } = req.body || {};
