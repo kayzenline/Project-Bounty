@@ -13,6 +13,7 @@ beforeEach(() => {
     nextControlUserId: 1,
     nextMissionId: 1,
     sessions: [],
+    astronauts: [],
   };
   fs.writeFileSync(DB_PATH, JSON.stringify(initialData, null, 2));
   loadData();
