@@ -1,4 +1,5 @@
 import { adminAuthRegister, adminAuthLogin } from '../../src/auth';
+import { findSessionFromSessionId } from '../../src/helper';
 import { clear } from '../../src/other';
 
 describe('adminAuthLogin', () => {
