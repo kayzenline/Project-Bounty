@@ -218,7 +218,7 @@ function isValidRank(rank: string) {
   if (typeof rank !== 'string') {
     return false;
   }
-  const trimmedRank = rank.trim();
+  const trimmedRank = rank.trim()
   // rank must be between 2 and 20 characters (inclusive)
   if (trimmedRank.length < 5 || trimmedRank.length > 50) {
     return false;
@@ -254,7 +254,7 @@ function astronautPhyCharCheck(age: number, weight: number, height: number) {
     throw new ServiceError('astronaut age does not meet the requirements', EC.BAD_INPUT);
   }
   if (weight > 100) {
-    throw new ServiceError('astronaut overweight', EC.BAD_INPUT)
+    throw new ServiceError('astronaut overweight', EC.BAD_INPUT);
   }
   if (height < 150 || height > 200) {
     throw new ServiceError('astronaut height does not meet the requirements', EC.BAD_INPUT);
