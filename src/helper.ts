@@ -216,7 +216,7 @@ function isValidRank(rank: string) {
     return false;
   }
   // Rank can only contain letters, spaces, hyphens, round brackets, apostrophes, or periods
-  return /^[a-zA-Z\s\-()'\.]+$/.test(trimmedRank);
+  return /^[a-zA-Z\s\-()'.]+$/.test(trimmedRank);
 }
 
 // Helper function to validate astronaut age

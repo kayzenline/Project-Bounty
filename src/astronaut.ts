@@ -10,7 +10,6 @@ import {
   isValidHeight,
   astronautIdGen,
   astronautIdCheck,
-  findAstronautById,
   normalizeError,
   ServiceError
 } from './helper';
