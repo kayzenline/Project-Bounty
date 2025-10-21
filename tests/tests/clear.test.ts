@@ -34,8 +34,11 @@ describe('clear', () => {
     expect(newData).toStrictEqual({
       controlUsers: [],
       spaceMissions: [],
+      astronauts: [],
       nextControlUserId: 1,
       nextMissionId: 1,
+      nextAstronautId: 1,
+      sessions: [],
     });
   });
 });

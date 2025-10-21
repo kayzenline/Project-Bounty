@@ -25,7 +25,7 @@ export async function adminMissionTransferRequest(
     'POST',
     `${SERVER_URL}/v1/admin/mission/${missionId}/transfer`,
     { userEmail },
-    { controlUserSessionId } 
+    { controlUserSessionId }
   );
 }
 
@@ -135,7 +135,7 @@ export function deleteMission(
   return {
     statusCode: res.statusCode,
     body: JSON.parse(res.body.toString())
-  }
+  };
 }
 
 export function createAstronautId(
@@ -162,37 +162,34 @@ export function createAstronautId(
   return {
     statusCode: res.statusCode,
     body: JSON.parse(res.body.toString())
-  }
+  };
 }
 
 export function assignAstronaut(
   controlUserSessionId: string,
   astronautid: number,
-  missionid: number,
+  missionid: number
 ) {
   const res = request('POST', `${SERVER_URL}/v1/admin/mission/${missionid}/assign/${astronautid}`, {
     headers: { controlUserSessionId: controlUserSessionId },
-  })
+  });
   return {
     statusCode: res.statusCode,
     body: JSON.parse(res.body.toString())
-  }
+  };
 }
-
-
 
 export function missionList(
   controlUserSessionId: string
-){
+) {
   const res = request('GET', `${SERVER_URL}/v1/admin/mission/list`, {
     headers: { controlUserSessionId: controlUserSessionId },
-  })
+  });
   return {
     statusCode: res.statusCode,
     body: JSON.parse(res.body.toString())
-  }
+  };
 }
-
 
 export function clearRequest() {
   const res = request('DELETE', `${SERVER_URL}/v1/clear`);

@@ -1,22 +1,24 @@
 import fs from 'fs';
 import path from 'path';
 import request from 'sync-request-curl';
-const SERVER_URL = "http://127.0.0.1:4900";
+const SERVER_URL = 'http://127.0.0.1:4900';
 const DB_PATH = path.join(__dirname, '../../src/db.json');
-import { loadData,DataStore } from '../../src/dataStore';
+import { loadData, DataStore } from '../../src/dataStore';
 let sessionId: string;
 let userEmail: string;
 beforeEach(() => {
   const initialData: DataStore = {
     controlUsers: [],
     spaceMissions: [],
+    astronauts: [],
     nextControlUserId: 1,
     nextMissionId: 1,
+    nextAstronautId: 1,
     sessions: [],
   };
   fs.writeFileSync(DB_PATH, JSON.stringify(initialData, null, 2));
   loadData();
-  const uniqueEmail = `user${Date.now()}@test.com`
+  const uniqueEmail = `user${Date.now()}@test.com`;
   userEmail = uniqueEmail;
   const res = request('POST', `${SERVER_URL}/v1/admin/auth/register`, {
     json: {
@@ -28,7 +30,7 @@ beforeEach(() => {
   });
 
   const body = JSON.parse(res.body.toString());
-  sessionId = body.controlUserSessionId; 
+  sessionId = body.controlUserSessionId;
 });
 
 describe('HTTP tests for ControlUserdetails', () => {
@@ -37,31 +39,30 @@ describe('HTTP tests for ControlUserdetails', () => {
     const body = JSON.parse(res.body.toString());
     expect(res.statusCode).toBe(401);
     expect(body.error).toBe('ControlUserSessionId is invalid');
-    expect(body.errorCategory).toBe('INVALID_CREDENTIALS'); 
+    expect(body.errorCategory).toBe('INVALID_CREDENTIALS');
   });
 
   test('User not found', () => {
     const res = request('GET', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: '999' } 
+      headers: { ControlUserSessionId: '999' }
     });
     const body = JSON.parse(res.body.toString());
     expect(res.statusCode).toBe(401);
     expect(body.error).toBe('User not found');
-    expect(body.errorCategory).toBe('INVALID_CREDENTIALS'); 
+    expect(body.errorCategory).toBe('INVALID_CREDENTIALS');
   });
 
   test('request successfully ', () => {
     const res = request('GET', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: sessionId } 
+      headers: { ControlUserSessionId: sessionId }
     });
     const body = JSON.parse(res.body.toString());
     const user = body.user;
     expect(res.statusCode).toBe(200);
     expect(user.controlUserId).toBeGreaterThan(0);
     expect(user.email).toBe(userEmail);
-    expect(user.name).toBe('Bill Ryker'); 
+    expect(user.name).toBe('Bill Ryker');
     expect(user.numSuccessfulLogins).toBe(1);
     expect(user.numFailedPasswordsSinceLastLogin).toBe(0);
   });
-
 });
