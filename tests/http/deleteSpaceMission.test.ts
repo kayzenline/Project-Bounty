@@ -1,5 +1,5 @@
 import { afterAll, beforeEach, describe, expect, test } from '@jest/globals';
-import { controlUserSessionId as missionCreate, userRegister, clearRequest, deleteMission, createAstronautId, assignAstronaut } from './requestHelpers';
+import { controlUserSessionId as missionCreate, userRegister, clearRequest, deleteMission, createAstronaut, assignAstronaut } from './requestHelpers';
 
 let missionId: number;
 let token: string;
@@ -34,7 +34,7 @@ describe('/v1/admin/mission/{missionid}', () => {
   describe('invalid cases', () => {
     // status code 400 If any of the following are true:
     test.skip('Astronauts have been assigned to this mission', () => {
-      const astronautId = createAstronautId(token,'Elon','Musk', 'string', 36, 75, 178).body.astronautId;
+      const astronautId = createAstronaut(token,'Elon','Musk', 'string', 36, 75, 178).body.astronautId;
       assignAstronaut(token, astronautId, missionId);
       const res = deleteMission(token, missionId);
       expect(res.statusCode).toBe(400);

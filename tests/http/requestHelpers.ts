@@ -84,25 +84,6 @@ export function userLogout(sessionId: string) {
   };
 }
 
-/* export function userLogin(email: string, password: string) {
-  const res = request('POST', `${SERVER_URL}/v1/admin/auth/login`, {
-    json: {
-      email,
-      password,
-    },
-  });
-  return JSON.parse(res.body.toString())
-}
-
-export function userLogout(token: string) {
-  const res = request('POST', `${SERVER_URL}/v1/admin/auth/logout`, {
-    json: {
-      token,
-    },
-  });
-  return JSON.parse(res.body.toString())
-} */
-
 export function controlUserSessionId(
   sessionId: string,
   name: string,
@@ -179,21 +160,48 @@ export function missionDescriptionUpdate(
 }
 
 export function deleteMission(
-  sessionId: string,
+  controlUserSessionId: string,
   missionId: number
 ) {
   const res = request('DELETE', `${SERVER_URL}/v1/admin/mission/${missionId}`, {
-    headers: { controlUserSessionId: sessionId }
+    headers: { controlUserSessionId: controlUserSessionId }
   });
 
   return {
     statusCode: res.statusCode,
     body: JSON.parse(res.body.toString())
-  }
+  };
 }
 
-export function createAstronautId(
-  sessionId: string,
+export function getMissionInfo(
+  controlUserSessionId: string,
+  missionId: number
+) {
+  const res = request('GET', `${SERVER_URL}/v1/admin/mission/${missionId}`, {
+    headers: { controlUserSessionId: controlUserSessionId },
+  });
+
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString())
+  };
+}
+
+export function checkAstronautPool(
+  controlUserSessionId: string,
+) {
+  const res = request('GET', `${SERVER_URL}/v1/admin/astronaut/pool`, {
+    headers: { controlUserSessionId: controlUserSessionId },
+  });
+
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString())
+  };
+}
+
+export function createAstronaut(
+  controlUserSessionId: string,
   nameFirst: string,
   nameLast: string,
   rank: string,
@@ -202,7 +210,7 @@ export function createAstronautId(
   height: number
 ) {
   const res = request('POST', `${SERVER_URL}/v1/admin/astronaut`, {
-    headers: { controlUserSessionId: sessionId },
+    headers: { controlUserSessionId: controlUserSessionId },
     json: {
       nameFirst,
       nameLast,
@@ -216,7 +224,64 @@ export function createAstronautId(
   return {
     statusCode: res.statusCode,
     body: JSON.parse(res.body.toString())
-  }
+  };
+}
+
+
+export function deleteAstronaut(
+  controlUserSessionId: string,
+  astronautId: number
+) {
+  const res = request('POST', `${SERVER_URL}/v1/admin/astronaut/${astronautId}`, {
+    headers: { controUserSessionId: controlUserSessionId },
+  });
+
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString())
+  };
+}
+
+export function getAstronautInfo(
+  controlUserSessionId: string,
+  astronautId: number
+) {
+  const res = request('GET', `${SERVER_URL}/v1/admin/astronaut/${astronautId}`, {
+    headers: { controlUserSessionId: controlUserSessionId },
+  });
+
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString())
+  };
+}
+
+export function editAstronaut(
+  controlUserSessionId: string,
+  astronautId: number,
+  nameFirst: string,
+  nameLast: string,
+  rank: string,
+  age: number,
+  weight: number,
+  height: number
+) {
+  const res = request('POST', `${SERVER_URL}/v1/admin/astronaut/${astronautId}`, {
+    headers: { controlUserSessionId: controlUserSessionId },
+    json: {
+      nameFirst,
+      nameLast,
+      rank,
+      age,
+      weight,
+      height,
+    }
+  });
+
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString())
+  };
 }
 
 export function assignAstronaut(
@@ -226,13 +291,26 @@ export function assignAstronaut(
 ) {
   const res = request('POST', `${SERVER_URL}/v1/admin/mission/${missionid}/assign/${astronautid}`, {
     headers: { controlUserSessionId: controlUserSessionId },
-  })
+  });
   return {
     statusCode: res.statusCode,
     body: JSON.parse(res.body.toString())
-  }
+  };
 }
 
+export function unassignAstronaut(
+  controlUserSessionId: string,
+  astronautid: number,
+  missionid: number,
+) {
+  const res = request('DELETE', `${SERVER_URL}/v1/admin/mission/${missionid}/assign/${astronautid}`, {
+    headers: { controlUserSessionId: controlUserSessionId },
+  });
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString())
+  };
+}
 
 
 export function missionList(
@@ -240,11 +318,11 @@ export function missionList(
 ){
   const res = request('GET', `${SERVER_URL}/v1/admin/mission/list`, {
     headers: { controlUserSessionId: controlUserSessionId },
-  })
+  });
   return {
     statusCode: res.statusCode,
     body: JSON.parse(res.body.toString())
-  }
+  };
 }
 
 
@@ -253,5 +331,5 @@ export function clearRequest() {
   return {
     statusCode: res.statusCode,
     body: JSON.parse(res.body.toString()),
-  }
+  };
 };

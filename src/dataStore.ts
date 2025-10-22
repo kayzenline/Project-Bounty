@@ -29,12 +29,31 @@ interface DataStore {
   nextControlUserId: number;
   nextMissionId: number;
   sessions: Session[];
+  astronauts: Astronaut[];
 }
 
 interface Session {
   controlUserSessionId:string;
   controlUserId: number;
 }
+
+interface Astronaut {
+  astronautId: number;
+  designation: string;
+  timeAdded: number;
+  timeLastEdited: number;
+  nameFirst: string;
+  nameLast: string;
+  rank: number;
+  age: number;
+  weight: number;
+  height: number;
+  assignedMission: {
+    missionId: number;
+    objective: string;
+  }
+}
+
 const DB_PATH = path.join(__dirname, 'db.json');
 
 let data: DataStore = {
@@ -42,7 +61,8 @@ let data: DataStore = {
   spaceMissions: [],
   nextControlUserId: 1,
   nextMissionId: 1,
-  sessions: []
+  sessions: [],
+  astronauts: [],
 };
 
 function createIfNotExist() {

@@ -60,7 +60,7 @@ class ServiceError extends Error {
 function controlUserIdCheck(controlUserId: number) {
   // user id must be integer
   if (!Number.isInteger(controlUserId) || controlUserId <= 0) {
-    throw new ServiceError('sofjds', EC.BAD_INPUT);
+    throw new ServiceError('controlUserId must be integer', EC.BAD_INPUT);
   }
 
   const data = getData();
@@ -121,7 +121,7 @@ function missionDescriptionValidity(description: string, maxlen = 400) {
 
   // check description length
   if (description.length > maxlen) {
-    throw new ServiceError('desdjfiosdf', EC.BAD_INPUT);
+    throw new ServiceError('description is too long', EC.BAD_INPUT);
   }
 
   return description;
@@ -197,6 +197,72 @@ function generateSessionId() {
   return uuidGen();
 }
 
+function astronautIdCheck(astronautId: number) {
+  // missionId must be integer
+
+  if (!Number.isInteger(astronautId) || astronautId < 0) {
+    throw new ServiceError('astronautId must be integer', EC.BAD_INPUT);
+  }
+
+  const data = getData();
+  // astronautId must correspond to an existing astronaut
+  const astronaut = data.astronauts.find(sm => sm.astronautId === astronautId);
+  if (!astronaut) {
+    throw new ServiceError('astronautId not found', EC.BAD_INPUT);
+  }
+  return astronautId;
+}
+
+function isValidRank(rank: string) {
+  // rank must be a string
+  if (typeof rank !== 'string') {
+    return false;
+  }
+  const trimmedRank = rank.trim();
+  // rank must be between 2 and 20 characters (inclusive)
+  if (trimmedRank.length < 5 || trimmedRank.length > 50) {
+    return false;
+  }
+  // rank can only contain letters, spaces, hyphens, or apostrophes
+  return /^[a-zA-Z\s\-']+$/.test(trimmedRank);
+}
+
+function astronautNameCheck(newNameFirst: string, newNamelast: string) {
+  if (!(isValidName(newNameFirst) && isValidName(newNamelast))) {
+    throw new ServiceError('get an invalid name', EC.BAD_INPUT);
+  }
+
+  const data = getData();
+  // Another Astronaut already exists with the same nameFirst and nameLast
+  const astronaut = data.astronauts.find(sm => sm.nameFirst === newNameFirst && sm.nameLast === newNamelast);
+  if (astronaut) {
+    throw new ServiceError('astronaut already exists', EC.BAD_INPUT);
+  }
+  return { newNameFirst: newNameFirst, newNamelast: newNamelast };
+}
+
+function astronautRankCheck(newRank: string) {
+  if (!isValidRank(newRank)) {
+    throw new ServiceError('get an invalid rank', EC.BAD_INPUT);
+  }
+
+  return newRank;
+}
+
+function astronautPhyCharCheck(age: number, weight: number, height: number) {
+  if (age < 20 || age > 60) {
+    throw new ServiceError('astronaut age does not meet the requirements', EC.BAD_INPUT);
+  }
+  if (weight > 100) {
+    throw new ServiceError('astronaut overweight', EC.BAD_INPUT);
+  }
+  if (height < 150 || height > 200) {
+    throw new ServiceError('astronaut height does not meet the requirements', EC.BAD_INPUT);
+  }
+
+  return { age: age, weight: weight, height: height };
+}
+
 function findSessionFromSessionId(controlUserSessionId: string) {
   return getData().sessions.find(s => s.controlUserSessionId === controlUserSessionId);
 }
@@ -217,5 +283,9 @@ export {
   normalizeError,
   generateSessionId,
   ServiceError,
-  findSessionFromSessionId
+  findSessionFromSessionId,
+  astronautIdCheck,
+  astronautNameCheck,
+  astronautRankCheck,
+  astronautPhyCharCheck
 };
