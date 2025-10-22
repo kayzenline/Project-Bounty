@@ -60,7 +60,7 @@ class ServiceError extends Error {
 function controlUserIdCheck(controlUserId: number) {
   // user id must be integer
   if (!Number.isInteger(controlUserId) || controlUserId <= 0) {
-    throw new ServiceError('sofjds', EC.BAD_INPUT);
+    throw new ServiceError('controlUserId must be integer', EC.BAD_INPUT);
   }
 
   const data = getData();
@@ -121,7 +121,7 @@ function missionDescriptionValidity(description: string, maxlen = 400) {
 
   // check description length
   if (description.length > maxlen) {
-    throw new ServiceError('desdjfiosdf', EC.BAD_INPUT);
+    throw new ServiceError('description is too long', EC.BAD_INPUT);
   }
 
   return description;
