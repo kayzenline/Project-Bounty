@@ -218,7 +218,7 @@ function isValidRank(rank: string) {
   if (typeof rank !== 'string') {
     return false;
   }
-  const trimmedRank = rank.trim()
+  const trimmedRank = rank.trim();
   // rank must be between 2 and 20 characters (inclusive)
   if (trimmedRank.length < 5 || trimmedRank.length > 50) {
     return false;
