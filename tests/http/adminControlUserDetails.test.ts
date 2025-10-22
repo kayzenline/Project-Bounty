@@ -4,6 +4,7 @@ import request from 'sync-request-curl';
 const SERVER_URL = "http://127.0.0.1:4900";
 const DB_PATH = path.join(__dirname, '../../src/db.json');
 import { loadData,DataStore } from '../../src/dataStore';
+import { userRegister, getUserDetails } from './requestHelpers'
 let sessionId: string;
 let userEmail: string;
 beforeEach(() => {
@@ -19,17 +20,8 @@ beforeEach(() => {
   loadData();
   const uniqueEmail = `user${Date.now()}@test.com`
   userEmail = uniqueEmail;
-  const res = request('POST', `${SERVER_URL}/v1/admin/auth/register`, {
-    json: {
-      email: uniqueEmail,
-      password: 'abcdefg123',
-      nameFirst: 'Bill',
-      nameLast: 'Ryker',
-    },
-  });
-
-  const body = JSON.parse(res.body.toString());
-  sessionId = body.controlUserSessionId; 
+  const res = userRegister(uniqueEmail, 'abcdefg123', 'Bill', 'Ryker');
+  sessionId = res.body.controlUserSessionId;
 });
 
 describe('HTTP tests for ControlUserdetails', () => {
@@ -42,25 +34,19 @@ describe('HTTP tests for ControlUserdetails', () => {
   });
 
   test('User not found', () => {
-    const res = request('GET', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: '999' } 
-    });
-    const body = JSON.parse(res.body.toString());
+    const res = getUserDetails('999');
     expect(res.statusCode).toBe(401);
-    expect(body.error).toBe('User not found');
-    expect(body.errorCategory).toBe('INVALID_CREDENTIALS'); 
+    expect(res.body.error).toBe('User not found');
+    expect(res.body.errorCategory).toBe('INVALID_CREDENTIALS');
   });
 
   test('request successfully ', () => {
-    const res = request('GET', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: sessionId } 
-    });
-    const body = JSON.parse(res.body.toString());
-    const user = body.user;
+    const res = getUserDetails(sessionId);
+    const user = res.body.user;
     expect(res.statusCode).toBe(200);
     expect(user.controlUserId).toBeGreaterThan(0);
     expect(user.email).toBe(userEmail);
-    expect(user.name).toBe('Bill Ryker'); 
+    expect(user.name).toBe('Bill Ryker');
     expect(user.numSuccessfulLogins).toBe(2);
     expect(user.numFailedPasswordsSinceLastLogin).toBe(0);
   });

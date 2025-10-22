@@ -84,6 +84,47 @@ export function userLogout(sessionId: string) {
   };
 }
 
+export function getUserDetails(controlUserSessionId: string) {
+    const response = request('GET', `${SERVER_URL}/v1/admin/controluser/details`, {
+      headers: { ControlUserSessionId: controlUserSessionId }
+    });
+    return {
+      statusCode: response.statusCode,
+      body: JSON.parse(response.body.toString())
+    };
+  }
+
+export function updatePassword(
+    controlUserSessionId: string,
+    oldPassword: string,
+    newPassword: string
+  ) {
+    const response = request('PUT', `${SERVER_URL}/v1/admin/controluser/password`, {
+      headers: { ControlUserSessionId: controlUserSessionId },
+      json: { oldPassword, newPassword }
+    });
+    return {
+      statusCode: response.statusCode,
+      body: JSON.parse(response.body.toString())
+    };
+  }
+
+  export function updateUserDetails(
+    controlUserSessionId: string,
+    email: string,
+    nameFirst: string,
+    nameLast: string
+  ) {
+    const response = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
+      headers: { ControlUserSessionId: controlUserSessionId },
+      json: { email, nameFirst, nameLast }
+    });
+    return {
+      statusCode: response.statusCode,
+      body: JSON.parse(response.body.toString())
+    };
+  }
+
 export function controlUserSessionId(
   sessionId: string,
   name: string,
