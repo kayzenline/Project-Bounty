@@ -72,7 +72,7 @@ function adminMissionCreate(controlUserId: number, name: string, description: st
     );
     // check duplicated
     if (duplicate) {
-      throw buildError('mission name already exists', EC.BAD_INPUT);
+      buildError('mission name already exists', EC.BAD_INPUT);
     }
 
     const missionId = missionIdGen();
