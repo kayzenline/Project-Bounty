@@ -13,11 +13,15 @@ import {
 } from './helper';
 import { errorCategories as EC } from './testSamples';
 
-function seeAstronautPool(controlUserSessionId: string) {
+function buildError(message: string, code: string): never {
+  throw new ServiceError(message, code);
+}
+
+export function seeAstronautPool(controlUserSessionId: string) {
 
 }
 
-function createAstronaut(
+export function createAstronaut(
   controlUserSessionId: string,
   nameFirst: string,
   nameLast: string,
@@ -29,15 +33,36 @@ function createAstronaut(
 
 }
 
-function deleteAstronaut(controlSessionUserId: string, astronautId: number) {
+export function deleteAstronaut(controlUserSessionId: string, astronautId: number) {
+  try {
+    if (!findSessionFromSessionId(controlUserSessionId)) {
+      buildError('controlUserSessionId is invalid', EC.INVALID_CREDENTIALS);
+    }
+
+    astronautIdCheck(astronautId);
+
+    const data = getData();
+    const astronaut = data.astronauts.find(a => a.astronautId === astronautId);
+    if (astronaut.assignedMission !== undefined) {
+      buildError('astronaut is currently assigned to a mission', EC.BAD_INPUT);
+    }
+
+    const newAstronautPool = data.astronauts.filter(a => a.astronautId !== astronautId);
+    data.astronauts = newAstronautPool;
+
+    setData(data);
+    return {};
+  } catch (e) {
+    const ne = normalizeError(e);
+    return { error: ne.error, errorCategory: ne.errorCategory };
+  }
+}
+
+export function getAstronautInfo(controlUserSessionId: string, astronautId: number) {
 
 }
 
-function getAstronautInfo(controlSessionUserId: string, astronautId: number) {
-
-}
-
-function editAstronaut(
+export function editAstronaut(
   controlUserSessionId: string,
   astronautId: number,
   nameFirst: string,
@@ -47,10 +72,34 @@ function editAstronaut(
   weight: number,
   height: number
 ) {
+  try {
+    if (!findSessionFromSessionId(controlUserSessionId)) {
+      buildError('controlUserSessionId is invalid', EC.INVALID_CREDENTIALS);
+    }
+    astronautIdCheck(astronautId);
+    astronautNameCheck(nameFirst, nameLast);
+    astronautRankCheck(rank);
+    astronautPhyCharCheck(age, weight, height);
 
+    const data = getData();
+    const astronaut = data.astronauts.find(a => a.astronautId === astronautId);
+    astronaut.nameFirst = nameFirst;
+    astronaut.nameLast = nameLast;
+    astronaut.rank = rank;
+    astronaut.age = age;
+    astronaut.weight = weight;
+    astronaut.height = height;
+    astronaut.timeLastEdited = Math.floor(Date.now() / 1000);
+
+    setData(data);
+    return {};
+  } catch (e) {
+    const ne = normalizeError(e);
+    return { error: ne.error, errorCategory: ne.errorCategory };
+  }
 }
 
-function assginAstronaut(
+export function assginAstronaut(
   controlUserSessionId: string,
   astronautId: number,
   missionId: number
@@ -58,7 +107,7 @@ function assginAstronaut(
 
 }
 
-function unassginAstronaut(
+export function unassginAstronaut(
   controlUserSessionId: string,
   astronautId: number,
   missionId: number

@@ -44,7 +44,7 @@ interface Astronaut {
   timeLastEdited: number;
   nameFirst: string;
   nameLast: string;
-  rank: number;
+  rank: string;
   age: number;
   weight: number;
   height: number;
