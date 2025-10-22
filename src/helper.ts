@@ -251,7 +251,7 @@ function astronautRankCheck(newRank: string) {
 
 function astronautPhyCharCheck(age: number, weight: number, height: number) {
   if (age < 20 || age > 60) {
-    throw new ServiceError('astronaut age does not meet the requirements', EC.BAD_INPUT);
+    throw new ServiceError('astronaut age is not meet the requirements', EC.BAD_INPUT);
   }
   if (weight > 100) {
     throw new ServiceError('astronaut overweight', EC.BAD_INPUT);
