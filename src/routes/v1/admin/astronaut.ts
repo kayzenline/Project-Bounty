@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { adminAstronautCreate, adminAstronautInfo } from '../../../astronaut';
+import { adminAstronautCreate } from '../../../astronaut';
 import { findSessionFromSessionId } from '../../../helper';
 import { errorCategories as EC } from '../../../testSamples';
 import { loadData } from '../../../dataStore';
