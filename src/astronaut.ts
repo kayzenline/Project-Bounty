@@ -70,18 +70,6 @@ export function adminAstronautCreate(
 }
 
 export function adminAstronautInfo(astronautId: number): { response: object } | { error: string; errorCategory: string } {
-  astronautId: number;
-  designation: string;
-  timeAdded: number;
-  timeLastEdited: number;
-  age: number;
-  weight: number;
-  height: number;
-  assignedMission?: {
-    missionId: number;
-    objective: string;
-  };
-} | { error: string; errorCategory: string } {
   try {
     astronautIdCheck(astronautId);
 
