@@ -6,7 +6,8 @@ import {
   astronautRankCheck,
   astronautPhyCharCheck,
   normalizeError,
-  ServiceError
+  ServiceError,
+  missionIdCheck
 } from './helper';
 import { errorCategories as EC } from './testSamples';
 
