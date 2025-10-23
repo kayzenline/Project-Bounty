@@ -1,4 +1,4 @@
-import { clearRequest, adminMissionCreateRequest, SpaceMissionInfo, adminAuthUserRegisterRequest, createAstronaut, assignAstronaut } from './requestHelpers';
+import { clearRequest, adminMissionCreateRequest, adminMissionInfoRequest, adminAuthUserRegisterRequest, adminAstronautCreateRequest, adminAstronautAssignRequest } from './requestHelpers';
 
 
 const ERROR = { error: expect.any(String) };
@@ -24,7 +24,7 @@ beforeEach(() => {
   const age = 20;
   const weight = 70;
   const height = 170;
-  const createAstronautRes = createAstronaut(
+  const createAstronautRes = adminAstronautCreateRequest(
     token,
     astronautNameFirst,
     astronautNameLast,
@@ -46,7 +46,7 @@ describe.skip(`/v1/admin/mission/{missionId}`, () => {
   describe('valid cases', () => {
     // status code 200 If any of the following are true:
     test('successful get the Space mission info without assign astronaut', () => {
-      const res = SpaceMissionInfo(token, missionId);
+      const res = adminMissionInfoRequest(token, missionId);
       // expect(res.statusCode).toBe(200);
       expect(res.body).toStrictEqual({
         "missionId": missionId,
@@ -59,8 +59,8 @@ describe.skip(`/v1/admin/mission/{missionId}`, () => {
       })
     })
     test('successful get the Space mission info with assign astronaut', () => {
-      assignAstronaut(token, astronautId, missionId);
-      const res = SpaceMissionInfo(token, missionId);
+      adminAstronautAssignRequest(token, astronautId, missionId);
+      const res = adminMissionInfoRequest(token, missionId);
       expect(res.statusCode).toBe(200);
       expect(res.body).toStrictEqual({
         "missionId": missionId,
@@ -83,7 +83,7 @@ describe.skip(`/v1/admin/mission/{missionId}`, () => {
   describe.skip('invalid cases', () => {
     // status code 401 If any of the following are true:
     test('ControlUserSessionId is empty or invalid (does not refer to valid logged in user session)', () => {
-      const res = SpaceMissionInfo('', missionId);
+      const res = adminMissionInfoRequest('', missionId);
       expect(res.statusCode).toBe(401);
       expect(res.body).toStrictEqual(ERROR);
     })
@@ -93,11 +93,11 @@ describe.skip(`/v1/admin/mission/{missionId}`, () => {
       expect(otherUser.statusCode).toBe(200);
       const otherToken = otherUser.body.controlUserSessionId;
 
-      const resNotOwner = SpaceMissionInfo(otherToken, missionId);
+      const resNotOwner = adminMissionInfoRequest(otherToken, missionId);
       expect(resNotOwner.statusCode).toBe(403);
       expect(resNotOwner.body).toStrictEqual(ERROR);
 
-      const resMissingMission = SpaceMissionInfo(token, missionId + 9999);
+      const resMissingMission = adminMissionInfoRequest(token, missionId + 9999);
       expect(resMissingMission.statusCode).toBe(403);
       expect(resMissingMission.body).toStrictEqual(ERROR);
     })
