@@ -229,7 +229,7 @@ export function getMissionInfo(
 }
 
 export function checkAstronautPool(
-  controlUserSessionId: string,
+  controlUserSessionId: string
 ) {
   const res = request('GET', `${SERVER_URL}/v1/admin/astronaut/pool`, {
     headers: { controlUserSessionId: controlUserSessionId },
@@ -258,7 +258,7 @@ export function createAstronaut(
       rank,
       age,
       weight,
-      height,
+      height
     }
   });
 
@@ -315,7 +315,7 @@ export function editAstronaut(
       rank,
       age,
       weight,
-      height,
+      height
     }
   });
 
@@ -328,7 +328,7 @@ export function editAstronaut(
 export function assignAstronaut(
   controlUserSessionId: string,
   astronautid: number,
-  missionid: number,
+  missionid: number
 ) {
   const res = request('POST', `${SERVER_URL}/v1/admin/mission/${missionid}/assign/${astronautid}`, {
     headers: { controlUserSessionId: controlUserSessionId },
@@ -342,7 +342,7 @@ export function assignAstronaut(
 export function unassignAstronaut(
   controlUserSessionId: string,
   astronautid: number,
-  missionid: number,
+  missionid: number
 ) {
   const res = request('DELETE', `${SERVER_URL}/v1/admin/mission/${missionid}/assign/${astronautid}`, {
     headers: { controlUserSessionId: controlUserSessionId },
