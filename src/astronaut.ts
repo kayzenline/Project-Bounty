@@ -198,12 +198,47 @@ export function editAstronaut(
   }
 }
 
-export function assginAstronaut(
+export function assignAstronaut(
   controlUserSessionId: string,
   astronautId: number,
   missionId: number
 ) {
-
+  try {
+    const data = getData();
+    const session = findSessionFromSessionId(controlUserSessionId)
+    if(!session){
+      buildError('controlUserSessionId is invalid', EC.INVALID_CREDENTIALS);
+    }
+    if(!missionIdCheck(missionId)){
+      buildError('missionId is invalid', EC.INACCESSIBLE_VALUE);
+    }
+    const mission = data.spaceMissions.find(m => m.missionId === missionId);
+    if (!mission) {
+      throw buildError('mission not found', EC.INACCESSIBLE_VALUE);
+    }
+    if (mission.controlUserId !== session.controlUserId) {
+      throw buildError('mission does not belong to owner', EC.INACCESSIBLE_VALUE);
+    }
+    if(!astronautIdCheck(astronautId)){
+       buildError('astronautId is invalid', EC.BAD_INPUT);
+    };
+    const astronaut = data.astronauts.find(a => a.astronautId === astronautId);
+    if (!astronaut) {
+      buildError('astronaut not found', EC.BAD_INPUT);
+    }
+    if (astronaut.assignedMission !== undefined) {
+      buildError('astronaut is currently assigned to a mission', EC.BAD_INPUT);
+    }
+    astronaut.assignedMission = {
+      missionId,
+      objective: 'Training for mission',
+    };
+    setData(data);
+    return {};
+  } catch (e) {
+    const ne = normalizeError(e);
+    return { error: ne.error, errorCategory: ne.errorCategory };
+  }
 }
 
 export function unassginAstronaut(

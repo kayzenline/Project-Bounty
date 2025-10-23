@@ -192,7 +192,23 @@ router.post('/:missionid/transfer', (req: Request, res: Response, next: NextFunc
   }
 });
 
-router.post('/:missionid/assign/:astronautid', notImplementedHandler);
+/* router.post('/:missionid/assign/:astronautid', (req ,res)=>{
+  const controlUserSessionId = req.headers.controlusersessionid as string;
+  if(!controlUserSessionId){
+    return res.status(401).json({
+      error: 'controlUserSessionId is invalid'
+    });
+  }
+  const missionId = parseInt(req.params.missionid);
+  const astronautId = parseInt(req.params.astronautid);
+  const result=assignAstronaut(controlUserSessionId,missionId,astronautId);
+  if('error' in result){
+    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
+    return res.status(status).json({ error: result.error });
+  }
+  return res.status(200).json({});
+});
+*/
 
 router.delete('/:missionid/assign/:astronautid', notImplementedHandler);
 
