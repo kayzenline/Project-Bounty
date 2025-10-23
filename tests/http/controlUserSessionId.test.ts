@@ -2,7 +2,6 @@ import { afterAll, beforeEach, describe, expect, test } from '@jest/globals';
 import { clear } from '../../src/other';
 import { adminMissionCreateRequest, adminAuthUserRegisterRequest, clearRequest } from './requestHelpers';
 
-
 beforeEach(() => {
   const clearRes = clearRequest();
   expect(clearRes.statusCode).toBe(200);

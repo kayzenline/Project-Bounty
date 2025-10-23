@@ -11,9 +11,8 @@ let missionId: number;
 let controlUserSessionId: string;
 
 describe('HTTP tests for MissionDescriptionUpdate', () => {
-
   // use async...await (use the missionId in the test) <-- solve this problem
-  beforeEach (() => {
+  beforeEach(() => {
     const clearRes = clearRequest();
     expect(clearRes.statusCode).toBe(200);
     const email = uniqueEmail('success');
@@ -61,7 +60,7 @@ describe('HTTP tests for MissionDescriptionUpdate', () => {
     const newSessionId = generateSessionId();
     const newDescription = 'Land humans on the Moon and bring them safely back to Earth';
     const res = missionDescriptionUpdate(newSessionId, missionId, newDescription);
-    const resultBody = res.body
+    const resultBody = res.body;
     expect(res.statusCode).toBe(401);
     expect(resultBody).toEqual({ error: expect.any(String) });
 

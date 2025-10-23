@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import request from 'sync-request-curl';
-const SERVER_URL = "http://127.0.0.1:4900";
+const SERVER_URL = 'http://127.0.0.1:4900';
 const DB_PATH = path.join(__dirname, '../../src/db.json');
 import { loadData, DataStore } from '../../src/dataStore';
 import { adminAuthUserRegisterRequest, updateUserDetails } from './requestHelpers';
@@ -15,13 +15,14 @@ beforeEach(() => {
     spaceMissions: [],
     nextControlUserId: 1,
     nextMissionId: 1,
+    nextAstronautId: 1,
     sessions: [],
     astronauts: [],
   };
 
   fs.writeFileSync(DB_PATH, JSON.stringify(initialData, null, 2));
   loadData();
-  const uniqueEmail = `user${Date.now()}@test.com`
+  const uniqueEmail = `user${Date.now()}@test.com`;
   userEmail1 = uniqueEmail;
   const res1 = adminAuthUserRegisterRequest(uniqueEmail, 'abcdefg123', 'Bill', 'Ryker');
   sessionId1 = res1.body.controlUserSessionId;
@@ -31,7 +32,6 @@ beforeEach(() => {
   sessionId2 = res2.body.controlUserSessionId;
 });
 describe('HTTP tests for ControlUserdetailsUpdate', () => {
-
   test('header is invalid', () => {
     const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
       json: { email: '1234@qq.com', nameFirst: 'Ka', nameLast: 'Ka' }
@@ -72,5 +72,4 @@ describe('HTTP tests for ControlUserdetailsUpdate', () => {
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual({});
   });
-
 });
