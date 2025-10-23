@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { userLogin, userRegister, clearRequest } from './requestHelpers';
+import { userLogin, adminAuthUserRegisterRequest, clearRequest } from './requestHelpers';
 
 beforeEach(() => {
   const res = clearRequest();
@@ -13,7 +13,7 @@ function uniqueEmail(prefix = 'user') {
 describe('POST /v1/admin/auth/login', () => {
   test('success: returns controlUserId', () => {
     const email = uniqueEmail('login-success');
-    const reg = userRegister(email, 'Abcd1234', 'John', 'Doe');
+    const reg = adminAuthUserRegisterRequest(email, 'Abcd1234', 'John', 'Doe');
     expect(reg.statusCode).toBe(200);
     const res = userLogin(email, 'Abcd1234');
     expect(res.statusCode).toBe(200);
@@ -22,7 +22,7 @@ describe('POST /v1/admin/auth/login', () => {
 
   test('error: missing password', () => {
     const email = uniqueEmail('login-missing-pw');
-    const reg = userRegister(email, 'Abcd1234', 'Amy', 'Pond');
+    const reg = adminAuthUserRegisterRequest(email, 'Abcd1234', 'Amy', 'Pond');
     expect(reg.statusCode).toBe(200);
     const res = userLogin(email, '');
     expect(res.statusCode).toBe(400);
@@ -37,7 +37,7 @@ describe('POST /v1/admin/auth/login', () => {
 
   test('error: incorrect password', () => {
     const email = uniqueEmail('login-wrong-pw');
-    const reg = userRegister(email, 'Abcd1234', 'River', 'Song');
+    const reg = adminAuthUserRegisterRequest(email, 'Abcd1234', 'River', 'Song');
     expect(reg.statusCode).toBe(200);
     const res = userLogin(email, 'Wrong1234');
     expect(res.statusCode).toBe(400);

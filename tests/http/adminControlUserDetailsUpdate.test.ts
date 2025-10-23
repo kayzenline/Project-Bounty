@@ -3,14 +3,14 @@ import path from 'path';
 import request from 'sync-request-curl';
 const SERVER_URL = "http://127.0.0.1:4900";
 const DB_PATH = path.join(__dirname, '../../src/db.json');
-import { loadData,DataStore } from '../../src/dataStore';
-import { userRegister, updateUserDetails } from './requestHelpers';
+import { loadData, DataStore } from '../../src/dataStore';
+import { adminAuthUserRegisterRequest, updateUserDetails } from './requestHelpers';
 let sessionId1: string;
 let sessionId2: string;
-let userEmail1: string; 
-let userEmail2: string; 
+let userEmail1: string;
+let userEmail2: string;
 beforeEach(() => {
-  const initialData :DataStore= {
+  const initialData: DataStore = {
     controlUsers: [],
     spaceMissions: [],
     nextControlUserId: 1,
@@ -23,30 +23,30 @@ beforeEach(() => {
   loadData();
   const uniqueEmail = `user${Date.now()}@test.com`
   userEmail1 = uniqueEmail;
-  const res1 = userRegister(uniqueEmail, 'abcdefg123', 'Bill', 'Ryker');
+  const res1 = adminAuthUserRegisterRequest(uniqueEmail, 'abcdefg123', 'Bill', 'Ryker');
   sessionId1 = res1.body.controlUserSessionId;
   const uniqueEmail2 = `kitty${Date.now()}@qq.com`;
   userEmail2 = uniqueEmail2;
-  const res2 = userRegister(uniqueEmail2, 'Kitty123456', 'Kitty', 'Tan');
+  const res2 = adminAuthUserRegisterRequest(uniqueEmail2, 'Kitty123456', 'Kitty', 'Tan');
   sessionId2 = res2.body.controlUserSessionId;
 });
 describe('HTTP tests for ControlUserdetailsUpdate', () => {
 
   test('header is invalid', () => {
-    const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`,{
-      json:{email:'1234@qq.com',nameFirst:'Ka',nameLast:'Ka'}
+    const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
+      json: { email: '1234@qq.com', nameFirst: 'Ka', nameLast: 'Ka' }
     });
     const body = JSON.parse(res.body.toString());
     expect(res.statusCode).toBe(401);
     expect(body.error).toBe('ControlUserSessionId is invalid');
-    expect(body.errorCategory).toBe('INVALID_CREDENTIALS'); 
+    expect(body.errorCategory).toBe('INVALID_CREDENTIALS');
   });
 
   test('User not found', () => {
     const res = updateUserDetails('999', '1234@qq.com', 'Ka', 'Ka');
     expect(res.statusCode).toBe(401);
     expect(res.body.error).toBe('controlUserId not found');
-    expect(res.body.errorCategory).toBe('INVALID_CREDENTIALS'); 
+    expect(res.body.errorCategory).toBe('INVALID_CREDENTIALS');
   });
   test('email is invalid', () => {
     const res = updateUserDetails(sessionId1, 'emailxxx', 'Bill', 'Ryker');

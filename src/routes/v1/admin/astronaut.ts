@@ -10,27 +10,41 @@ import {
 
 const router = Router();
 
-router.post('/', (req: Request, res: Response, next: NextFunction) => {
+router.get('/pool', notImplementedHandler);
+router.post('/', notImplementedHandler);
+router.get('/:astronautid', notImplementedHandler);
+// router.put('/:astronautid', (req, res) => {
+//   const controlUserSessionId = req.header('controlUserSessionId');
+//   const astronautId = Number(req.params.astronautid);
+//   const { nameFirst, nameLast, rank, age, weight, height } = req.body || {};
 
-});
+//   const result = editAstronaut(
+//     controlUserSessionId,
+//     astronautId,
+//     nameFirst,
+//     nameLast,
+//     rank,
+//     age,
+//     weight,
+//     height
+//   );
+//   if ('error' in result) {
+//     const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
+//     return res.status(status).json({ error: result.error });
+//   }
+//   return res.status(200).json({});
+// });
+// router.delete('/:astronautid', (req, res) => {
+//   const controlUserSessionId = req.header('controlUserSessionId');
+//   const astronautId = Number(req.params.astronautid);
 
-router.delete('/pool', (req: Request, res: Response, next: NextFunction) => {
-
-});
-
-router.get('/:astronautid', (req: Request, res: Response, next: NextFunction) => {
-
-});
-
-router.put('/:astronautid', (req: Request, res: Response, next: NextFunction) => {
-
-});
-
-router.delete('/:astronautid', (req: Request, res: Response, next: NextFunction) => {
-
-});
-
-
+//   const result = deleteAstronaut(controlUserSessionId, astronautId);
+//   if ('error' in result) {
+//     const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
+//     return res.status(status).json({ error: result.error });
+//   }
+//   return res.status(200).json({});
+// });
 
 export default router;
  */
