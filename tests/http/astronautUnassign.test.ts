@@ -1,4 +1,4 @@
-import { unassignAstronaut, clearRequest, userRegister, controlUserSessionId as missionCreate, createAstronaut, assignAstronaut } from './requestHelpers';
+import { unassignAstronaut, clearRequest, adminAuthUserRegisterRequest, adminMissionCreateRequest, createAstronaut, assignAstronaut } from './requestHelpers';
 
 const ERROR = { error: expect.any(String) };
 let missionId: number;
@@ -11,11 +11,11 @@ let rank: string;
 beforeEach(() => {
   const clearRes = clearRequest();
   expect(clearRes.statusCode).toBe(200);
-  const registerRes = userRegister('test@example.com', 'ValidPass123', 'John', 'Doe');
+  const registerRes = adminAuthUserRegisterRequest('test@example.com', 'ValidPass123', 'John', 'Doe');
   expect(registerRes.statusCode).toBe(200);
   token = registerRes.body.controlUserSessionId;
 
-  const res = missionCreate(token, "Mission 1", "Description", "Target");
+  const res = adminMissionCreateRequest(token, "Mission 1", "Description", "Target");
   expect(res.statusCode).toBe(200);
   missionId = res.body.missionId;
 
@@ -88,7 +88,7 @@ describe('DELETE /v1/admin/mission/{missionid}/assign/{astronautid}', () => {
     test('Valid controlUserSessionId is provided, but the control user is not an owner of this mission or the specified missionId does not exist', () => {
       // The control user is not an owner of this mission
       assignAstronaut(token, astronautId, missionId);
-      const otherUser = userRegister('other@example.com', 'ValidPass123', 'Alice', 'Smith');
+      const otherUser = adminAuthUserRegisterRequest('other@example.com', 'ValidPass123', 'Alice', 'Smith');
       expect(otherUser.statusCode).toBe(200);
       const otherToken = otherUser.body.controlUserSessionId;
       const notOwnerRes = unassignAstronaut(otherToken, astronautId, missionId);
