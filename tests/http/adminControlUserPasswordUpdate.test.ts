@@ -3,8 +3,8 @@ import path from 'path';
 import request from 'sync-request-curl';
 const SERVER_URL = "http://127.0.0.1:4900";
 const DB_PATH = path.join(__dirname, '../../src/db.json');
-import { loadData,DataStore } from '../../src/dataStore';
-import { userRegister, userLogin, updatePassword } from './requestHelpers'; 
+import { loadData, DataStore } from '../../src/dataStore';
+import { adminAuthUserRegisterRequest, userLogin, updatePassword } from './requestHelpers'; 
 let sessionId1: string;
 let userEmail: string;
 beforeEach(() => {
@@ -21,7 +21,7 @@ beforeEach(() => {
   loadData();
   const uniqueEmail = `user${Date.now()}@test.com`;
   userEmail = uniqueEmail; 
-  const res1 = userRegister(uniqueEmail, 'StrongPass123', 'Bill', 'Ryker');
+  const res1 = adminAuthUserRegisterRequest(uniqueEmail, 'StrongPass123', 'Bill', 'Ryker');
   sessionId1 = res1.body.controlUserSessionId;
 });
 describe('HTTP tests for ControlUserPasswordUpdate', () => {

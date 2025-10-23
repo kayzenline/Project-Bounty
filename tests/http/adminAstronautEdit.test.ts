@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { userRegister, userLogin, editAstronaut, clearRequest, createAstronaut } from './requestHelpers';
+import { adminAuthUserRegisterRequest, userLogin, editAstronaut, clearRequest, createAstronaut } from './requestHelpers';
 import { getData } from '../../src/dataStore';
 import { generateSessionId } from '../../src/helper';
 
@@ -18,7 +18,7 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}',() => {
     const password = 'password';
     const nameFirst = 'namefirst';
     const nameLast = 'nameLast';
-    const registerRes = userRegister(email, password, nameFirst, nameLast);
+    const registerRes = adminAuthUserRegisterRequest(email, password, nameFirst, nameLast);
     expect(registerRes.statusCode).toBe(200);
 
     const loginRes = userLogin(email, password);

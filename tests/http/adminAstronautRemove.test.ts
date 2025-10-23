@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { userRegister, userLogin, deleteAstronaut, clearRequest, createAstronaut, assignAstronaut, controlUserSessionId as missionCreate } from './requestHelpers';
+import { adminAuthUserRegisterRequest, userLogin, deleteAstronaut, clearRequest, createAstronaut, assignAstronaut, adminMissionCreateRequest } from './requestHelpers';
 import { getData } from '../../src/dataStore';
 import { generateSessionId } from '../../src/helper';
 
@@ -18,7 +18,7 @@ describe.skip('DELETE /v1/admin/astronaut/{astronautid}',()=>{
       const password = 'password';
       const nameFirst = 'namefirst';
       const nameLast = 'nameLast';
-      const registerRes = userRegister(email, password, nameFirst, nameLast);
+      const registerRes = adminAuthUserRegisterRequest(email, password, nameFirst, nameLast);
       expect(registerRes.statusCode).toBe(200);
   
       const loginRes = userLogin(email, password);
@@ -73,7 +73,7 @@ describe.skip('DELETE /v1/admin/astronaut/{astronautid}',()=>{
       description: 'Place a manned spacecraft in orbital flight around the earth. Investigate a persons performance capabilities and their ability to function in the environment of space. Recover the person and the spacecraft safely',
       target: 'Earth orbit',
     };
-    const createMissionRes = missionCreate(controlUserSessionId, mission.name, mission.description, mission.target);
+    const createMissionRes = adminMissionCreateRequest(controlUserSessionId, mission.name, mission.description, mission.target);
     expect(createMissionRes.statusCode).toBe(200);
 
     const assignAstronautRes = assignAstronaut(controlUserSessionId, astronautId, createMissionRes.body);
