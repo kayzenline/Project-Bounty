@@ -92,7 +92,7 @@ export function adminAstronautInfo(astronautId: number): { response: object } | 
       assignedMission: astronaut.assignedMission
     };
 
-    return response;
+    return { response: response };
   } catch (e) {
     const ne = normalizeError(e);
     return { error: ne.error, errorCategory: ne.errorCategory };
