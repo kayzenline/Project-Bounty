@@ -1,4 +1,4 @@
-
+/*
 import { getData, setData } from './dataStore';
 import {
   controlUserIdCheck,
@@ -114,4 +114,4 @@ export function unassginAstronaut(
 ) {
 
 }
-
+*/
