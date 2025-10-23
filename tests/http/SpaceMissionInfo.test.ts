@@ -1,4 +1,4 @@
-/* import { clearRequest, adminMissionCreateRequest, SpaceMissionInfo as SpaceMissionInfo, adminAuthUserRegisterRequest, createAstronaut, assignAstronaut } from './requestHelpers';
+import { clearRequest, adminMissionCreateRequest, SpaceMissionInfo as SpaceMissionInfo, adminAuthUserRegisterRequest, createAstronaut, assignAstronaut } from './requestHelpers';
 
 
 const ERROR = { error: expect.any(String) };
@@ -8,41 +8,43 @@ let astronautId: number;
 let astronautNameFirst: string;
 let astronautNameLast: string;
 let rank: string;
-beforeEach(() => {
-  const clearRes = clearRequest();
-  expect(clearRes.statusCode).toBe(200);
-  const registerRes = adminAuthUserRegisterRequest('test@example.com', 'ValidPass123', 'John', 'Doe');
-  expect(registerRes.statusCode).toBe(200);
-  token = registerRes.body.controlUserSessionId;
 
-  const res = adminMissionCreateRequest(token, "Mission 1", "Description", "Target");
-  expect(res.statusCode).toBe(200);
-  missionId = res.body.missionId;
-  astronautNameFirst = 'NameFirst';
-  astronautNameLast = 'NameLast';
-  rank = 'rankOfAstronaut';
-  const age = 20;
-  const weight = 70;
-  const height = 170;
-  const createAstronautRes = createAstronaut(
-    token,
-    astronautNameFirst,
-    astronautNameLast,
-    rank,
-    age,
-    weight,
-    height
-  );
-  expect(createAstronautRes.statusCode).toBe(200);
-  astronautId = createAstronautRes.body;
-})
-
-afterAll(() => {
-  const clearRes = clearRequest();
-  expect(clearRes.statusCode).toBe(200);
-});
 
 describe(`/v1/admin/mission/{missionId}`, () => {
+  beforeEach(() => {
+    const clearRes = clearRequest();
+    expect(clearRes.statusCode).toBe(200);
+    const registerRes = adminAuthUserRegisterRequest('test@example.com', 'ValidPass123', 'John', 'Doe');
+    expect(registerRes.statusCode).toBe(200);
+    token = registerRes.body.controlUserSessionId;
+
+    const res = adminMissionCreateRequest(token, "Mission 1", "Description", "Target");
+    expect(res.statusCode).toBe(200);
+    missionId = res.body.missionId;
+    astronautNameFirst = 'NameFirst';
+    astronautNameLast = 'NameLast';
+    rank = 'rankOfAstronaut';
+    const age = 20;
+    const weight = 70;
+    const height = 170;
+    const createAstronautRes = createAstronaut(
+      token,
+      astronautNameFirst,
+      astronautNameLast,
+      rank,
+      age,
+      weight,
+      height
+    );
+    expect(createAstronautRes.statusCode).toBe(200);
+    astronautId = createAstronautRes.body;
+  })
+
+  afterAll(() => {
+    const clearRes = clearRequest();
+    expect(clearRes.statusCode).toBe(200);
+  });
+  
   describe('valid cases', () => {
     // status code 200 If any of the following are true:
     test('successful get the Space mission info without assign astronaut', () => {
@@ -103,4 +105,3 @@ describe(`/v1/admin/mission/{missionId}`, () => {
     })
   })
 })
- */
