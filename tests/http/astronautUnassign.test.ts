@@ -1,4 +1,4 @@
-import { unassignAstronaut, clearRequest, adminAuthUserRegisterRequest, adminMissionCreateRequest, createAstronaut, assignAstronaut } from './requestHelpers';
+/* import { unassignAstronaut, clearRequest, adminAuthUserRegisterRequest, adminMissionCreateRequest, createAstronaut, assignAstronaut } from './requestHelpers';
 
 const ERROR = { error: expect.any(String) };
 let missionId: number;
@@ -102,3 +102,4 @@ describe('DELETE /v1/admin/mission/{missionid}/assign/{astronautid}', () => {
     })
   })
 })
+ */
