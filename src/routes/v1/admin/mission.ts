@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { notImplementedHandler } from '../../utils';
 import { getData } from '../../../dataStore';
-import { adminMissionNameUpdate, adminMissionTargetUpdate, adminMissionDescriptionUpdate, adminMissionRemove, adminMissionCreate, adminMissionList, adminMissionTransfer } from '../../../mission';
+import { adminMissionNameUpdate, adminMissionTargetUpdate, adminMissionDescriptionUpdate, adminMissionRemove, adminMissionCreate, adminMissionList, adminMissionTransfer, adminMissionInfo } from '../../../mission';
 import { httpToErrorCategories } from '../../../testSamples';
 import { findSessionFromSessionId } from '../../../helper';
 
@@ -65,7 +65,32 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.get('/:missionid', notImplementedHandler);
+router.get('/:missionid', (req: Request, res: Response, next: NextFunction) => {
+  const controlUserSessionId = req.header('controlUserSessionId');
+  const missionId = Number(req.params.missionid);
+
+  try {
+    if (!controlUserSessionId) {
+      return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
+    }
+
+    const session = findSessionFromSessionId(controlUserSessionId);
+    if (!session) {
+      return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
+    }
+
+    const result = adminMissionInfo(session.controlUserId, missionId);
+    if ('error' in result) {
+      const status = httpToErrorCategories[
+        (result as { error: string; errorCategory: keyof typeof httpToErrorCategories }).errorCategory
+      ];
+      return res.status(status).json({ error: result.error });
+    }
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.delete('/:missionid', (req: Request, res: Response, next: NextFunction) => {
   const controlUserSessionId = req.header('controlUserSessionId');
