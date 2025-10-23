@@ -192,11 +192,11 @@ router.post('/:missionid/transfer', (req: Request, res: Response, next: NextFunc
   }
 });
 
-/*router.post('/:missionid/assign/:astronautid', (req ,res)=>{
+/* router.post('/:missionid/assign/:astronautid', (req ,res)=>{
   const controlUserSessionId = req.headers.controlusersessionid as string;
   if(!controlUserSessionId){
-    return res.status(401).json({ 
-      error: 'controlUserSessionId is invalid' 
+    return res.status(401).json({
+      error: 'controlUserSessionId is invalid'
     });
   }
   const missionId = parseInt(req.params.missionid);
