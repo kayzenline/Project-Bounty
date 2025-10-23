@@ -3,44 +3,24 @@ import config from '../../src/config.json';
 const { port, url } = config;
 const SERVER_URL = `${url}:${port}`;
 
-async function httpRequest(method: string, url: string, body?: any, headers: Record<string, string> = {}) {
-  const res = await fetch(url, {
-    method,
-    headers: { 'Content-Type': 'application/json', ...headers },
-    body: body !== undefined ? JSON.stringify(body) : undefined,
+export function adminMissionTransferRequest(
+  controlUserSessionId: string,
+  missionId: number,
+  email: string
+) {
+  const response = request('POST', `${SERVER_URL}/v1/admin/mission/${missionId}/transfer`, {
+    headers: { controlusersessionid: controlUserSessionId },
+    json: {
+      email
+    }
   });
-  const text = await res.text();
   return {
-    statusCode: res.status,
-    getBody: () => text,
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
   };
 }
 
-export async function adminMissionTransferRequest(
-  controlUserSessionId: string,
-  missionId: number,
-  userEmail: string
-) {
-  return httpRequest(
-    'POST',
-    `${SERVER_URL}/v1/admin/mission/${missionId}/transfer`,
-    { userEmail },
-    { controlUserSessionId } 
-  );
-}
-
-export async function adminAuthRegisterRequest(
-  email: string,
-  password: string,
-  nameFirst: string,
-  nameLast: string
-) {
-  return httpRequest('POST', `${SERVER_URL}/v1/admin/auth/register`, {
-    email, password, nameFirst, nameLast
-  });
-}
-
-export function userRegister(
+export function adminAuthUserRegisterRequest(
   email: string,
   password: string,
   nameFirst: string,
@@ -85,47 +65,47 @@ export function userLogout(sessionId: string) {
 }
 
 export function getUserDetails(controlUserSessionId: string) {
-    const response = request('GET', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: controlUserSessionId }
-    });
-    return {
-      statusCode: response.statusCode,
-      body: JSON.parse(response.body.toString())
-    };
-  }
+  const response = request('GET', `${SERVER_URL}/v1/admin/controluser/details`, {
+    headers: { ControlUserSessionId: controlUserSessionId }
+  });
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
+}
 
 export function updatePassword(
-    controlUserSessionId: string,
-    oldPassword: string,
-    newPassword: string
-  ) {
-    const response = request('PUT', `${SERVER_URL}/v1/admin/controluser/password`, {
-      headers: { ControlUserSessionId: controlUserSessionId },
-      json: { oldPassword, newPassword }
-    });
-    return {
-      statusCode: response.statusCode,
-      body: JSON.parse(response.body.toString())
-    };
-  }
+  controlUserSessionId: string,
+  oldPassword: string,
+  newPassword: string
+) {
+  const response = request('PUT', `${SERVER_URL}/v1/admin/controluser/password`, {
+    headers: { ControlUserSessionId: controlUserSessionId },
+    json: { oldPassword, newPassword }
+  });
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
+}
 
-  export function updateUserDetails(
-    controlUserSessionId: string,
-    email: string,
-    nameFirst: string,
-    nameLast: string
-  ) {
-    const response = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
-      headers: { ControlUserSessionId: controlUserSessionId },
-      json: { email, nameFirst, nameLast }
-    });
-    return {
-      statusCode: response.statusCode,
-      body: JSON.parse(response.body.toString())
-    };
-  }
+export function updateUserDetails(
+  controlUserSessionId: string,
+  email: string,
+  nameFirst: string,
+  nameLast: string
+) {
+  const response = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
+    headers: { ControlUserSessionId: controlUserSessionId },
+    json: { email, nameFirst, nameLast }
+  });
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
+}
 
-export function controlUserSessionId(
+export function adminMissionCreateRequest(
   sessionId: string,
   name: string,
   description: string,
@@ -229,7 +209,7 @@ export function getMissionInfo(
 }
 
 export function checkAstronautPool(
-  controlUserSessionId: string,
+  controlUserSessionId: string
 ) {
   const res = request('GET', `${SERVER_URL}/v1/admin/astronaut/pool`, {
     headers: { controlUserSessionId: controlUserSessionId },
@@ -258,7 +238,7 @@ export function createAstronaut(
       rank,
       age,
       weight,
-      height,
+      height
     }
   });
 
@@ -267,7 +247,6 @@ export function createAstronaut(
     body: JSON.parse(res.body.toString())
   };
 }
-
 
 export function deleteAstronaut(
   controlUserSessionId: string,
@@ -315,7 +294,7 @@ export function editAstronaut(
       rank,
       age,
       weight,
-      height,
+      height
     }
   });
 
@@ -328,7 +307,7 @@ export function editAstronaut(
 export function assignAstronaut(
   controlUserSessionId: string,
   astronautid: number,
-  missionid: number,
+  missionid: number
 ) {
   const res = request('POST', `${SERVER_URL}/v1/admin/mission/${missionid}/assign/${astronautid}`, {
     headers: { controlUserSessionId: controlUserSessionId },
@@ -342,7 +321,7 @@ export function assignAstronaut(
 export function unassignAstronaut(
   controlUserSessionId: string,
   astronautid: number,
-  missionid: number,
+  missionid: number
 ) {
   const res = request('DELETE', `${SERVER_URL}/v1/admin/mission/${missionid}/assign/${astronautid}`, {
     headers: { controlUserSessionId: controlUserSessionId },
@@ -353,10 +332,9 @@ export function unassignAstronaut(
   };
 }
 
-
 export function missionList(
   controlUserSessionId: string
-){
+) {
   const res = request('GET', `${SERVER_URL}/v1/admin/mission/list`, {
     headers: { controlUserSessionId: controlUserSessionId },
   });
@@ -366,24 +344,10 @@ export function missionList(
   };
 }
 
-export function SpaceMissionInfo(
-  controlUserSessionId: string,
-  missionid: number
-) {
-  const res = request('GET', `${SERVER_URL}/v1/admin/mission/${missionid}`, {
-    headers: {controlUserSessionId}
-  });
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
-}
-
-
 export function clearRequest() {
   const res = request('DELETE', `${SERVER_URL}/v1/clear`);
   return {
     statusCode: res.statusCode,
     body: JSON.parse(res.body.toString()),
   };
-};
+}

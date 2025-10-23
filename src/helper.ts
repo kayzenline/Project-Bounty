@@ -219,12 +219,12 @@ function isValidRank(rank: string) {
     return false;
   }
   const trimmedRank = rank.trim();
-  // rank must be between 2 and 20 characters (inclusive)
+  // rank must be between 5 and 50 characters (inclusive)
   if (trimmedRank.length < 5 || trimmedRank.length > 50) {
     return false;
   }
-  // rank can only contain letters, spaces, hyphens, or apostrophes
-  return /^[a-zA-Z\s\-']+$/.test(trimmedRank);
+  // rank can only contain letters, spaces, hyphens, parentheses, or apostrophes
+  return /^[a-zA-Z\s\-'()]+$/.test(trimmedRank);
 }
 
 function astronautNameCheck(newNameFirst: string, newNamelast: string) {
@@ -250,10 +250,14 @@ function astronautRankCheck(newRank: string) {
 }
 
 function astronautPhyCharCheck(age: number, weight: number, height: number) {
+  // Check if age is an integer
+  if (!Number.isInteger(age)) {
+    throw new ServiceError('astronaut age is not meet the requirements', EC.BAD_INPUT);
+  }
   if (age < 20 || age > 60) {
     throw new ServiceError('astronaut age is not meet the requirements', EC.BAD_INPUT);
   }
-  if (weight > 100) {
+  if (weight < 0 || weight > 100) {
     throw new ServiceError('astronaut overweight', EC.BAD_INPUT);
   }
   if (height < 150 || height > 200) {

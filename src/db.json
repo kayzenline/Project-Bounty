@@ -1,8 +1,9 @@
 {
   "controlUsers": [],
   "spaceMissions": [],
-  "sessions": [],
   "nextControlUserId": 1,
   "nextMissionId": 1,
-  "astronauts": []
+  "sessions": [],
+  "astronauts": [],
+  "nextAstronautId": 157
 }

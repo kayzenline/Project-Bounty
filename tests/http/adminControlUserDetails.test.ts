@@ -1,10 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import request from 'sync-request-curl';
-const SERVER_URL = "http://127.0.0.1:4900";
+const SERVER_URL = 'http://127.0.0.1:4900';
 const DB_PATH = path.join(__dirname, '../../src/db.json');
-import { loadData,DataStore } from '../../src/dataStore';
-import { userRegister, getUserDetails } from './requestHelpers'
+import { loadData, DataStore } from '../../src/dataStore';
+import { adminAuthUserRegisterRequest, getUserDetails } from './requestHelpers';
 let sessionId: string;
 let userEmail: string;
 beforeEach(() => {
@@ -13,14 +13,15 @@ beforeEach(() => {
     spaceMissions: [],
     nextControlUserId: 1,
     nextMissionId: 1,
+    nextAstronautId: 1,
     sessions: [],
     astronauts: [],
   };
   fs.writeFileSync(DB_PATH, JSON.stringify(initialData, null, 2));
   loadData();
-  const uniqueEmail = `user${Date.now()}@test.com`
+  const uniqueEmail = `user${Date.now()}@test.com`;
   userEmail = uniqueEmail;
-  const res = userRegister(uniqueEmail, 'abcdefg123', 'Bill', 'Ryker');
+  const res = adminAuthUserRegisterRequest(uniqueEmail, 'abcdefg123', 'Bill', 'Ryker');
   sessionId = res.body.controlUserSessionId;
 });
 
@@ -30,7 +31,7 @@ describe('HTTP tests for ControlUserdetails', () => {
     const body = JSON.parse(res.body.toString());
     expect(res.statusCode).toBe(401);
     expect(body.error).toBe('ControlUserSessionId is invalid');
-    expect(body.errorCategory).toBe('INVALID_CREDENTIALS'); 
+    expect(body.errorCategory).toBe('INVALID_CREDENTIALS');
   });
 
   test('User not found', () => {
@@ -50,5 +51,4 @@ describe('HTTP tests for ControlUserdetails', () => {
     expect(user.numSuccessfulLogins).toBe(2);
     expect(user.numFailedPasswordsSinceLastLogin).toBe(0);
   });
-
 });

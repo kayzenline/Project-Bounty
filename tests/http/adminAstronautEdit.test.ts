@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { userRegister, userLogin, editAstronaut, clearRequest, createAstronaut } from './requestHelpers';
+import { adminAuthUserRegisterRequest, userLogin, editAstronaut, clearRequest, createAstronaut } from './requestHelpers';
 import { getData } from '../../src/dataStore';
 import { generateSessionId } from '../../src/helper';
 
@@ -7,10 +7,10 @@ function uniqueEmail(prefix = 'user') {
   return `${prefix}.${uuid()}@example.com`;
 }
 
-describe.skip('PUT /v1/admin/astronaut/{astronautid}',() => {
+describe.skip('PUT /v1/admin/astronaut/{astronautid}', () => {
   let controlUserSessionId: string;
   let astronautId: number;
-  beforeEach(()=> {
+  beforeEach(() => {
     const clearRes = clearRequest();
     expect(clearRes.statusCode).toBe(200);
 
@@ -18,7 +18,7 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}',() => {
     const password = 'password';
     const nameFirst = 'namefirst';
     const nameLast = 'nameLast';
-    const registerRes = userRegister(email, password, nameFirst, nameLast);
+    const registerRes = adminAuthUserRegisterRequest(email, password, nameFirst, nameLast);
     expect(registerRes.statusCode).toBe(200);
 
     const loginRes = userLogin(email, password);
@@ -44,7 +44,7 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}',() => {
     astronautId = createAstronautRes.body;
   });
 
-  test('edit astronaut successfully',() => {
+  test('edit astronaut successfully', () => {
     const newAstronautNameFirst = 'newNameFirst';
     const newAstronautNameLat = 'newNameLast';
     const newRank = 'newRankOfAstronaut';
@@ -75,7 +75,7 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}',() => {
     }
   });
 
-  test('astronautId is invalid',() => {
+  test('astronautId is invalid', () => {
     const invalidId = astronautId + 1;
     const newAstronautNameFirst = 'newNameFirst';
     const newAstronautNameLat = 'newNameLast';
@@ -149,13 +149,13 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}',() => {
       newHeight: 175
     }
   ];
-  test.each(invalidNameValue)('astronaut name is invalid',({ 
-    newAstronautNameFirst, 
-    newAstronautNameLat, 
-    newRank, 
-    newAge, 
-    newWeight, 
-    newHeight 
+  test.each(invalidNameValue)('astronaut name is invalid', ({
+    newAstronautNameFirst,
+    newAstronautNameLat,
+    newRank,
+    newAge,
+    newWeight,
+    newHeight
   }) => {
     const editAstronautRes = editAstronaut(
       controlUserSessionId,
@@ -198,13 +198,13 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}',() => {
       newHeight: 175
     }
   ];
-  test.each(invalidRankValue)('astronaut rank is invalid',({
-    newAstronautNameFirst, 
-    newAstronautNameLat, 
-    newRank, 
-    newAge, 
-    newWeight, 
-    newHeight 
+  test.each(invalidRankValue)('astronaut rank is invalid', ({
+    newAstronautNameFirst,
+    newAstronautNameLat,
+    newRank,
+    newAge,
+    newWeight,
+    newHeight
   }) => {
     const editAstronautRes = editAstronaut(
       controlUserSessionId,
@@ -239,13 +239,13 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}',() => {
       newHeight: 175
     }
   ];
-  test.each(invalidAgeValue)('astronaut age is not meet the requirement',({
-    newAstronautNameFirst, 
-    newAstronautNameLat, 
-    newRank, 
-    newAge, 
-    newWeight, 
-    newHeight 
+  test.each(invalidAgeValue)('astronaut age is not meet the requirement', ({
+    newAstronautNameFirst,
+    newAstronautNameLat,
+    newRank,
+    newAge,
+    newWeight,
+    newHeight
   }) => {
     const editAstronautRes = editAstronaut(
       controlUserSessionId,
@@ -262,7 +262,7 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}',() => {
     expect(editAstronautRes.body).toEqual({ error: expect.any(String) });
   });
 
-  test('astronaut weight is not meet the requirement',() => {
+  test('astronaut weight is not meet the requirement', () => {
     const newAstronautNameFirst = 'newNameFirst';
     const newAstronautNameLat = 'newNameLast';
     const newRank = 'newRankOfAstronaut';
@@ -303,13 +303,13 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}',() => {
       newHeight: 201
     }
   ];
-  test.each(invalidHeightValue)('astronaut height is not meet the requirement',({
-    newAstronautNameFirst, 
-    newAstronautNameLat, 
-    newRank, 
-    newAge, 
-    newWeight, 
-    newHeight 
+  test.each(invalidHeightValue)('astronaut height is not meet the requirement', ({
+    newAstronautNameFirst,
+    newAstronautNameLat,
+    newRank,
+    newAge,
+    newWeight,
+    newHeight
   }) => {
     const editAstronautRes = editAstronaut(
       controlUserSessionId,
@@ -346,16 +346,15 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}',() => {
       newHeight: 175
     }
   ];
-  test.each(invalidSessionIdValue)('controlUserSessionId is invalid',({
+  test.each(invalidSessionIdValue)('controlUserSessionId is invalid', ({
     invalidSessionId,
-    newAstronautNameFirst, 
-    newAstronautNameLat, 
-    newRank, 
-    newAge, 
-    newWeight, 
-    newHeight 
+    newAstronautNameFirst,
+    newAstronautNameLat,
+    newRank,
+    newAge,
+    newWeight,
+    newHeight
   }) => {
-
     const editAstronautRes = editAstronaut(
       invalidSessionId,
       astronautId,
