@@ -121,7 +121,7 @@ export function adminAstronautInfo(astronautId: number): { response: object } | 
   }
 }
 
-export function deleteAstronaut(controlUserSessionId: string, astronautId: number): {} | { error: string; errorCategory: string } {
+export function deleteAstronaut(controlUserSessionId: string, astronautId: number): Record<string, never> | { error: string; errorCategory: string } {
   try {
     if (!findSessionFromSessionId(controlUserSessionId)) {
       buildError('controlUserSessionId is invalid', EC.INVALID_CREDENTIALS);
@@ -159,7 +159,7 @@ export function editAstronaut(
   age: number,
   weight: number,
   height: number
-): {} | { error: string; errorCategory: string } {
+): Record<string, never> | { error: string; errorCategory: string } {
   try {
     if (!findSessionFromSessionId(controlUserSessionId)) {
       buildError('controlUserSessionId is invalid', EC.INVALID_CREDENTIALS);
@@ -191,10 +191,10 @@ export function assignAstronaut(
   controlUserSessionId: string,
   astronautId: number,
   missionId: number
-): {} | { error: string; errorCategory: string } {
+): Record<string, never> | { error: string; errorCategory: string } {
   try {
     const data = getData();
-    const session = findSessionFromSessionId(controlUserSessionId)
+    const session = findSessionFromSessionId(controlUserSessionId);
     if (!session) {
       buildError('controlUserSessionId is invalid', EC.INVALID_CREDENTIALS);
     }
@@ -209,7 +209,7 @@ export function assignAstronaut(
       throw buildError('mission does not belong to owner', EC.INACCESSIBLE_VALUE);
     }
     if (!astronautIdCheck(astronautId)) {
-       buildError('astronautId is invalid', EC.BAD_INPUT);
+      buildError('astronautId is invalid', EC.BAD_INPUT);
     }
     const astronaut = data.astronauts.find(a => a.astronautId === astronautId);
     if (!astronaut) {
@@ -234,6 +234,6 @@ export function unassginAstronaut(
   controlUserSessionId: string,
   astronautId: number,
   missionId: number
-): {} | { error: string; errorCategory: string } {
+): Record<string, never> | { error: string; errorCategory: string } {
 
 }
