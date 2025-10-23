@@ -1,7 +1,5 @@
-import { getData, setData } from './dataStore';
+import { getData, setData, Astronaut } from './dataStore';
 import {
-  controlUserIdCheck,
-  missionIdCheck,
   findSessionFromSessionId,
   astronautIdCheck,
   astronautNameCheck,
@@ -27,7 +25,7 @@ export function adminAstronautCreate(
   age: number,
   weight: number,
   height: number
-) {
+): { astronautId: number } | { error: string; errorCategory: string } {
   try {
     // Validate input parameters
     astronautNameCheck(nameFirst, nameLast);
@@ -46,7 +44,7 @@ export function adminAstronautCreate(
     const currentTime = Math.floor(Date.now() / 1000);
 
     // Create new astronaut
-    const newAstronaut = {
+    const newAstronaut: Astronaut = {
       astronautId,
       designation,
       timeAdded: currentTime,

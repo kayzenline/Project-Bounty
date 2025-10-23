@@ -38,7 +38,7 @@ interface Session {
   controlUserId: number;
 }
 
-interface Astronaut {
+export interface Astronaut {
   astronautId: number;
   designation: string;
   timeAdded: number;
@@ -49,10 +49,10 @@ interface Astronaut {
   age: number;
   weight: number;
   height: number;
-  assignedMission: {
+  assignedMission?: {
     missionId: number;
     objective: string;
-  }
+  };
 }
 
 const DB_PATH = path.join(__dirname, 'db.json');

@@ -24,7 +24,7 @@ router.post('/', (req: Request, res: Response) => {
   const { nameFirst, nameLast, rank, age, weight, height } = req.body;
   const result = adminAstronautCreate(nameFirst, nameLast, rank, age, weight, height);
 
-  if (result.error) {
+  if ('error' in result) {
     const statusCode = result.errorCategory === EC.BAD_INPUT ? 400 : 401;
     return res.status(statusCode).json({ error: result.error });
   }
