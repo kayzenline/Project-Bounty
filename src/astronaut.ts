@@ -68,7 +68,7 @@ export function adminAstronautCreate(
   }
 }
 
-export function adminAstronautInfo(astronautId: number): {
+export function adminAstronautInfo(astronautId: number): { response: object } | { error: string; errorCategory: string } {
   astronautId: number;
   designation: string;
   timeAdded: number;
@@ -132,7 +132,7 @@ export function adminAstronautInfo(astronautId: number): {
   }
 }
 
-export function deleteAstronaut(controlUserSessionId: string, astronautId: number) {
+export function deleteAstronaut(controlUserSessionId: string, astronautId: number): {} | { error: string; errorCategory: string } {
   try {
     if (!findSessionFromSessionId(controlUserSessionId)) {
       buildError('controlUserSessionId is invalid', EC.INVALID_CREDENTIALS);
@@ -170,7 +170,7 @@ export function editAstronaut(
   age: number,
   weight: number,
   height: number
-) {
+): {} | { error: string; errorCategory: string } {
   try {
     if (!findSessionFromSessionId(controlUserSessionId)) {
       buildError('controlUserSessionId is invalid', EC.INVALID_CREDENTIALS);
@@ -202,14 +202,14 @@ export function assignAstronaut(
   controlUserSessionId: string,
   astronautId: number,
   missionId: number
-) {
+): {} | { error: string; errorCategory: string } {
   try {
     const data = getData();
     const session = findSessionFromSessionId(controlUserSessionId)
-    if(!session){
+    if (!session) {
       buildError('controlUserSessionId is invalid', EC.INVALID_CREDENTIALS);
     }
-    if(!missionIdCheck(missionId)){
+    if (!missionIdCheck(missionId)) {
       buildError('missionId is invalid', EC.INACCESSIBLE_VALUE);
     }
     const mission = data.spaceMissions.find(m => m.missionId === missionId);
@@ -219,9 +219,9 @@ export function assignAstronaut(
     if (mission.controlUserId !== session.controlUserId) {
       throw buildError('mission does not belong to owner', EC.INACCESSIBLE_VALUE);
     }
-    if(!astronautIdCheck(astronautId)){
+    if (!astronautIdCheck(astronautId)) {
        buildError('astronautId is invalid', EC.BAD_INPUT);
-    };
+    }
     const astronaut = data.astronauts.find(a => a.astronautId === astronautId);
     if (!astronaut) {
       buildError('astronaut not found', EC.BAD_INPUT);
@@ -245,6 +245,6 @@ export function unassginAstronaut(
   controlUserSessionId: string,
   astronautId: number,
   missionId: number
-) {
+): {} | { error: string; errorCategory: string } {
 
 }
