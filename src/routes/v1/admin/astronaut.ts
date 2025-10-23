@@ -1,12 +1,36 @@
-import { Router } from 'express';
-import { notImplementedHandler } from '../../utils';
+/* import { Router, Request, Response, NextFunction } from 'express';
+import { httpToErrorCategories } from '../../../testSamples';
+import {
+  seeAstronautPool,
+  createAstronaut,
+  getAstronautInfo,
+  editAstronaut,
+  deleteAstronaut
+} from '../../../astronaut';
 
 const router = Router();
 
-router.get('/pool', notImplementedHandler);
-router.post('/', notImplementedHandler);
-router.get('/:astronautid', notImplementedHandler);
-router.put('/:astronautid', notImplementedHandler);
-router.delete('/:astronautid', notImplementedHandler);
+router.post('/', (req: Request, res: Response, next: NextFunction) => {
+
+});
+
+router.delete('/pool', (req: Request, res: Response, next: NextFunction) => {
+
+});
+
+router.get('/:astronautid', (req: Request, res: Response, next: NextFunction) => {
+
+});
+
+router.put('/:astronautid', (req: Request, res: Response, next: NextFunction) => {
+
+});
+
+router.delete('/:astronautid', (req: Request, res: Response, next: NextFunction) => {
+
+});
+
+
 
 export default router;
+ */
