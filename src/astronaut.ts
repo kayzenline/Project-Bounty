@@ -68,6 +68,70 @@ export function adminAstronautCreate(
   }
 }
 
+export function adminAstronautInfo(astronautId: number): {
+  astronautId: number;
+  designation: string;
+  timeAdded: number;
+  timeLastEdited: number;
+  age: number;
+  weight: number;
+  height: number;
+  assignedMission?: {
+    missionId: number;
+    objective: string;
+  };
+} | { error: string; errorCategory: string } {
+  try {
+    astronautIdCheck(astronautId);
+
+    const data = getData();
+    const astronaut = data.astronauts.find(a => a.astronautId === astronautId);
+
+    if (!astronaut) {
+      buildError('astronautId not found', EC.BAD_INPUT);
+    }
+
+    // Build response object
+    const response: {
+      astronautId: number;
+      designation: string;
+      timeAdded: number;
+      timeLastEdited: number;
+      age: number;
+      weight: number;
+      height: number;
+      assignedMission?: {
+        missionId: number;
+        objective: string;
+      };
+    } = {
+      astronautId: astronaut.astronautId,
+      designation: astronaut.designation,
+      timeAdded: astronaut.timeAdded,
+      timeLastEdited: astronaut.timeLastEdited,
+      age: astronaut.age,
+      weight: astronaut.weight,
+      height: astronaut.height
+    };
+
+    // Add assigned mission info if exists
+    if (astronaut.assignedMission) {
+      const mission = data.spaceMissions.find(m => m.missionId === astronaut.assignedMission.missionId);
+      if (mission) {
+        response.assignedMission = {
+          missionId: mission.missionId,
+          objective: `[${mission.target}] ${mission.name}`
+        };
+      }
+    }
+
+    return response;
+  } catch (e) {
+    const ne = normalizeError(e);
+    return { error: ne.error, errorCategory: ne.errorCategory };
+  }
+}
+
 export function deleteAstronaut(controlUserSessionId: string, astronautId: number) {
   try {
     if (!findSessionFromSessionId(controlUserSessionId)) {
