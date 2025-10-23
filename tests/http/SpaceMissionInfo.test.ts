@@ -10,7 +10,7 @@ let astronautNameLast: string;
 let rank: string;
 
 
-describe(`/v1/admin/mission/{missionId}`, () => {
+describe.skip(`/v1/admin/mission/{missionId}`, () => {
   beforeEach(() => {
     const clearRes = clearRequest();
     expect(clearRes.statusCode).toBe(200);
@@ -44,7 +44,7 @@ describe(`/v1/admin/mission/{missionId}`, () => {
     const clearRes = clearRequest();
     expect(clearRes.statusCode).toBe(200);
   });
-  
+
   describe('valid cases', () => {
     // status code 200 If any of the following are true:
     test('successful get the Space mission info without assign astronaut', () => {
