@@ -41,7 +41,7 @@ export function adminAuthUserRegisterRequest(
   };
 }
 
-export function userLogin(email: string, password: string) {
+export function adminAuthUserLoginRequest(email: string, password: string) {
   const response = request('POST', `${SERVER_URL}/v1/admin/auth/login`, {
     json: {
       email,
@@ -54,7 +54,7 @@ export function userLogin(email: string, password: string) {
   };
 }
 
-export function userLogout(sessionId: string) {
+export function adminAuthUserLogoutRequest(sessionId: string) {
   const response = request('POST', `${SERVER_URL}/v1/admin/auth/logout`, {
     headers: { controlusersessionid: sessionId }
   });
@@ -64,7 +64,7 @@ export function userLogout(sessionId: string) {
   };
 }
 
-export function getUserDetails(controlUserSessionId: string) {
+export function adminAuthUserDetailsRequest(controlUserSessionId: string) {
   const response = request('GET', `${SERVER_URL}/v1/admin/controluser/details`, {
     headers: { ControlUserSessionId: controlUserSessionId }
   });
@@ -74,7 +74,7 @@ export function getUserDetails(controlUserSessionId: string) {
   };
 }
 
-export function updatePassword(
+export function adminAuthUserPasswordUpdateRequest(
   controlUserSessionId: string,
   oldPassword: string,
   newPassword: string
@@ -89,7 +89,7 @@ export function updatePassword(
   };
 }
 
-export function updateUserDetails(
+export function adminAuthUserDetailsUpdateRequest(
   controlUserSessionId: string,
   email: string,
   nameFirst: string,
@@ -126,7 +126,7 @@ export function adminMissionCreateRequest(
   };
 }
 
-export function missionNameUpdate(
+export function adminMissionNameUpdateRequest(
   controlUserSessionId: string,
   missionId: number,
   name: string
@@ -144,7 +144,7 @@ export function missionNameUpdate(
   };
 }
 
-export function missionTargetUpdate(
+export function adminMissionTargetUpdateRequest(
   controlUserSessionId: string,
   missionId: number,
   target: string
@@ -162,7 +162,7 @@ export function missionTargetUpdate(
   };
 }
 
-export function missionDescriptionUpdate(
+export function adminMissionDescriptionUpdateRequest(
   controlUserSessionId: string,
   missionId: number,
   description: string
@@ -180,7 +180,7 @@ export function missionDescriptionUpdate(
   };
 }
 
-export function deleteMission(
+export function adminMissionDeleteRequest(
   controlUserSessionId: string,
   missionId: number
 ) {
@@ -194,7 +194,7 @@ export function deleteMission(
   };
 }
 
-export function getMissionInfo(
+export function adminMissionInfoRequest(
   controlUserSessionId: string,
   missionId: number
 ) {
@@ -208,7 +208,7 @@ export function getMissionInfo(
   };
 }
 
-export function checkAstronautPool(
+export function adminAstronautPoolRequest(
   controlUserSessionId: string
 ) {
   const res = request('GET', `${SERVER_URL}/v1/admin/astronaut/pool`, {
@@ -221,7 +221,7 @@ export function checkAstronautPool(
   };
 }
 
-export function createAstronaut(
+export function adminAstronautCreateRequest(
   controlUserSessionId: string,
   nameFirst: string,
   nameLast: string,
@@ -248,7 +248,7 @@ export function createAstronaut(
   };
 }
 
-export function deleteAstronaut(
+export function adminAstronautDeleteRequest(
   controlUserSessionId: string,
   astronautId: number
 ) {
@@ -262,7 +262,7 @@ export function deleteAstronaut(
   };
 }
 
-export function getAstronautInfo(
+export function adminAstronautInfoRequest(
   controlUserSessionId: string,
   astronautId: number
 ) {
@@ -276,7 +276,7 @@ export function getAstronautInfo(
   };
 }
 
-export function editAstronaut(
+export function adminAstronautEditRequest(
   controlUserSessionId: string,
   astronautId: number,
   nameFirst: string,
@@ -304,7 +304,7 @@ export function editAstronaut(
   };
 }
 
-export function assignAstronaut(
+export function adminAstronautAssignRequest(
   controlUserSessionId: string,
   astronautid: number,
   missionid: number
@@ -318,7 +318,7 @@ export function assignAstronaut(
   };
 }
 
-export function unassignAstronaut(
+export function adminAstronautUnassignRequest(
   controlUserSessionId: string,
   astronautid: number,
   missionid: number
@@ -332,24 +332,11 @@ export function unassignAstronaut(
   };
 }
 
-export function missionList(
+export function adminMissionListRequest(
   controlUserSessionId: string
 ) {
   const res = request('GET', `${SERVER_URL}/v1/admin/mission/list`, {
     headers: { controlUserSessionId: controlUserSessionId },
-  });
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
-}
-
-export function SpaceMissionInfo(
-  controlUserSessionId: string,
-  missionid: number
-) {
-  const res = request('GET', `${SERVER_URL}/v1/admin/mission/${missionid}`, {
-    headers: {controlUserSessionId}
   });
   return {
     statusCode: res.statusCode,

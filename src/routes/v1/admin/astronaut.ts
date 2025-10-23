@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
-import { adminAstronautCreate, adminAstronautInfo } from '../../../astronaut';
+import { adminAstronautCreate, adminAstronautInfo, adminAstronautDelete, adminAstronautEdit } from '../../../astronaut';
 import { findSessionFromSessionId } from '../../../helper';
+import { httpToErrorCategories } from '../../../testSamples';
 import { errorCategories as EC } from '../../../testSamples';
 import { loadData } from '../../../dataStore';
 
@@ -62,17 +63,42 @@ router.get('/:astronautid', (req: Request, res: Response) => {
   return res.status(200).json(result);
 });
 
-// Keep other routes as not implemented for now
 router.get('/pool', (req: Request, res: Response) => {
   res.status(501).json({ error: 'Not implemented' });
 });
 
-router.put('/:astronautid', (req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
+router.put('/:astronautid', (req, res) => {
+  const controlUserSessionId = req.header('controlUserSessionId');
+  const astronautId = Number(req.params.astronautid);
+  const { nameFirst, nameLast, rank, age, weight, height } = req.body || {};
+
+  const result = adminAstronautEdit(
+    controlUserSessionId,
+    astronautId,
+    nameFirst,
+    nameLast,
+    rank,
+    age,
+    weight,
+    height
+  );
+  if ('error' in result) {
+    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
+    return res.status(status).json({ error: result.error });
+  }
+  return res.status(200).json({});
 });
 
-router.delete('/:astronautid', (req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
+router.delete('/:astronautid', (req, res) => {
+  const controlUserSessionId = req.header('controlUserSessionId');
+  const astronautId = Number(req.params.astronautid);
+
+  const result = adminAstronautDelete(controlUserSessionId, astronautId);
+  if ('error' in result) {
+    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
+    return res.status(status).json({ error: result.error });
+  }
+  return res.status(200).json({});
 });
 
 export default router;

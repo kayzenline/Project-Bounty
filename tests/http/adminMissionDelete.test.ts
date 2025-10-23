@@ -1,5 +1,5 @@
 import { afterAll, beforeEach, describe, expect, test } from '@jest/globals';
-import { adminMissionCreateRequest, adminAuthUserRegisterRequest, clearRequest, deleteMission, createAstronaut, assignAstronaut } from './requestHelpers';
+import { adminMissionCreateRequest, adminAuthUserRegisterRequest, clearRequest, adminMissionDeleteRequest, adminAstronautCreateRequest, adminAstronautAssignRequest } from './requestHelpers';
 
 let missionId: number;
 let token: string;
@@ -26,7 +26,7 @@ describe('/v1/admin/mission/{missionid}', () => {
   describe('valid cases', () => {
     // status code 200 If any of the following are true:
     test('successful delete a space mission', () => {
-      const res = deleteMission(token, missionId);
+      const res = adminMissionDeleteRequest(token, missionId);
       expect(res.statusCode).toBe(200);
       expect(res.body).toStrictEqual({});
     });
@@ -34,20 +34,20 @@ describe('/v1/admin/mission/{missionid}', () => {
   describe('invalid cases', () => {
     // status code 400 If any of the following are true:
     test.skip('Astronauts have been assigned to this mission', () => {
-      const astronautId = createAstronaut(token, 'Elon', 'Musk', 'string', 36, 75, 178).body.astronautId;
-      assignAstronaut(token, astronautId, missionId);
-      const res = deleteMission(token, missionId);
+      const astronautId = adminAstronautCreateRequest(token, 'Elon', 'Musk', 'string', 36, 75, 178).body.astronautId;
+      adminAstronautAssignRequest(token, astronautId, missionId);
+      const res = adminMissionDeleteRequest(token, missionId);
       expect(res.statusCode).toBe(400);
       expect(res.body).toStrictEqual(ERROR);
     });
     // status code 401 If any of the following are true:
     test('ControlUserSessionId is empty or invalid (does not refer to valid logged in user session)', () => {
       const invalidSession = token + 'awgaw';
-      const resin = deleteMission(invalidSession, missionId);
+      const resin = adminMissionDeleteRequest(invalidSession, missionId);
       expect(resin.statusCode).toBe(401);
       expect(resin.body).toStrictEqual(ERROR);
       const empty = '';
-      const resem = deleteMission(empty, missionId);
+      const resem = adminMissionDeleteRequest(empty, missionId);
       expect(resem.statusCode).toBe(401);
       expect(resem.body).toStrictEqual(ERROR);
     });
@@ -57,11 +57,11 @@ describe('/v1/admin/mission/{missionid}', () => {
       expect(otherUser.statusCode).toBe(200);
       const otherToken = otherUser.body.controlUserSessionId;
 
-      const notOwnerResponse = deleteMission(otherToken, missionId);
+      const notOwnerResponse = adminMissionDeleteRequest(otherToken, missionId);
       expect(notOwnerResponse.statusCode).toBe(403);
       expect(notOwnerResponse.body).toStrictEqual(ERROR);
 
-      const missingMissionResponse = deleteMission(token, missionId + 9999);
+      const missingMissionResponse = adminMissionDeleteRequest(token, missionId + 9999);
       expect(missingMissionResponse.statusCode).toBe(403);
       expect(missingMissionResponse.body).toStrictEqual(ERROR);
     });

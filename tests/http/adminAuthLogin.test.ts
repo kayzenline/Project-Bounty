@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { userLogin, adminAuthUserRegisterRequest, clearRequest } from './requestHelpers';
+import { adminAuthUserLoginRequest, adminAuthUserRegisterRequest, clearRequest } from './requestHelpers';
 
 beforeEach(() => {
   const res = clearRequest();
@@ -15,7 +15,7 @@ describe('POST /v1/admin/auth/login', () => {
     const email = uniqueEmail('login-success');
     const reg = adminAuthUserRegisterRequest(email, 'Abcd1234', 'John', 'Doe');
     expect(reg.statusCode).toBe(200);
-    const res = userLogin(email, 'Abcd1234');
+    const res = adminAuthUserLoginRequest(email, 'Abcd1234');
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual({ controlUserSessionId: expect.any(String) });
   });
@@ -24,13 +24,13 @@ describe('POST /v1/admin/auth/login', () => {
     const email = uniqueEmail('login-missing-pw');
     const reg = adminAuthUserRegisterRequest(email, 'Abcd1234', 'Amy', 'Pond');
     expect(reg.statusCode).toBe(200);
-    const res = userLogin(email, '');
+    const res = adminAuthUserLoginRequest(email, '');
     expect(res.statusCode).toBe(400);
     expect(res.body).toEqual({ error: expect.any(String) });
   });
 
   test('error: user not found', () => {
-    const res = userLogin(uniqueEmail('no-user'), 'Abcd1234');
+    const res = adminAuthUserLoginRequest(uniqueEmail('no-user'), 'Abcd1234');
     expect(res.statusCode).toBe(400);
     expect(res.body).toEqual({ error: expect.any(String) });
   });
@@ -39,7 +39,7 @@ describe('POST /v1/admin/auth/login', () => {
     const email = uniqueEmail('login-wrong-pw');
     const reg = adminAuthUserRegisterRequest(email, 'Abcd1234', 'River', 'Song');
     expect(reg.statusCode).toBe(200);
-    const res = userLogin(email, 'Wrong1234');
+    const res = adminAuthUserLoginRequest(email, 'Wrong1234');
     expect(res.statusCode).toBe(400);
     expect(res.body).toEqual({ error: expect.any(String) });
   });

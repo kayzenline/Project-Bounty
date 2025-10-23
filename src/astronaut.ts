@@ -15,7 +15,7 @@ function buildError(message: string, code: string): never {
   throw new ServiceError(message, code);
 }
 
-export function seeAstronautPool(controlUserSessionId: string) {
+export function adminAstronautPool(controlUserSessionId: string) {
 
 }
 
@@ -99,7 +99,7 @@ export function adminAstronautInfo(astronautId: number): { response: object } | 
   }
 }
 
-export function deleteAstronaut(controlUserSessionId: string, astronautId: number): Record<string, never> | { error: string; errorCategory: string } {
+export function adminAstronautDelete(controlUserSessionId: string, astronautId: number): Record<string, never> | { error: string; errorCategory: string } {
   try {
     if (!findSessionFromSessionId(controlUserSessionId)) {
       buildError('controlUserSessionId is invalid', EC.INVALID_CREDENTIALS);
@@ -124,11 +124,7 @@ export function deleteAstronaut(controlUserSessionId: string, astronautId: numbe
   }
 }
 
-export function getAstronautInfo(controlUserSessionId: string, astronautId: number) {
-
-}
-
-export function editAstronaut(
+export function adminAstronautEdit(
   controlUserSessionId: string,
   astronautId: number,
   nameFirst: string,
@@ -165,7 +161,7 @@ export function editAstronaut(
   }
 }
 
-export function assignAstronaut(
+export function adminMissionAstronautAssign(
   controlUserSessionId: string,
   astronautId: number,
   missionId: number
@@ -208,12 +204,54 @@ export function assignAstronaut(
   }
 }
 
-export function unassginAstronaut(
+export function adminMissionAstronautUnassign(
   controlUserSessionId: string,
   astronautId: number,
   missionId: number
 ): Record<string, never> | { error: string; errorCategory: string } {
-  // add code here
+  try {
+    const session = findSessionFromSessionId(controlUserSessionId);
+    if (!session) {
+      buildError('controlUserSessionId is invalid', EC.INVALID_CREDENTIALS);
+    }
 
-  return {};
+    astronautIdCheck(astronautId);
+    const missionRecord = missionIdCheck(missionId);
+
+    if (missionRecord.controlUserId !== session.controlUserId) {
+      buildError('Mission does not belong to this user', EC.INACCESSIBLE_VALUE);
+    }
+
+    const data = getData();
+    const mission = data.spaceMissions.find(m => m.missionId === missionId);
+    if (!mission) {
+      buildError('missionId not found', EC.INACCESSIBLE_VALUE);
+    }
+
+    mission.assignedAstronauts = mission.assignedAstronauts ?? [];
+    const assigned = mission.assignedAstronauts.find(a => a.astronautId === astronautId);
+    if (!assigned) {
+      buildError('Astronaut not assigned to this mission', EC.BAD_INPUT);
+    }
+
+    const astronaut = data.astronauts.find(a => a.astronautId === astronautId);
+    if (!astronaut) {
+      buildError('astronautId not found', EC.BAD_INPUT);
+    }
+
+    mission.assignedAstronauts = mission.assignedAstronauts.filter(a => a.astronautId !== astronautId);
+    // Remove mission linkage from astronaut record if it matches this mission
+    const missionLink = (astronaut as { assignedMission: { missionId: number } }).assignedMission;
+    if (missionLink.missionId === missionId) {
+      delete (astronaut as { assignedMission: { missionId: number } }).assignedMission;
+    }
+
+    mission.timeLastEdited = Math.floor(Date.now() / 1000);
+    setData(data);
+
+    return {};
+  } catch (e) {
+    const ne = normalizeError(e);
+    return { error: ne.error, errorCategory: ne.errorCategory };
+  }
 }

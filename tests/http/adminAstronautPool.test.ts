@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { adminAuthUserRegisterRequest, adminAuthUserLoginRequest, adminAstronautDeleteRequest, clearRequest, adminAstronautCreateRequest, adminAstronautAssignRequest, adminMissionCreateRequest } from './requestHelpers';
+import { adminAuthUserRegisterRequest, adminAuthUserLoginRequest, adminAstronautDeleteRequest, clearRequest, adminAstronautCreateRequest, adminAstronautAssignRequest, adminMissionCreateRequest, adminAstronautPoolRequest } from './requestHelpers';
 import { getData } from '../../src/dataStore';
 import { generateSessionId } from '../../src/helper';
 
@@ -7,7 +7,7 @@ function uniqueEmail(prefix = 'user') {
   return `${prefix}.${uuid()}@example.com`;
 }
 
-describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {
+describe.skip('GET /v1/admin/astronaut/pool', () => {
   let controlUserSessionId: string;
   let astronautId: number;
   beforeEach(() => {
@@ -42,32 +42,26 @@ describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {
     );
     expect(createAstronautRes.statusCode).toBe(200);
     astronautId = createAstronautRes.body;
-  });
-  test('delete an astronaut successfully', () => {
-    const deleteAstronautRes = adminAstronautDeleteRequest(
+
+    const astronautNameFirst2 = 'NameFirst2';
+    const astronautNameLast2 = 'NameLast2';
+    const rank2 = 'rankOfAstronaut2';
+    const age2 = 25;
+    const weight2 = 75;
+    const height2 = 175;
+    const createAstronautRes2 = adminAstronautCreateRequest(
       controlUserSessionId,
-      astronautId
+      astronautNameFirst2,
+      astronautNameLast2,
+      rank2,
+      age2,
+      weight2,
+      height2
     );
-
-    expect(deleteAstronautRes.statusCode).toBe(200);
-    expect(deleteAstronautRes.body).toEqual({});
-
-    const astronaut = getData().astronauts.find(a => a.astronautId === astronautId);
-    expect(astronaut).toBe(undefined);
+    expect(createAstronautRes2.statusCode).toBe(200);
   });
-
-  test('astronaut id is invalid', () => {
-    const invalAstronautId = astronautId + 1;
-    const deleteAstronautRes = adminAstronautDeleteRequest(
-      controlUserSessionId,
-      invalAstronautId
-    );
-
-    expect(deleteAstronautRes.statusCode).toBe(400);
-    expect(deleteAstronautRes.body).toEqual({ error: expect.any(String) });
-  });
-
-  test('delete an astronaut assgined to a mission', () => {
+  test('list all astronauts in the pool successfully', () => {
+    // assign the fitst astronaut to a misison
     const mission = {
       name: 'Mercury',
       description: 'Place a manned spacecraft in orbital flight around the earth. Investigate a persons performance capabilities and their ability to function in the environment of space. Recover the person and the spacecraft safely',
@@ -75,17 +69,15 @@ describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {
     };
     const createMissionRes = adminMissionCreateRequest(controlUserSessionId, mission.name, mission.description, mission.target);
     expect(createMissionRes.statusCode).toBe(200);
-
     const assignAstronautRes = adminAstronautAssignRequest(controlUserSessionId, astronautId, createMissionRes.body);
     expect(assignAstronautRes).toBe(200);
 
-    const deleteAstronautRes = adminAstronautDeleteRequest(
-      controlUserSessionId,
-      astronautId
-    );
+    const astronautPoolRes = adminAstronautPoolRequest(controlUserSessionId);
 
-    expect(deleteAstronautRes.statusCode).toBe(400);
-    expect(deleteAstronautRes.body).toEqual({ error: expect.any(String) });
+    // check the number of listed astronauts
+    expect(astronautPoolRes.statusCode).toBe(200);
+    const astronauts = getData().astronauts;
+    expect(astronautPoolRes.body.length).toBe(astronauts.length);
   });
 
   const invalidSessionIdValue = [
@@ -97,12 +89,14 @@ describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {
     }
   ];
   test.each(invalidSessionIdValue)('controlUserSessionId is invalid', ({ invalidSessionId }) => {
-    const deleteAstronautRes = adminAstronautDeleteRequest(
-      invalidSessionId,
-      astronautId
-    );
+    const astronautPoolRes = adminAstronautPoolRequest( invalidSessionId );
 
-    expect(deleteAstronautRes.statusCode).toBe(401);
-    expect(deleteAstronautRes.body).toEqual({ error: expect.any(String) });
+    expect(astronautPoolRes.statusCode).toBe(401);
+    expect(astronautPoolRes.body).toEqual({ error: expect.any(String) });
+  });
+
+  afterEach(() => {
+    const clearRes = clearRequest();
+    expect(clearRes.statusCode).toBe(200);
   });
 });

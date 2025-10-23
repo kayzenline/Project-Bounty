@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { adminMissionInfo } from '../../src/mission';
 import { findSessionFromSessionId, generateSessionId } from '../../src/helper';
-import { missionNameUpdate, clearRequest, adminMissionCreateRequest, adminAuthUserRegisterRequest, userLogin } from './requestHelpers';
+import { adminMissionNameUpdateRequest, clearRequest, adminMissionCreateRequest, adminAuthUserRegisterRequest, adminAuthUserLoginRequest } from './requestHelpers';
 
 function uniqueEmail(prefix = 'user') {
   return `${prefix}.${uuid()}@example.com`;
@@ -18,7 +18,7 @@ describe('HTTP tests for MissionNameUpdate', () => {
     const registerRes = adminAuthUserRegisterRequest(email, 'abc12345', 'John', 'Doe');
     expect(registerRes.statusCode).toBe(200);
     controlUserSessionId = registerRes.body.controlUserSessionId;
-    const loginRes = userLogin(email, 'abc12345');
+    const loginRes = adminAuthUserLoginRequest(email, 'abc12345');
     expect(loginRes.statusCode).toBe(200);
     const mission = {
       name: 'Mercury',
@@ -34,7 +34,7 @@ describe('HTTP tests for MissionNameUpdate', () => {
     const session = findSessionFromSessionId(controlUserSessionId);
     if (session) {
       const controlUserId = session.controlUserId;
-      const res = missionNameUpdate(controlUserSessionId, missionId, 'Mars');
+      const res = adminMissionNameUpdateRequest(controlUserSessionId, missionId, 'Mars');
       const resultBody = res.body;
       expect(res.statusCode).toBe(200);
       expect(resultBody).toBe({});
@@ -52,7 +52,7 @@ describe('HTTP tests for MissionNameUpdate', () => {
   test.each(testCases)('get an invalid name', (name) => {
     const session = findSessionFromSessionId(controlUserSessionId);
     if (session) {
-      const res = missionNameUpdate(controlUserSessionId, missionId, name);
+      const res = adminMissionNameUpdateRequest(controlUserSessionId, missionId, name);
       const resultBody = res.body;
       expect(res.statusCode).toBe(400);
       expect(resultBody).toEqual({ error: expect.any(String) });
@@ -62,12 +62,12 @@ describe('HTTP tests for MissionNameUpdate', () => {
   test('ControlUserSessionId is empty or invalid', () => {
     const newSessionId = generateSessionId();
 
-    const res = missionNameUpdate(newSessionId, missionId, 'Mars');
+    const res = adminMissionNameUpdateRequest(newSessionId, missionId, 'Mars');
     const resultBody = res.body;
     expect(res.statusCode).toBe(401);
     expect(resultBody).toEqual({ error: expect.any(String) });
 
-    const res1 = missionNameUpdate('', missionId, 'Mars');
+    const res1 = adminMissionNameUpdateRequest('', missionId, 'Mars');
     const resultBody1 = res1.body;
     expect(res1.statusCode).toBe(401);
     expect(resultBody1).toEqual({ error: expect.any(String) });
@@ -79,7 +79,7 @@ describe('HTTP tests for MissionNameUpdate', () => {
     const newRegisterRes = adminAuthUserRegisterRequest(newEmail, 'abc12345', 'Tony', 'Stark');
     expect(newRegisterRes.statusCode).toBe(200);
     const newSessionId = newRegisterRes.body.controlUserSessionId;
-    const newLoginRes = userLogin(newEmail, 'abc12345');
+    const newLoginRes = adminAuthUserLoginRequest(newEmail, 'abc12345');
     expect(newLoginRes.statusCode).toBe(200);
     const newMission = {
       name: 'Venus',
@@ -90,12 +90,12 @@ describe('HTTP tests for MissionNameUpdate', () => {
     expect(newRes.statusCode).toBe(200);
     const newMissionId = newRes.body.missionId;
 
-    const res = missionNameUpdate(newSessionId, missionId, 'Mars');
+    const res = adminMissionNameUpdateRequest(newSessionId, missionId, 'Mars');
     const resultBody = res.body;
     expect(res.statusCode).toBe(403);
     expect(resultBody).toEqual({ error: expect.any(String) });
 
-    const res1 = missionNameUpdate(controlUserSessionId, newMissionId + 1, 'Mars');
+    const res1 = adminMissionNameUpdateRequest(controlUserSessionId, newMissionId + 1, 'Mars');
     const resultBody1 = res1.body;
     expect(res1.statusCode).toBe(403);
     expect(resultBody1).toEqual({ error: expect.any(String) });

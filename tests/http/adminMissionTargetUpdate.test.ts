@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { adminMissionInfo } from '../../src/mission';
 import { findSessionFromSessionId, generateSessionId } from '../../src/helper';
-import { missionTargetUpdate, clearRequest, adminMissionCreateRequest, adminAuthUserRegisterRequest, userLogin } from './requestHelpers';
+import { adminMissionTargetUpdateRequest, clearRequest, adminMissionCreateRequest, adminAuthUserRegisterRequest, adminAuthUserLoginRequest } from './requestHelpers';
 
 function uniqueEmail(prefix = 'user') {
   return `${prefix}.${uuid()}@example.com`;
@@ -18,7 +18,7 @@ describe('HTTP tests for MissionTargetUpdate', () => {
     const registerRes = adminAuthUserRegisterRequest(email, 'abc12345', 'John', 'Doe');
     expect(registerRes.statusCode).toBe(200);
     controlUserSessionId = registerRes.body.controlUserSessionId;
-    const loginRes = userLogin(email, 'abc12345');
+    const loginRes = adminAuthUserLoginRequest(email, 'abc12345');
     expect(loginRes.statusCode).toBe(200);
     const mission = {
       name: 'Mercury',
@@ -34,7 +34,7 @@ describe('HTTP tests for MissionTargetUpdate', () => {
     const session = findSessionFromSessionId(controlUserSessionId);
     if (session) {
       const controlUserId = session.controlUserId;
-      const res = missionTargetUpdate(controlUserSessionId, missionId, 'Jupiter moons');
+      const res = adminMissionTargetUpdateRequest(controlUserSessionId, missionId, 'Jupiter moons');
       const resultBody = res.body;
       expect(res.statusCode).toBe(200);
       expect(resultBody).toBe({});
@@ -47,7 +47,7 @@ describe('HTTP tests for MissionTargetUpdate', () => {
     const session = findSessionFromSessionId(controlUserSessionId);
     if (session) {
       const longTarget = 'J'.repeat(101);
-      const res = missionTargetUpdate(controlUserSessionId, missionId, longTarget);
+      const res = adminMissionTargetUpdateRequest(controlUserSessionId, missionId, longTarget);
       const resultBody = res.body;
       expect(res.statusCode).toBe(400);
       expect(resultBody).toEqual({ error: expect.any(String) });
@@ -57,12 +57,12 @@ describe('HTTP tests for MissionTargetUpdate', () => {
   test('ControlUserSessionId is empty or invalid', () => {
     const newSessionId = generateSessionId();
 
-    const res = missionTargetUpdate(newSessionId, missionId, 'Jupiter moons');
+    const res = adminMissionTargetUpdateRequest(newSessionId, missionId, 'Jupiter moons');
     const resultBody = res.body;
     expect(res.statusCode).toBe(401);
     expect(resultBody).toEqual({ error: expect.any(String) });
 
-    const res1 = missionTargetUpdate('', missionId, 'Jupiter moons');
+    const res1 = adminMissionTargetUpdateRequest('', missionId, 'Jupiter moons');
     const resultBody1 = res1.body;
     expect(res1.statusCode).toBe(401);
     expect(resultBody1).toEqual({ error: expect.any(String) });
@@ -74,7 +74,7 @@ describe('HTTP tests for MissionTargetUpdate', () => {
     const newRegisterRes = adminAuthUserRegisterRequest(newEmail, 'abc12345', 'Tony', 'Stark');
     expect(newRegisterRes.statusCode).toBe(200);
     const newSessionId = newRegisterRes.body.controlUserSessionId;
-    const newLoginRes = userLogin(newEmail, 'abc12345');
+    const newLoginRes = adminAuthUserLoginRequest(newEmail, 'abc12345');
     expect(newLoginRes.statusCode).toBe(200);
     const newMission = {
       name: 'Venus',
@@ -85,12 +85,12 @@ describe('HTTP tests for MissionTargetUpdate', () => {
     expect(newRes.statusCode).toBe(200);
     const newMissionId = newRes.body.missionId;
 
-    const res = missionTargetUpdate(newSessionId, missionId, 'Jupiter moons');
+    const res = adminMissionTargetUpdateRequest(newSessionId, missionId, 'Jupiter moons');
     const resultBody = res.body;
     expect(res.statusCode).toBe(403);
     expect(resultBody).toEqual({ error: expect.any(String) });
 
-    const res1 = missionTargetUpdate(controlUserSessionId, newMissionId + 1, 'Jupiter moons');
+    const res1 = adminMissionTargetUpdateRequest(controlUserSessionId, newMissionId + 1, 'Jupiter moons');
     const resultBody1 = res1.body;
     expect(res1.statusCode).toBe(403);
     expect(resultBody1).toEqual({ error: expect.any(String) });
