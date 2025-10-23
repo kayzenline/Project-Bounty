@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { adminAuthUserRegisterRequest, userLogin, createAstronaut, getAstronautInfo, clearRequest } from './requestHelpers';
+import { adminAuthUserRegisterRequest, adminAuthUserLoginRequest, adminAstronautCreateRequest, adminAstronautInfoRequest, clearRequest } from './requestHelpers';
 
 function uniqueEmail(prefix = 'user') {
   return `${prefix}.${uuid()}@example.com`;
@@ -20,12 +20,12 @@ describe.skip('GET /v1/admin/astronaut/{astronautid}', () => {
     const registerRes = adminAuthUserRegisterRequest(email, password, nameFirst, nameLast);
     expect(registerRes.statusCode).toBe(200);
 
-    const loginRes = userLogin(email, password);
+    const loginRes = adminAuthUserLoginRequest(email, password);
     expect(loginRes.statusCode).toBe(200);
     controlUserSessionId = loginRes.body.controlUserSessionId;
 
     // Create an astronaut for testing
-    const createRes = createAstronaut(
+    const createRes = adminAstronautCreateRequest(
       controlUserSessionId,
       'James',
       'Kirk',
@@ -40,7 +40,7 @@ describe.skip('GET /v1/admin/astronaut/{astronautid}', () => {
 
   describe('success: gets astronaut info', () => {
     test('should return astronaut information successfully', () => {
-      const response = getAstronautInfo(controlUserSessionId, astronautId);
+      const response = adminAstronautInfoRequest(controlUserSessionId, astronautId);
 
       expect(response.statusCode).toBe(200);
       expect(response.body).toHaveProperty('astronautId', astronautId);
@@ -57,7 +57,7 @@ describe.skip('GET /v1/admin/astronaut/{astronautid}', () => {
 
   describe('error: missing controlUserSessionId header', () => {
     test('should return 401 when header is missing', () => {
-      const response = getAstronautInfo('', astronautId);
+      const response = adminAstronautInfoRequest('', astronautId);
 
       expect(response.statusCode).toBe(401);
       expect(response.body.error).toBe('ControlUserSessionId is empty or invalid');
@@ -66,7 +66,7 @@ describe.skip('GET /v1/admin/astronaut/{astronautid}', () => {
 
   describe('error: invalid controlUserSessionId', () => {
     test('should return 401 when session ID is invalid', () => {
-      const response = getAstronautInfo('invalid-session-id', astronautId);
+      const response = adminAstronautInfoRequest('invalid-session-id', astronautId);
 
       expect(response.statusCode).toBe(401);
       expect(response.body.error).toBe('ControlUserSessionId is empty or invalid');
@@ -75,28 +75,28 @@ describe.skip('GET /v1/admin/astronaut/{astronautid}', () => {
 
   describe('error: invalid astronautid', () => {
     test('should return 400 when astronautid is not a number', () => {
-      const response = getAstronautInfo(controlUserSessionId, NaN);
+      const response = adminAstronautInfoRequest(controlUserSessionId, NaN);
 
       expect(response.statusCode).toBe(400);
       expect(response.body.error).toBe('astronautid is invalid');
     });
 
     test('should return 400 when astronautid does not exist', () => {
-      const response = getAstronautInfo(controlUserSessionId, 99999);
+      const response = adminAstronautInfoRequest(controlUserSessionId, 99999);
 
       expect(response.statusCode).toBe(400);
       expect(response.body.error).toBe('astronautId not found');
     });
 
     test('should return 400 when astronautid is negative', () => {
-      const response = getAstronautInfo(controlUserSessionId, -1);
+      const response = adminAstronautInfoRequest(controlUserSessionId, -1);
 
       expect(response.statusCode).toBe(400);
       expect(response.body.error).toBe('astronautId must be integer');
     });
 
     test('should return 400 when astronautid is zero', () => {
-      const response = getAstronautInfo(controlUserSessionId, 0);
+      const response = adminAstronautInfoRequest(controlUserSessionId, 0);
 
       expect(response.statusCode).toBe(400);
       expect(response.body.error).toBe('astronautId not found');
@@ -107,7 +107,7 @@ describe.skip('GET /v1/admin/astronaut/{astronautid}', () => {
     test('should return astronaut info with assigned mission details', () => {
       // This test would require mission assignment functionality
       // For now, we'll test the basic astronaut info without mission
-      const response = getAstronautInfo(controlUserSessionId, astronautId);
+      const response = adminAstronautInfoRequest(controlUserSessionId, astronautId);
 
       expect(response.statusCode).toBe(200);
       expect(response.body).toHaveProperty('astronautId', astronautId);
@@ -121,7 +121,7 @@ describe.skip('GET /v1/admin/astronaut/{astronautid}', () => {
   describe('success: multiple astronauts', () => {
     test('should return correct info for different astronauts', () => {
       // Create another astronaut
-      const createRes2 = createAstronaut(
+      const createRes2 = adminAstronautCreateRequest(
         controlUserSessionId,
         'Spock',
         'Vulcan',
@@ -134,12 +134,12 @@ describe.skip('GET /v1/admin/astronaut/{astronautid}', () => {
       const astronautId2 = createRes2.body.astronautId;
 
       // Get info for first astronaut
-      const response1 = getAstronautInfo(controlUserSessionId, astronautId);
+      const response1 = adminAstronautInfoRequest(controlUserSessionId, astronautId);
       expect(response1.statusCode).toBe(200);
       expect(response1.body.designation).toBe('Captain James Kirk');
 
       // Get info for second astronaut
-      const response2 = getAstronautInfo(controlUserSessionId, astronautId2);
+      const response2 = adminAstronautInfoRequest(controlUserSessionId, astronautId2);
       expect(response2.statusCode).toBe(200);
       expect(response2.body.designation).toBe('Commander Spock Vulcan');
     });

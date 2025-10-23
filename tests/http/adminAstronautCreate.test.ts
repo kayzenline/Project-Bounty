@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { adminAuthUserRegisterRequest, userLogin, createAstronaut, clearRequest } from './requestHelpers';
+import { adminAuthUserRegisterRequest, adminAuthUserLoginRequest, adminAstronautCreateRequest, clearRequest } from './requestHelpers';
 
 function uniqueEmail(prefix = 'user') {
   return `${prefix}.${uuid()}@example.com`;
@@ -19,7 +19,7 @@ describe('POST /v1/admin/astronaut', () => {
     const registerRes = adminAuthUserRegisterRequest(email, password, nameFirst, nameLast);
     expect(registerRes.statusCode).toBe(200);
 
-    const loginRes = userLogin(email, password);
+    const loginRes = adminAuthUserLoginRequest(email, password);
     expect(loginRes.statusCode).toBe(200);
     controlUserSessionId = loginRes.body.controlUserSessionId;
   });
@@ -33,7 +33,7 @@ describe('POST /v1/admin/astronaut', () => {
       const weight = 75;
       const height = 180;
 
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         nameFirst,
         nameLast,
@@ -58,7 +58,7 @@ describe('POST /v1/admin/astronaut', () => {
       const weight = 75;
       const height = 180;
 
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         '', // Empty session ID
         nameFirst,
         nameLast,
@@ -82,7 +82,7 @@ describe('POST /v1/admin/astronaut', () => {
       const weight = 75;
       const height = 180;
 
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         'invalid-session-id',
         nameFirst,
         nameLast,
@@ -107,7 +107,7 @@ describe('POST /v1/admin/astronaut', () => {
       const height = 180;
 
       // Create first astronaut
-      const firstResponse = createAstronaut(
+      const firstResponse = adminAstronautCreateRequest(
         controlUserSessionId,
         nameFirst,
         nameLast,
@@ -119,7 +119,7 @@ describe('POST /v1/admin/astronaut', () => {
       expect(firstResponse.statusCode).toBe(200);
 
       // Try to create second astronaut with same name
-      const secondResponse = createAstronaut(
+      const secondResponse = adminAstronautCreateRequest(
         controlUserSessionId,
         nameFirst,
         nameLast,
@@ -136,7 +136,7 @@ describe('POST /v1/admin/astronaut', () => {
 
   describe('error: invalid first name', () => {
     test('should return 400 when first name is too short', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'A', // Too short
         'Kirk',
@@ -151,7 +151,7 @@ describe('POST /v1/admin/astronaut', () => {
     });
 
     test('should return 400 when first name is too long', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'A'.repeat(21), // Too long
         'Kirk',
@@ -166,7 +166,7 @@ describe('POST /v1/admin/astronaut', () => {
     });
 
     test('should return 400 when first name has invalid characters', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James123', // Invalid characters
         'Kirk',
@@ -183,7 +183,7 @@ describe('POST /v1/admin/astronaut', () => {
 
   describe('error: invalid last name', () => {
     test('should return 400 when last name is too short', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'K', // Too short
@@ -198,7 +198,7 @@ describe('POST /v1/admin/astronaut', () => {
     });
 
     test('should return 400 when last name is too long', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'K'.repeat(21), // Too long
@@ -213,7 +213,7 @@ describe('POST /v1/admin/astronaut', () => {
     });
 
     test('should return 400 when last name has invalid characters', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'Kirk123', // Invalid characters
@@ -230,7 +230,7 @@ describe('POST /v1/admin/astronaut', () => {
 
   describe('error: invalid rank', () => {
     test('should return 400 when rank is too short', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'Kirk',
@@ -245,7 +245,7 @@ describe('POST /v1/admin/astronaut', () => {
     });
 
     test('should return 400 when rank is too long', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'Kirk',
@@ -260,7 +260,7 @@ describe('POST /v1/admin/astronaut', () => {
     });
 
     test('should return 400 when rank has invalid characters', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'Kirk',
@@ -277,7 +277,7 @@ describe('POST /v1/admin/astronaut', () => {
 
   describe('error: invalid age', () => {
     test('should return 400 when age is too young', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'Kirk',
@@ -292,7 +292,7 @@ describe('POST /v1/admin/astronaut', () => {
     });
 
     test('should return 400 when age is too old', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'Kirk',
@@ -307,7 +307,7 @@ describe('POST /v1/admin/astronaut', () => {
     });
 
     test('should return 400 when age is not integer', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'Kirk',
@@ -324,7 +324,7 @@ describe('POST /v1/admin/astronaut', () => {
 
   describe('error: invalid weight', () => {
     test('should return 400 when weight is too heavy', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'Kirk',
@@ -339,7 +339,7 @@ describe('POST /v1/admin/astronaut', () => {
     });
 
     test('should return 400 when weight is negative', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'Kirk',
@@ -356,7 +356,7 @@ describe('POST /v1/admin/astronaut', () => {
 
   describe('error: invalid height', () => {
     test('should return 400 when height is too short', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'Kirk',
@@ -371,7 +371,7 @@ describe('POST /v1/admin/astronaut', () => {
     });
 
     test('should return 400 when height is too tall', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'Kirk',
@@ -388,7 +388,7 @@ describe('POST /v1/admin/astronaut', () => {
 
   describe('success: valid rank with parentheses and apostrophes', () => {
     test('should accept rank with parentheses and apostrophes', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'Kirk',
@@ -405,7 +405,7 @@ describe('POST /v1/admin/astronaut', () => {
 
   describe('success: valid names with hyphens and apostrophes', () => {
     test('should accept names with hyphens and apostrophes', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'Jean-Luc',
         "O'Connor",
@@ -422,7 +422,7 @@ describe('POST /v1/admin/astronaut', () => {
 
   describe('success: boundary values for age', () => {
     test('should accept minimum age', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'Kirk',
@@ -437,7 +437,7 @@ describe('POST /v1/admin/astronaut', () => {
     });
 
     test('should accept maximum age', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'Kirk',
@@ -454,7 +454,7 @@ describe('POST /v1/admin/astronaut', () => {
 
   describe('success: boundary values for weight', () => {
     test('should accept maximum weight', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'Kirk',
@@ -471,7 +471,7 @@ describe('POST /v1/admin/astronaut', () => {
 
   describe('success: boundary values for height', () => {
     test('should accept minimum height', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'Kirk',
@@ -486,7 +486,7 @@ describe('POST /v1/admin/astronaut', () => {
     });
 
     test('should accept maximum height', () => {
-      const response = createAstronaut(
+      const response = adminAstronautCreateRequest(
         controlUserSessionId,
         'James',
         'Kirk',

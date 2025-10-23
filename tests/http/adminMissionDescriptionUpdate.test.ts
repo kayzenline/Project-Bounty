@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { adminMissionInfo } from '../../src/mission';
 import { findSessionFromSessionId, generateSessionId } from '../../src/helper';
-import { missionDescriptionUpdate, clearRequest, adminMissionCreateRequest, adminAuthUserRegisterRequest, userLogin } from './requestHelpers';
+import { adminMissionDescriptionUpdateRequest, clearRequest, adminMissionCreateRequest, adminAuthUserRegisterRequest, adminAuthUserLoginRequest } from './requestHelpers';
 
 function uniqueEmail(prefix = 'user') {
   return `${prefix}.${uuid()}@example.com`;
@@ -19,7 +19,7 @@ describe('HTTP tests for MissionDescriptionUpdate', () => {
     const registerRes = adminAuthUserRegisterRequest(email, 'abc12345', 'John', 'Doe');
     expect(registerRes.statusCode).toBe(200);
     controlUserSessionId = registerRes.body.controlUserSessionId;
-    const loginRes = userLogin(email, 'abc12345');
+    const loginRes = adminAuthUserLoginRequest(email, 'abc12345');
     expect(loginRes.statusCode).toBe(200);
     const mission = {
       name: 'Mercury',
@@ -36,7 +36,7 @@ describe('HTTP tests for MissionDescriptionUpdate', () => {
     if (session) {
       const controlUserId = session.controlUserId;
       const newDescription = 'Land humans on the Moon and bring them safely back to Earth';
-      const res = missionDescriptionUpdate(controlUserSessionId, missionId, newDescription);
+      const res = adminMissionDescriptionUpdateRequest(controlUserSessionId, missionId, newDescription);
       const resultBody = res.body;
       expect(res.statusCode).toBe(200);
       expect(resultBody).toBe({});
@@ -49,7 +49,7 @@ describe('HTTP tests for MissionDescriptionUpdate', () => {
     const session = findSessionFromSessionId(controlUserSessionId);
     if (session) {
       const longDescription = 'J'.repeat(401);
-      const res = missionDescriptionUpdate(controlUserSessionId, missionId, longDescription);
+      const res = adminMissionDescriptionUpdateRequest(controlUserSessionId, missionId, longDescription);
       const resultBody = res.body;
       expect(res.statusCode).toBe(400);
       expect(resultBody).toEqual({ error: expect.any(String) });
@@ -59,12 +59,12 @@ describe('HTTP tests for MissionDescriptionUpdate', () => {
   test('ControlUserSessionId is empty or invalid', () => {
     const newSessionId = generateSessionId();
     const newDescription = 'Land humans on the Moon and bring them safely back to Earth';
-    const res = missionDescriptionUpdate(newSessionId, missionId, newDescription);
+    const res = adminMissionDescriptionUpdateRequest(newSessionId, missionId, newDescription);
     const resultBody = res.body;
     expect(res.statusCode).toBe(401);
     expect(resultBody).toEqual({ error: expect.any(String) });
 
-    const res1 = missionDescriptionUpdate('', missionId, newDescription);
+    const res1 = adminMissionDescriptionUpdateRequest('', missionId, newDescription);
     const resultBody1 = res1.body;
     expect(res1.statusCode).toBe(401);
     expect(resultBody1).toEqual({ error: expect.any(String) });
@@ -76,7 +76,7 @@ describe('HTTP tests for MissionDescriptionUpdate', () => {
     const newRegisterRes = adminAuthUserRegisterRequest(newEmail, 'abc12345', 'Tony', 'Stark');
     expect(newRegisterRes.statusCode).toBe(200);
     const newSessionId = newRegisterRes.body.controlUserSessionId;
-    const newLoginRes = userLogin(newEmail, 'abc12345');
+    const newLoginRes = adminAuthUserLoginRequest(newEmail, 'abc12345');
     expect(newLoginRes.statusCode).toBe(200);
     const newMission = {
       name: 'Venus',
@@ -89,12 +89,12 @@ describe('HTTP tests for MissionDescriptionUpdate', () => {
     console.log('the new session id:', newSessionId);
 
     const newDescription = 'Land humans on the Moon and bring them safely back to Earth';
-    const res = missionDescriptionUpdate(newSessionId, missionId, newDescription);
+    const res = adminMissionDescriptionUpdateRequest(newSessionId, missionId, newDescription);
     const resultBody = res.body;
     expect(res.statusCode).toBe(403);
     expect(resultBody).toEqual({ error: expect.any(String) });
 
-    const res1 = missionDescriptionUpdate(controlUserSessionId, newMissionId + 1, newDescription);
+    const res1 = adminMissionDescriptionUpdateRequest(controlUserSessionId, newMissionId + 1, newDescription);
     const resultBody1 = res1.body;
     expect(res1.statusCode).toBe(403);
     expect(resultBody1).toEqual({ error: expect.any(String) });

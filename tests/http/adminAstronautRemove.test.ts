@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { adminAuthUserRegisterRequest, userLogin, deleteAstronaut, clearRequest, createAstronaut, assignAstronaut, adminMissionCreateRequest } from './requestHelpers';
+import { adminAuthUserRegisterRequest, adminAuthUserLoginRequest, adminAstronautDeleteRequest, clearRequest, adminAstronautCreateRequest, adminAstronautAssignRequest, adminMissionCreateRequest } from './requestHelpers';
 import { getData } from '../../src/dataStore';
 import { generateSessionId } from '../../src/helper';
 
@@ -21,7 +21,7 @@ describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {
     const registerRes = adminAuthUserRegisterRequest(email, password, nameFirst, nameLast);
     expect(registerRes.statusCode).toBe(200);
 
-    const loginRes = userLogin(email, password);
+    const loginRes = adminAuthUserLoginRequest(email, password);
     expect(loginRes.statusCode).toBe(200);
     controlUserSessionId = loginRes.body;
 
@@ -31,7 +31,7 @@ describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {
     const age = 20;
     const weight = 70;
     const height = 170;
-    const createAstronautRes = createAstronaut(
+    const createAstronautRes = adminAstronautCreateRequest(
       controlUserSessionId,
       astronautNameFirst,
       astronautNameLat,
@@ -44,7 +44,7 @@ describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {
     astronautId = createAstronautRes.body;
   });
   test('delete an astronaut successfully', () => {
-    const deleteAstronautRes = deleteAstronaut(
+    const deleteAstronautRes = adminAstronautDeleteRequest(
       controlUserSessionId,
       astronautId
     );
@@ -58,7 +58,7 @@ describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {
 
   test('astronaut id is invalid', () => {
     const invalAstronautId = astronautId + 1;
-    const deleteAstronautRes = deleteAstronaut(
+    const deleteAstronautRes = adminAstronautDeleteRequest(
       controlUserSessionId,
       invalAstronautId
     );
@@ -76,10 +76,10 @@ describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {
     const createMissionRes = adminMissionCreateRequest(controlUserSessionId, mission.name, mission.description, mission.target);
     expect(createMissionRes.statusCode).toBe(200);
 
-    const assignAstronautRes = assignAstronaut(controlUserSessionId, astronautId, createMissionRes.body);
+    const assignAstronautRes = adminAstronautAssignRequest(controlUserSessionId, astronautId, createMissionRes.body);
     expect(assignAstronautRes).toBe(200);
 
-    const deleteAstronautRes = deleteAstronaut(
+    const deleteAstronautRes = adminAstronautDeleteRequest(
       controlUserSessionId,
       astronautId
     );
@@ -97,7 +97,7 @@ describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {
     }
   ];
   test.each(invalidSessionIdValue)('controlUserSessionId is invalid', ({ invalidSessionId }) => {
-    const deleteAstronautRes = deleteAstronaut(
+    const deleteAstronautRes = adminAstronautDeleteRequest(
       invalidSessionId,
       astronautId
     );

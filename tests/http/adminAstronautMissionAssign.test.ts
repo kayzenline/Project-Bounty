@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { adminAuthUserRegisterRequest, userLogin, deleteAstronaut, clearRequest, createAstronaut, assignAstronaut, adminMissionCreateRequest } from './requestHelpers';
+import { adminAuthUserRegisterRequest, adminAuthUserLoginRequest, clearRequest, adminAstronautCreateRequest, adminAstronautAssignRequest, adminMissionCreateRequest } from './requestHelpers';
 import { generateSessionId,} from '../../src/helper';
 
 function uniqueEmail(prefix = 'user') {
@@ -21,7 +21,7 @@ describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
       const registerRes = adminAuthUserRegisterRequest(email, password, nameFirst, nameLast);
       expect(registerRes.statusCode).toBe(200);
   
-      const loginRes = userLogin(email, password);
+      const loginRes = adminAuthUserLoginRequest(email, password);
       expect(loginRes.statusCode).toBe(200);
       controlUserSessionId = loginRes.body;
   
@@ -31,7 +31,7 @@ describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
       const age = 20;
       const weight = 70;
       const height = 170;
-      const createAstronautRes = createAstronaut(
+      const createAstronautRes = adminAstronautCreateRequest(
         controlUserSessionId,
         astronautNameFirst,
         astronautNameLat,
@@ -55,7 +55,7 @@ describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
       missionId=adminMissionCreateRequestRes.body;
   });
   test('assign mission successfully',() => {
-    const assignAstronautRes = assignAstronaut(
+    const assignAstronautRes = adminAstronautAssignRequest(
       controlUserSessionId,
       astronautId,
       missionId,
@@ -66,7 +66,7 @@ describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
 
   test('astronaut id is invalid',() => {
     const invalidAstronautId = astronautId + 1;
-    const assignAstronautRes = assignAstronaut(
+    const assignAstronautRes = adminAstronautAssignRequest(
       controlUserSessionId,
       invalidAstronautId,
       missionId,
@@ -76,7 +76,7 @@ describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
   });
 
   test('astronaut is already assigned to another mission',() => {
-    const assignAstronautRes1 = assignAstronaut(
+    const assignAstronautRes1 = adminAstronautAssignRequest(
       controlUserSessionId,
       astronautId,
       missionId,
@@ -90,7 +90,7 @@ describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
       };
       const createMissionRes2 = adminMissionCreateRequest(controlUserSessionId, mission2.name, mission2.description, mission2.target);
       expect(createMissionRes2.statusCode).toBe(200);
-      const assignAstronautRes2 = assignAstronaut(controlUserSessionId, astronautId, createMissionRes2.body);
+      const assignAstronautRes2 = adminAstronautAssignRequest(controlUserSessionId, astronautId, createMissionRes2.body);
       expect(assignAstronautRes2.statusCode).toBe(400);
       expect(assignAstronautRes2.body).toEqual({ error: expect.any(String) });
   });
@@ -105,7 +105,7 @@ describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
     ];
     test.each(invalidSessionIdValue)('controlUserSessionId is invalid',({invalidSessionId}) => {
   
-      const assignAstronautRes = assignAstronaut(
+      const assignAstronautRes = adminAstronautAssignRequest(
         invalidSessionId,
         astronautId,
         missionId
@@ -119,7 +119,7 @@ describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
       const email2 = uniqueEmail('user2');
       const registerRes2 = adminAuthUserRegisterRequest(email2, 'password', 'nameFirst', 'nameLast');
       expect(registerRes2.statusCode).toBe(200);
-      const loginRes2 = userLogin(email2, 'password');
+      const loginRes2 = adminAuthUserLoginRequest(email2, 'password');
       expect(loginRes2.statusCode).toBe(200);
       const controlUserSessionId2 = loginRes2.body;
       const missionRes = adminMissionCreateRequest(
@@ -130,7 +130,7 @@ describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
       );
       expect(missionRes.statusCode).toBe(200);
       const user2MissionId = missionRes.body;
-      const assignRes = assignAstronaut(
+      const assignRes = adminAstronautAssignRequest(
         controlUserSessionId,  
         astronautId,           
         user2MissionId        
@@ -141,7 +141,7 @@ describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
 
     test('missionid is invalid', () => {
       const invalidMissionId = 999; 
-      const assignRes = assignAstronaut(
+      const assignRes = adminAstronautAssignRequest(
         controlUserSessionId,
         astronautId,
         invalidMissionId

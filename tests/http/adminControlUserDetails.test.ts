@@ -4,7 +4,7 @@ import request from 'sync-request-curl';
 const SERVER_URL = 'http://127.0.0.1:4900';
 const DB_PATH = path.join(__dirname, '../../src/db.json');
 import { loadData, DataStore } from '../../src/dataStore';
-import { adminAuthUserRegisterRequest, getUserDetails } from './requestHelpers';
+import { adminAuthUserRegisterRequest, adminAuthUserDetailsRequest } from './requestHelpers';
 let sessionId: string;
 let userEmail: string;
 beforeEach(() => {
@@ -35,14 +35,14 @@ describe('HTTP tests for ControlUserdetails', () => {
   });
 
   test('User not found', () => {
-    const res = getUserDetails('999');
+    const res = adminAuthUserDetailsRequest('999');
     expect(res.statusCode).toBe(401);
     expect(res.body.error).toBe('User not found');
     expect(res.body.errorCategory).toBe('INVALID_CREDENTIALS');
   });
 
   test('request successfully ', () => {
-    const res = getUserDetails(sessionId);
+    const res = adminAuthUserDetailsRequest(sessionId);
     const user = res.body.user;
     expect(res.statusCode).toBe(200);
     expect(user.controlUserId).toBeGreaterThan(0);

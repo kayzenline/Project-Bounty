@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from '@jest/globals';
-import { adminAuthUserRegisterRequest, userLogout, clearRequest, adminMissionCreateRequest } from './requestHelpers';
+import { adminAuthUserRegisterRequest, adminAuthUserLoginRequest, adminAuthUserLogoutRequest, clearRequest, adminMissionCreateRequest } from './requestHelpers';
 
 beforeEach(() => {
   const res = clearRequest();
@@ -14,7 +14,7 @@ describe('POST /v1/admin/auth/logout', () => {
     expect(reg.statusCode).toBe(200);
     const token = reg.body.controlUserSessionId;
 
-    const out = userLogout(token);
+    const out = adminAuthUserLogoutRequest(token);
     expect(out.statusCode).toBe(200);
     expect(out.body).toEqual({});
 
@@ -25,7 +25,7 @@ describe('POST /v1/admin/auth/logout', () => {
 
   describe('invalid session header', () => {
     test.each(['', 'invalid-session-id'])('ControlUserSessionId "%s" is empty or invalid', (sid) => {
-      const res = userLogout(sid);
+      const res = adminAuthUserLogoutRequest(sid);
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual(ERROR);
     });

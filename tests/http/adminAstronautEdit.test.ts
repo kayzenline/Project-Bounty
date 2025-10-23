@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { adminAuthUserRegisterRequest, userLogin, editAstronaut, clearRequest, createAstronaut } from './requestHelpers';
+import { adminAuthUserRegisterRequest, adminAuthUserLoginRequest, adminAstronautEditRequest, clearRequest, adminAstronautCreateRequest } from './requestHelpers';
 import { getData } from '../../src/dataStore';
 import { generateSessionId } from '../../src/helper';
 
@@ -21,7 +21,7 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}', () => {
     const registerRes = adminAuthUserRegisterRequest(email, password, nameFirst, nameLast);
     expect(registerRes.statusCode).toBe(200);
 
-    const loginRes = userLogin(email, password);
+    const loginRes = adminAuthUserLoginRequest(email, password);
     expect(loginRes.statusCode).toBe(200);
     controlUserSessionId = loginRes.body;
 
@@ -31,7 +31,7 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}', () => {
     const age = 20;
     const weight = 70;
     const height = 170;
-    const createAstronautRes = createAstronaut(
+    const createAstronautRes = adminAstronautCreateRequest(
       controlUserSessionId,
       astronautNameFirst,
       astronautNameLat,
@@ -52,7 +52,7 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}', () => {
     const newWeight = 75;
     const newHeight = 175;
 
-    const editAstronautRes = editAstronaut(
+    const editAstronautRes = adminAstronautEditRequest(
       controlUserSessionId,
       astronautId,
       newAstronautNameFirst,
@@ -84,7 +84,7 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}', () => {
     const newWeight = 75;
     const newHeight = 175;
 
-    const editAstronautRes = editAstronaut(
+    const editAstronautRes = adminAstronautEditRequest(
       controlUserSessionId,
       invalidId,
       newAstronautNameFirst,
@@ -157,7 +157,7 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}', () => {
     newWeight,
     newHeight
   }) => {
-    const editAstronautRes = editAstronaut(
+    const editAstronautRes = adminAstronautEditRequest(
       controlUserSessionId,
       astronautId,
       newAstronautNameFirst,
@@ -206,7 +206,7 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}', () => {
     newWeight,
     newHeight
   }) => {
-    const editAstronautRes = editAstronaut(
+    const editAstronautRes = adminAstronautEditRequest(
       controlUserSessionId,
       astronautId,
       newAstronautNameFirst,
@@ -247,7 +247,7 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}', () => {
     newWeight,
     newHeight
   }) => {
-    const editAstronautRes = editAstronaut(
+    const editAstronautRes = adminAstronautEditRequest(
       controlUserSessionId,
       astronautId,
       newAstronautNameFirst,
@@ -270,7 +270,7 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}', () => {
     const newWeight = 101;
     const newHeight = 175;
 
-    const editAstronautRes = editAstronaut(
+    const editAstronautRes = adminAstronautEditRequest(
       controlUserSessionId,
       astronautId,
       newAstronautNameFirst,
@@ -311,7 +311,7 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}', () => {
     newWeight,
     newHeight
   }) => {
-    const editAstronautRes = editAstronaut(
+    const editAstronautRes = adminAstronautEditRequest(
       controlUserSessionId,
       astronautId,
       newAstronautNameFirst,
@@ -355,7 +355,7 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}', () => {
     newWeight,
     newHeight
   }) => {
-    const editAstronautRes = editAstronaut(
+    const editAstronautRes = adminAstronautEditRequest(
       invalidSessionId,
       astronautId,
       newAstronautNameFirst,

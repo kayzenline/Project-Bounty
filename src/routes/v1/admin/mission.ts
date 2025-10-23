@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { notImplementedHandler } from '../../utils';
 import { getData } from '../../../dataStore';
+import { adminMissionAstronautAssign, adminMissionAstronautUnassign } from '../../../astronaut';
 import { adminMissionNameUpdate, adminMissionTargetUpdate, adminMissionDescriptionUpdate, adminMissionRemove, adminMissionCreate, adminMissionList, adminMissionTransfer, adminMissionInfo } from '../../../mission';
 import { httpToErrorCategories } from '../../../testSamples';
 import { findSessionFromSessionId } from '../../../helper';
@@ -217,7 +217,7 @@ router.post('/:missionid/transfer', (req: Request, res: Response, next: NextFunc
   }
 });
 
-/* router.post('/:missionid/assign/:astronautid', (req ,res)=>{
+router.post('/:missionid/assign/:astronautid', (req ,res)=>{
   const controlUserSessionId = req.headers.controlusersessionid as string;
   if(!controlUserSessionId){
     return res.status(401).json({
@@ -226,15 +226,37 @@ router.post('/:missionid/transfer', (req: Request, res: Response, next: NextFunc
   }
   const missionId = parseInt(req.params.missionid);
   const astronautId = parseInt(req.params.astronautid);
-  const result=assignAstronaut(controlUserSessionId,missionId,astronautId);
+  const result = adminMissionAstronautAssign(controlUserSessionId, missionId, astronautId);
   if('error' in result){
     const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
     return res.status(status).json({ error: result.error });
   }
   return res.status(200).json({});
 });
-*/
 
-router.delete('/:missionid/assign/:astronautid', notImplementedHandler);
+router.delete('/:missionid/assign/:astronautid', (req: Request, res: Response, next: NextFunction) => {
+  const controlUserSessionId = req.header('controlUserSessionId');
+  const missionId = Number(req.params.missionid);
+  const astronautId = Number(req.params.astronautid);
+
+  try {
+    if (!controlUserSessionId) {
+      return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
+    }
+
+    const result = adminMissionAstronautUnassign(controlUserSessionId, astronautId, missionId);
+
+    if ('error' in result) {
+      const status = httpToErrorCategories[
+        result.errorCategory as keyof typeof httpToErrorCategories
+      ] ?? 400;
+      return res.status(status).json({ error: result.error });
+    }
+
+    return res.status(200).json(result);
+  } catch (err) {
+    return next(err);
+  }
+});
 
 export default router;

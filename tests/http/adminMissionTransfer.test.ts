@@ -3,7 +3,8 @@ import { beforeEach, describe, expect, test } from '@jest/globals';
 import {
   adminAuthUserRegisterRequest,
   adminMissionCreateRequest,
-  deleteMission,
+  adminMissionTransferRequest,
+  adminMissionDeleteRequest,
   clearRequest
 } from './requestHelpers';
 
