@@ -1,5 +1,4 @@
-import { afterAll, beforeEach, describe, expect, test } from '@jest/globals';
-import { clearRequest, controlUserSessionId as missionCreate, SpaceMissionInfo as SpaceMissionInfo, userRegister, createAstronaut, assignAstronaut } from './requestHelpers';
+import { clearRequest, missionCreate, SpaceMissionInfo, adminAuthUserRegisterRequest, createAstronaut, assignAstronaut } from './requestHelpers';
 
 
 const ERROR = { error: expect.any(String) };
@@ -12,7 +11,7 @@ let rank: string;
 beforeEach(() => {
   const clearRes = clearRequest();
   expect(clearRes.statusCode).toBe(200);
-  const registerRes = userRegister('test@example.com', 'ValidPass123', 'John', 'Doe');
+  const registerRes = adminAuthUserRegisterRequest('test@example.com', 'ValidPass123', 'John', 'Doe');
   expect(registerRes.statusCode).toBe(200);
   token = registerRes.body.controlUserSessionId;
 
@@ -90,7 +89,7 @@ describe.skip(`/v1/admin/mission/{missionId}`, () => {
     })
     // status code 403 If any of the following are true:
     test('Valid controlUserSessionId is provided, but the control user is not an owner of this mission or the specified missionId does not exist', () => {
-      const otherUser = userRegister('other@example.com', 'ValidPass123', 'Alice', 'Smith');
+      const otherUser = adminAuthUserRegisterRequest('other@example.com', 'ValidPass123', 'Alice', 'Smith');
       expect(otherUser.statusCode).toBe(200);
       const otherToken = otherUser.body.controlUserSessionId;
 
