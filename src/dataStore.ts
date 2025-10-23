@@ -28,6 +28,7 @@ interface DataStore {
   spaceMissions: Mission[];
   nextControlUserId: number;
   nextMissionId: number;
+  nextAstronautId: number;
   sessions: Session[];
   astronauts: Astronaut[];
 }
@@ -61,6 +62,7 @@ let data: DataStore = {
   spaceMissions: [],
   nextControlUserId: 1,
   nextMissionId: 1,
+  nextAstronautId: 1,
   sessions: [],
   astronauts: [],
 };
