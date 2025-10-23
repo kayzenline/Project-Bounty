@@ -1,4 +1,4 @@
-/*
+/* 
 import { getData, setData } from './dataStore';
 import {
   controlUserIdCheck,
@@ -112,6 +112,52 @@ export function unassginAstronaut(
   astronautId: number,
   missionId: number
 ) {
+  // Guard against invalid sessions, enforce ownership, then detach the astronaut from the mission
+  // while clearing their mission link. Failures surface with the contract-aligned error categories.
+  try {
+    const session = findSessionFromSessionId(controlUserSessionId);
+    if (!session) {
+      buildError('controlUserSessionId is invalid', EC.INVALID_CREDENTIALS);
+    }
 
+    astronautIdCheck(astronautId);
+    const missionRecord = missionIdCheck(missionId);
+
+    if (missionRecord.controlUserId !== session.controlUserId) {
+      buildError('Mission does not belong to this user', EC.INACCESSIBLE_VALUE);
+    }
+
+    const data = getData();
+    const mission = data.spaceMissions.find(m => m.missionId === missionId);
+    if (!mission) {
+      buildError('missionId not found', EC.INACCESSIBLE_VALUE);
+    }
+
+    mission.assignedAstronauts = mission.assignedAstronauts ?? [];
+    const assigned = mission.assignedAstronauts.find(a => a.astronautId === astronautId);
+    if (!assigned) {
+      buildError('Astronaut not assigned to this mission', EC.BAD_INPUT);
+    }
+
+    const astronaut = data.astronauts.find(a => a.astronautId === astronautId);
+    if (!astronaut) {
+      buildError('astronautId not found', EC.BAD_INPUT);
+    }
+
+    mission.assignedAstronauts = mission.assignedAstronauts.filter(a => a.astronautId !== astronautId);
+    // Remove mission linkage from astronaut record if it matches this mission
+    const missionLink = (astronaut as { assignedMission: { missionId: number } }).assignedMission;
+    if (missionLink.missionId === missionId) {
+      delete (astronaut as { assignedMission: { missionId: number } }).assignedMission;
+    }
+
+    mission.timeLastEdited = Math.floor(Date.now() / 1000);
+    setData(data);
+
+    return {};
+  } catch (e) {
+    const ne = normalizeError(e);
+    return { error: ne.error, errorCategory: ne.errorCategory };
+  }
 }
-*/
+ */
