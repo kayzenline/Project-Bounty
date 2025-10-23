@@ -1,4 +1,3 @@
-
 import { Router } from 'express';
 import { notImplementedHandler } from '../../utils';
 // import { deleteAstronaut, editAstronaut, seeAstronautPool, createAstronaut, getAstronautInfo, assginAstronaut, unassginAstronaut } from '../../../astronaut';
@@ -7,7 +6,7 @@ import { notImplementedHandler } from '../../utils';
 const router = Router();
 
 router.get('/pool', notImplementedHandler);
-router.post('/', );
+router.post('/', notImplementedHandler);
 router.get('/:astronautid', notImplementedHandler);
 // router.put('/:astronautid', (req, res) => {
 //   const controlUserSessionId = req.header('controlUserSessionId');
