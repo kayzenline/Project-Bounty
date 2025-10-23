@@ -1,4 +1,4 @@
-import { clearRequest, missionCreate, SpaceMissionInfo, adminAuthUserRegisterRequest, createAstronaut, assignAstronaut } from './requestHelpers';
+import { clearRequest, adminMissionCreateRequest, SpaceMissionInfo, adminAuthUserRegisterRequest, createAstronaut, assignAstronaut } from './requestHelpers';
 
 
 const ERROR = { error: expect.any(String) };
@@ -15,7 +15,7 @@ beforeEach(() => {
   expect(registerRes.statusCode).toBe(200);
   token = registerRes.body.controlUserSessionId;
 
-  const res = missionCreate(token, "Mission 1", "Description", "Target");
+  const res = adminMissionCreateRequest(token, "Mission 1", "Description", "Target");
   expect(res.statusCode).toBe(200);
   missionId = res.body.missionId;
   astronautNameFirst = 'NameFirst';
