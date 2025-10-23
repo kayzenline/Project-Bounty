@@ -3,8 +3,8 @@ import path from 'path';
 import request from 'sync-request-curl';
 const SERVER_URL = "http://127.0.0.1:4900";
 const DB_PATH = path.join(__dirname, '../../src/db.json');
-import { loadData,DataStore } from '../../src/dataStore';
-import { userRegister, getUserDetails } from './requestHelpers'
+import { loadData, DataStore } from '../../src/dataStore';
+import { adminAuthUserRegisterRequest, getUserDetails } from './requestHelpers'
 let sessionId: string;
 let userEmail: string;
 beforeEach(() => {
@@ -20,7 +20,7 @@ beforeEach(() => {
   loadData();
   const uniqueEmail = `user${Date.now()}@test.com`
   userEmail = uniqueEmail;
-  const res = userRegister(uniqueEmail, 'abcdefg123', 'Bill', 'Ryker');
+  const res = adminAuthUserRegisterRequest(uniqueEmail, 'abcdefg123', 'Bill', 'Ryker');
   sessionId = res.body.controlUserSessionId;
 });
 

@@ -3,44 +3,24 @@ import config from '../../src/config.json';
 const { port, url } = config;
 const SERVER_URL = `${url}:${port}`;
 
-async function httpRequest(method: string, url: string, body?: any, headers: Record<string, string> = {}) {
-  const res = await fetch(url, {
-    method,
-    headers: { 'Content-Type': 'application/json', ...headers },
-    body: body !== undefined ? JSON.stringify(body) : undefined,
-  });
-  const text = await res.text();
-  return {
-    statusCode: res.status,
-    getBody: () => text,
-  };
-}
-
-export async function adminMissionTransferRequest(
+export function adminMissionTransferRequest(
   controlUserSessionId: string,
   missionId: number,
-  userEmail: string
+  email: string
 ) {
-  return httpRequest(
-    'POST',
-    `${SERVER_URL}/v1/admin/mission/${missionId}/transfer`,
-    { userEmail },
-    { controlUserSessionId } 
-  );
-}
-
-export async function adminAuthRegisterRequest(
-  email: string,
-  password: string,
-  nameFirst: string,
-  nameLast: string
-) {
-  return httpRequest('POST', `${SERVER_URL}/v1/admin/auth/register`, {
-    email, password, nameFirst, nameLast
+  const response = request('POST', `${SERVER_URL}/v1/admin/mission/${missionId}/transfer`, {
+    headers: { controlusersessionid: controlUserSessionId },
+    json: {
+      email
+    }
   });
+  return {
+      statusCode: response.statusCode,
+      body: JSON.parse(response.body.toString())
+    };
 }
 
-export function userRegister(
+export function adminAuthUserRegisterRequest(
   email: string,
   password: string,
   nameFirst: string,
@@ -125,7 +105,7 @@ export function updatePassword(
     };
   }
 
-export function controlUserSessionId(
+export function adminMissionCreateRequest(
   sessionId: string,
   name: string,
   description: string,
@@ -229,7 +209,7 @@ export function getMissionInfo(
 }
 
 export function checkAstronautPool(
-  controlUserSessionId: string,
+  controlUserSessionId: string
 ) {
   const res = request('GET', `${SERVER_URL}/v1/admin/astronaut/pool`, {
     headers: { controlUserSessionId: controlUserSessionId },
@@ -258,7 +238,7 @@ export function createAstronaut(
       rank,
       age,
       weight,
-      height,
+      height
     }
   });
 
@@ -315,7 +295,7 @@ export function editAstronaut(
       rank,
       age,
       weight,
-      height,
+      height
     }
   });
 
@@ -328,7 +308,7 @@ export function editAstronaut(
 export function assignAstronaut(
   controlUserSessionId: string,
   astronautid: number,
-  missionid: number,
+  missionid: number
 ) {
   const res = request('POST', `${SERVER_URL}/v1/admin/mission/${missionid}/assign/${astronautid}`, {
     headers: { controlUserSessionId: controlUserSessionId },
@@ -342,7 +322,7 @@ export function assignAstronaut(
 export function unassignAstronaut(
   controlUserSessionId: string,
   astronautid: number,
-  missionid: number,
+  missionid: number
 ) {
   const res = request('DELETE', `${SERVER_URL}/v1/admin/mission/${missionid}/assign/${astronautid}`, {
     headers: { controlUserSessionId: controlUserSessionId },
