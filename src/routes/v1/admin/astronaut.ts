@@ -1,4 +1,4 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import { Router /* Request, Response, NextFunction */ } from 'express';
 /* import { httpToErrorCategories } from '../../../testSamples';
 import {
   seeAstronautPool,
@@ -7,7 +7,7 @@ import {
   editAstronaut,
   deleteAstronaut
 } from '../../../astronaut'; */
-import { notImplementedHandler } from '../../utils'
+import { notImplementedHandler } from '../../utils';
 const router = Router();
 
 router.get('/pool', notImplementedHandler);
