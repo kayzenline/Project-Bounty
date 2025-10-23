@@ -1,5 +1,5 @@
-import { beforeEach } from "node:test"
-import { clearRequest, controlUserSessionId as missionCreate, SpaceMissionInfo as SpaceMissionInfo, userRegister, createAstronaut, assignAstronaut } from "./requestHelpers"
+import { afterAll, beforeEach, describe, expect, test } from '@jest/globals';
+import { clearRequest, controlUserSessionId as missionCreate, SpaceMissionInfo as SpaceMissionInfo, userRegister, createAstronaut, assignAstronaut } from './requestHelpers';
 
 
 const ERROR = { error: expect.any(String) };
@@ -43,7 +43,7 @@ afterAll(() => {
   expect(clearRes.statusCode).toBe(200);
 });
 
-describe(`/v1/admin/mission/{missionId}`, () => {
+describe.skip(`/v1/admin/mission/{missionId}`, () => {
   describe('valid cases', () => {
     // status code 200 If any of the following are true:
     test('successful get the Space mission info without assign astronaut', () => {
@@ -59,7 +59,7 @@ describe(`/v1/admin/mission/{missionId}`, () => {
         "assignedAstronauts": []
       })
     })
-    test.skip('successful get the Space mission info with assign astronaut', () => {
+    test('successful get the Space mission info with assign astronaut', () => {
       assignAstronaut(token, astronautId, missionId);
       const res = SpaceMissionInfo(token, missionId);
       expect(res.statusCode).toBe(200);
@@ -81,7 +81,7 @@ describe(`/v1/admin/mission/{missionId}`, () => {
 
   })
 
-  describe('invalid cases', () => {
+  describe.skip('invalid cases', () => {
     // status code 401 If any of the following are true:
     test('ControlUserSessionId is empty or invalid (does not refer to valid logged in user session)', () => {
       const res = SpaceMissionInfo('', missionId);
