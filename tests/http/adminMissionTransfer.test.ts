@@ -11,8 +11,8 @@ const ERROR = { error: expect.any(String) };
 let u1Session: string;
 let u2Session: string;
 let m1_u1: number;
-let m2_u1: number; 
-let m1_u2: number; 
+let m2_u1: number;
+let m1_u2: number;
 
 beforeEach(() => {
   // call clearRequest() to reset the state

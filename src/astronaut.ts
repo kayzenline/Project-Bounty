@@ -1,8 +1,5 @@
-/*
-import { getData, setData } from './dataStore';
+import { getData, setData, Astronaut } from './dataStore';
 import {
-  controlUserIdCheck,
-  missionIdCheck,
   findSessionFromSessionId,
   astronautIdCheck,
   astronautNameCheck,
@@ -21,16 +18,54 @@ export function seeAstronautPool(controlUserSessionId: string) {
 
 }
 
-export function createAstronaut(
-  controlUserSessionId: string,
+export function adminAstronautCreate(
   nameFirst: string,
   nameLast: string,
   rank: string,
   age: number,
   weight: number,
   height: number
-) {
+): { astronautId: number } | { error: string; errorCategory: string } {
+  try {
+    // Validate input parameters
+    astronautNameCheck(nameFirst, nameLast);
+    astronautRankCheck(rank);
+    astronautPhyCharCheck(age, weight, height);
 
+    const data = getData();
+
+    // Generate new astronaut ID
+    const astronautId = data.nextAstronautId || 1;
+    data.nextAstronautId = astronautId + 1;
+
+    // Create designation (rank + nameFirst + nameLast)
+    const designation = `${rank} ${nameFirst} ${nameLast}`;
+
+    const currentTime = Math.floor(Date.now() / 1000);
+
+    // Create new astronaut
+    const newAstronaut: Astronaut = {
+      astronautId,
+      designation,
+      timeAdded: currentTime,
+      timeLastEdited: currentTime,
+      nameFirst,
+      nameLast,
+      rank,
+      age,
+      weight,
+      height,
+      assignedMission: undefined
+    };
+
+    data.astronauts.push(newAstronaut);
+    setData(data);
+
+    return { astronautId };
+  } catch (e) {
+    const ne = normalizeError(e);
+    return { error: ne.error, errorCategory: ne.errorCategory };
+  }
 }
 
 export function deleteAstronaut(controlUserSessionId: string, astronautId: number) {
@@ -114,4 +149,3 @@ export function unassginAstronaut(
 ) {
 
 }
-*/
