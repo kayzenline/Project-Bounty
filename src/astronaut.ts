@@ -81,38 +81,28 @@ export function adminAstronautInfo(astronautId: number): { response: object } | 
     }
 
     // Build response object
-    const response: {
-      astronautId: number;
-      designation: string;
-      timeAdded: number;
-      timeLastEdited: number;
-      age: number;
-      weight: number;
-      height: number;
-      assignedMission?: {
-        missionId: number;
-        objective: string;
-      };
-    } = {
-      astronautId: astronaut.astronautId,
-      designation: astronaut.designation,
-      timeAdded: astronaut.timeAdded,
-      timeLastEdited: astronaut.timeLastEdited,
-      age: astronaut.age,
-      weight: astronaut.weight,
-      height: astronaut.height
+    const response = {
+      astronautId: number,
+      designation: string,
+      timeAdded: number,
+      timeLastEdited: number,
+      age: number,
+      weight: number,
+      height: number,
+      assignedMission: {
+        missionId: number,
+        objective: string
+      }
     };
 
-    // Add assigned mission info if exists
-    if (astronaut.assignedMission) {
-      const mission = data.spaceMissions.find(m => m.missionId === astronaut.assignedMission.missionId);
-      if (mission) {
-        response.assignedMission = {
-          missionId: mission.missionId,
-          objective: `[${mission.target}] ${mission.name}`
-        };
-      }
-    }
+    response.astronautId = astronaut.astronautId;
+    response.designation = astronaut.designation;
+    response.timeAdded = astronaut.timeAdded;
+    response.timeLastEdited = astronaut.timeLastEdited;
+    response.age = astronaut.age;
+    response.weight = astronaut.weight;
+    response.height = astronaut.height;
+    response.assignedMission = astronaut.assignedMission;
 
     return response;
   } catch (e) {
@@ -235,5 +225,7 @@ export function unassginAstronaut(
   astronautId: number,
   missionId: number
 ): Record<string, never> | { error: string; errorCategory: string } {
+  // add code here
 
+  return {};
 }

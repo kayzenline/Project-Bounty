@@ -50,7 +50,7 @@ export interface Astronaut {
   age: number;
   weight: number;
   height: number;
-  assignedMission?: {
+  assignedMission: {
     missionId: number;
     objective: string;
   };
