@@ -21,6 +21,7 @@ interface Mission {
   target: string;
   timeCreated: number;
   timeLastEdited: number;
+  assignedAstronauts: { astronautId: number, designation: string }[]
 }
 
 interface DataStore {
@@ -34,7 +35,7 @@ interface DataStore {
 }
 
 interface Session {
-  controlUserSessionId:string;
+  controlUserSessionId: string;
   controlUserId: number;
 }
 
@@ -49,7 +50,7 @@ export interface Astronaut {
   age: number;
   weight: number;
   height: number;
-  assignedMission?: {
+  assignedMission: {
     missionId: number;
     objective: string;
   };
