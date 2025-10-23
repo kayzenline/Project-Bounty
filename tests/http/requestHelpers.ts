@@ -344,6 +344,19 @@ export function missionList(
   };
 }
 
+export function SpaceMissionInfo(
+  controlUserSessionId: string,
+  missionid: number
+) {
+  const res = request('GET', `${SERVER_URL}/v1/admin/mission/${missionid}`, {
+    headers: {controlUserSessionId}
+  });
+  return {
+    statusCode: res.statusCode,
+    body: JSON.parse(res.body.toString())
+  };
+}
+
 export function clearRequest() {
   const res = request('DELETE', `${SERVER_URL}/v1/clear`);
   return {
