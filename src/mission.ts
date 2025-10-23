@@ -89,6 +89,7 @@ function adminMissionCreate(controlUserId: number, name: string, description: st
       target: fixedTarget,
       timeCreated: timestamp,
       timeLastEdited: timestamp,
+      assignedAstronauts: []
     });
 
     setData(data);
@@ -114,6 +115,7 @@ function adminMissionInfo(controlUserId: number, missionId: number) {
       timeLastEdited: mission.timeLastEdited,
       description: mission.description,
       target: mission.target,
+      assignedAstronauts: mission.assignedAstronauts ?? []
     };
   } catch (err) {
     const ne = normalizeError(err);
