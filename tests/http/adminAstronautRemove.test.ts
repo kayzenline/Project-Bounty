@@ -8,7 +8,7 @@ function uniqueEmail(prefix = 'user') {
 }
 
 describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {
-  let controlUserSessionId:string;
+  let controlUserSessionId: string;
   let astronautId: number;
   beforeEach(() => {
     const clearRes = clearRequest();
@@ -26,7 +26,7 @@ describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {
     controlUserSessionId = loginRes.body;
 
     const astronautNameFirst = 'NameFirst';
-    const astronautNameLat = 'NameLast';
+    const astronautNameLast = 'NameLast';
     const rank = 'rankOfAstronaut';
     const age = 20;
     const weight = 70;
@@ -34,7 +34,7 @@ describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {
     const createAstronautRes = adminAstronautCreateRequest(
       controlUserSessionId,
       astronautNameFirst,
-      astronautNameLat,
+      astronautNameLast,
       rank,
       age,
       weight,
