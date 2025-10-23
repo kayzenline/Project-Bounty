@@ -1,4 +1,4 @@
-/* import { unassignAstronaut, clearRequest, adminAuthUserRegisterRequest, adminMissionCreateRequest, createAstronaut, assignAstronaut } from './requestHelpers';
+import { unassignAstronaut, clearRequest, adminAuthUserRegisterRequest, adminMissionCreateRequest, createAstronaut, assignAstronaut } from './requestHelpers';
 
 const ERROR = { error: expect.any(String) };
 let missionId: number;
@@ -8,42 +8,43 @@ let astronautNameFirst: string;
 let astronautNameLast: string;
 let rank: string;
 
-beforeEach(() => {
-  const clearRes = clearRequest();
-  expect(clearRes.statusCode).toBe(200);
-  const registerRes = adminAuthUserRegisterRequest('test@example.com', 'ValidPass123', 'John', 'Doe');
-  expect(registerRes.statusCode).toBe(200);
-  token = registerRes.body.controlUserSessionId;
 
-  const res = adminMissionCreateRequest(token, "Mission 1", "Description", "Target");
-  expect(res.statusCode).toBe(200);
-  missionId = res.body.missionId;
 
-  astronautNameFirst = 'NameFirst';
-  astronautNameLast = 'NameLast';
-  rank = 'rankOfAstronaut';
-  const age = 20;
-  const weight = 70;
-  const height = 170;
-  const createAstronautRes = createAstronaut(
-    token,
-    astronautNameFirst,
-    astronautNameLast,
-    rank,
-    age,
-    weight,
-    height
-  );
-  expect(createAstronautRes.statusCode).toBe(200);
-  astronautId = createAstronautRes.body.astronautId;
-});
+describe.skip('DELETE /v1/admin/mission/{missionid}/assign/{astronautid}', () => {
+  beforeEach(() => {
+    const clearRes = clearRequest();
+    expect(clearRes.statusCode).toBe(200);
+    const registerRes = adminAuthUserRegisterRequest('test@example.com', 'ValidPass123', 'John', 'Doe');
+    expect(registerRes.statusCode).toBe(200);
+    token = registerRes.body.controlUserSessionId;
 
-afterAll(() => {
-  const clearRes = clearRequest();
-  expect(clearRes.statusCode).toBe(200);
-});
+    const res = adminMissionCreateRequest(token, "Mission 1", "Description", "Target");
+    expect(res.statusCode).toBe(200);
+    missionId = res.body.missionId;
 
-describe('DELETE /v1/admin/mission/{missionid}/assign/{astronautid}', () => {
+    astronautNameFirst = 'NameFirst';
+    astronautNameLast = 'NameLast';
+    rank = 'rankOfAstronaut';
+    const age = 20;
+    const weight = 70;
+    const height = 170;
+    const createAstronautRes = createAstronaut(
+      token,
+      astronautNameFirst,
+      astronautNameLast,
+      rank,
+      age,
+      weight,
+      height
+    );
+    expect(createAstronautRes.statusCode).toBe(200);
+    astronautId = createAstronautRes.body.astronautId;
+  });
+
+  afterAll(() => {
+    const clearRes = clearRequest();
+    expect(clearRes.statusCode).toBe(200);
+  });
   describe('valid cases', () => {
     // status code 200 If any of the following are true:
     test('successful unassign an astronaut', () => {
@@ -102,4 +103,3 @@ describe('DELETE /v1/admin/mission/{missionid}/assign/{astronautid}', () => {
     })
   })
 })
- */
