@@ -82,27 +82,15 @@ export function adminAstronautInfo(astronautId: number): { response: object } | 
 
     // Build response object
     const response = {
-      astronautId: number,
-      designation: string,
-      timeAdded: number,
-      timeLastEdited: number,
-      age: number,
-      weight: number,
-      height: number,
-      assignedMission: {
-        missionId: number,
-        objective: string
-      }
+      astronautId: astronaut.astronautId,
+      designation: astronaut.designation,
+      timeAdded: astronaut.timeAdded,
+      timeLastEdited: astronaut.timeLastEdited,
+      age: astronaut.age,
+      weight: astronaut.weight,
+      height: astronaut.height,
+      assignedMission: astronaut.assignedMission
     };
-
-    response.astronautId = astronaut.astronautId;
-    response.designation = astronaut.designation;
-    response.timeAdded = astronaut.timeAdded;
-    response.timeLastEdited = astronaut.timeLastEdited;
-    response.age = astronaut.age;
-    response.weight = astronaut.weight;
-    response.height = astronaut.height;
-    response.assignedMission = astronaut.assignedMission;
 
     return response;
   } catch (e) {
