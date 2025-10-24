@@ -1,3 +1,4 @@
+import { string } from 'yaml/dist/schema/common/string';
 import { getData, setData, Astronaut } from './dataStore';
 import {
   findSessionFromSessionId,
@@ -16,18 +17,67 @@ function buildError(message: string, code: string): never {
 }
 
 export function adminAstronautPool(controlUserSessionId: string) {
+  try {
+    if (!controlUserSessionId || typeof controlUserSessionId !== 'string') {
+      buildError('ControlUserSessionId is empty or invalid', EC.INVALID_CREDENTIALS);
+    }
 
+    if (!findSessionFromSessionId(controlUserSessionId)) {
+      buildError('ControlUserSessionId is empty or invalid', EC.INVALID_CREDENTIALS);
+    }
+
+    const data = getData();
+    interface AstronautDetail {
+      astronautId: number,
+      designation: string,
+      assigned: boolean
+    }
+    
+    const result: AstronautDetail[] = [];
+
+    for (const astronaut of data.astronauts) {
+      if (astronaut.assignedMission) {
+        result.push({
+          astronautId: astronaut.astronautId,
+          designation: astronaut.designation,
+          assigned: true
+        });
+      } else {
+        result.push({
+          astronautId: astronaut.astronautId,
+          designation: astronaut.designation,
+          assigned: false
+        });
+      }
+    }
+
+    return { result: result };
+  } catch (e) {
+    const ne = normalizeError(e);
+    return { error: ne.error, errorCategory: ne.errorCategory };
+  }
 }
 
 export function adminAstronautCreate(
+  controlUserSessionId: string,
   nameFirst: string,
   nameLast: string,
   rank: string,
   age: number,
   weight: number,
   height: number
-): { astronautId: number } | { error: string; errorCategory: string } {
+) {
   try {
+    console.log(controlUserSessionId);
+
+    if (!controlUserSessionId || typeof controlUserSessionId !== 'string') {
+      buildError('ControlUserSessionId is empty or invalid', EC.INVALID_CREDENTIALS);
+    }
+
+    if (!findSessionFromSessionId(controlUserSessionId)) {
+      buildError('ControlUserSessionId is empty or invalid', EC.INVALID_CREDENTIALS);
+    }
+
     // Validate input parameters
     astronautNameCheck(nameFirst, nameLast);
     astronautRankCheck(rank);
@@ -69,8 +119,15 @@ export function adminAstronautCreate(
   }
 }
 
-export function adminAstronautInfo(astronautId: number): { response: object } | { error: string; errorCategory: string } {
+export function adminAstronautInfo(controlUserSessionId: string, astronautId: number) {
   try {
+    if (!controlUserSessionId || typeof controlUserSessionId !== 'string') {
+      buildError('ControlUserSessionId is empty or invalid', EC.INVALID_CREDENTIALS);
+    }
+
+    if (!findSessionFromSessionId(controlUserSessionId)) {
+      buildError('ControlUserSessionId is empty or invalid', EC.INVALID_CREDENTIALS);
+    }
     astronautIdCheck(astronautId);
 
     const data = getData();
@@ -99,7 +156,7 @@ export function adminAstronautInfo(astronautId: number): { response: object } | 
   }
 }
 
-export function adminAstronautDelete(controlUserSessionId: string, astronautId: number): Record<string, never> | { error: string; errorCategory: string } {
+export function adminAstronautDelete(controlUserSessionId: string, astronautId: number) {
   try {
     if (!findSessionFromSessionId(controlUserSessionId)) {
       buildError('controlUserSessionId is invalid', EC.INVALID_CREDENTIALS);
@@ -133,7 +190,7 @@ export function adminAstronautEdit(
   age: number,
   weight: number,
   height: number
-): Record<string, never> | { error: string; errorCategory: string } {
+) {
   try {
     if (!findSessionFromSessionId(controlUserSessionId)) {
       buildError('controlUserSessionId is invalid', EC.INVALID_CREDENTIALS);
@@ -165,7 +222,7 @@ export function adminMissionAstronautAssign(
   controlUserSessionId: string,
   astronautId: number,
   missionId: number
-): Record<string, never> | { error: string; errorCategory: string } {
+) {
   try {
     const data = getData();
     const session = findSessionFromSessionId(controlUserSessionId);
@@ -208,7 +265,7 @@ export function adminMissionAstronautUnassign(
   controlUserSessionId: string,
   astronautId: number,
   missionId: number
-): Record<string, never> | { error: string; errorCategory: string } {
+) {
   try {
     const session = findSessionFromSessionId(controlUserSessionId);
     if (!session) {

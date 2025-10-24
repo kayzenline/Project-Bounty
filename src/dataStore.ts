@@ -75,12 +75,13 @@ function createIfNotExist() {
 }
 
 export function getData(): DataStore {
+  loadData();
   return data;
 }
 
 export function setData(newData: DataStore) {
   data = newData;
-  fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+  saveData();
 }
 
 export function loadData() {

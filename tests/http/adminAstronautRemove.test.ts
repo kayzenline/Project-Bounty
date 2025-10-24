@@ -21,9 +21,7 @@ describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {
     const registerRes = adminAuthUserRegisterRequest(email, password, nameFirst, nameLast);
     expect(registerRes.statusCode).toBe(200);
 
-    const loginRes = adminAuthUserLoginRequest(email, password);
-    expect(loginRes.statusCode).toBe(200);
-    controlUserSessionId = loginRes.body;
+    controlUserSessionId = registerRes.body.controlUserSessionId;
 
     const astronautNameFirst = 'NameFirst';
     const astronautNameLast = 'NameLast';

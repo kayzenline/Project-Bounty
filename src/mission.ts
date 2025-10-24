@@ -92,6 +92,7 @@ function adminMissionCreate(controlUserId: number, name: string, description: st
       assignedAstronauts: []
     });
 
+    data.nextMissionId++;
     setData(data);
     return { missionId };
   } catch (e) {
@@ -141,8 +142,10 @@ function adminMissionNameUpdate(controlUserId: number, missionId: number, name: 
     if (duplicate) {
       buildError('mission name already exists', EC.BAD_INPUT);
     }
-    mission.name = validname;
-    mission.timeLastEdited = Math.floor(Date.now() / 1000);
+    const rightMission = data.spaceMissions.find(m => m.missionId === missionId);
+    rightMission.name = validname;
+    rightMission.timeLastEdited = Math.floor(Date.now() / 1000);
+
     setData(data);
     return {};
   } catch (e) {
@@ -160,12 +163,12 @@ function adminMissionTargetUpdate(controlUserId: number, missionId: number, targ
     const data = getData();
 
     if (mission.controlUserId !== controlUserId) {
-      console.log('done');
       buildError('Mission does not belong to this user', EC.INACCESSIBLE_VALUE);
     }
 
-    mission.target = validTarget;
-    mission.timeLastEdited = Math.floor(Date.now() / 1000);
+    const rightMission = data.spaceMissions.find(m => m.missionId === missionId);
+    rightMission.target = validTarget;
+    rightMission.timeLastEdited = Math.floor(Date.now() / 1000);
     setData(data);
     return {};
   } catch (e) {
@@ -187,8 +190,9 @@ function adminMissionDescriptionUpdate(controlUserId: number, missionId: number,
       buildError('Mission does not belong to this user', EC.INACCESSIBLE_VALUE);
     }
 
-    mission.description = validDescription;
-    mission.timeLastEdited = Math.floor(Date.now() / 1000);
+    const rightMission = data.spaceMissions.find(m => m.missionId === missionId);
+    rightMission.description = validDescription;
+    rightMission.timeLastEdited = Math.floor(Date.now() / 1000);
     setData(data);
     return {};
   } catch (e) {

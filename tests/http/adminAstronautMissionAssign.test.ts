@@ -20,10 +20,8 @@ describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
       const nameLast = 'nameLast';
       const registerRes = adminAuthUserRegisterRequest(email, password, nameFirst, nameLast);
       expect(registerRes.statusCode).toBe(200);
-  
-      const loginRes = adminAuthUserLoginRequest(email, password);
-      expect(loginRes.statusCode).toBe(200);
-      controlUserSessionId = loginRes.body;
+ 
+      controlUserSessionId = registerRes.body.controlUserSessionId;
   
       const astronautNameFirst = 'NameFirst';
       const astronautNameLat = 'NameLast';

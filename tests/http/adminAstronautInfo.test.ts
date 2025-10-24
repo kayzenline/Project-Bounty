@@ -20,9 +20,7 @@ describe.skip('GET /v1/admin/astronaut/{astronautid}', () => {
     const registerRes = adminAuthUserRegisterRequest(email, password, nameFirst, nameLast);
     expect(registerRes.statusCode).toBe(200);
 
-    const loginRes = adminAuthUserLoginRequest(email, password);
-    expect(loginRes.statusCode).toBe(200);
-    controlUserSessionId = loginRes.body.controlUserSessionId;
+    controlUserSessionId = registerRes.body.controlUserSessionId;
 
     // Create an astronaut for testing
     const createRes = adminAstronautCreateRequest(

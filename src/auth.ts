@@ -10,8 +10,11 @@ import {
   findUserById,
   normalizeError,
   generateSessionId,
+  hashPasswordSync,
+  isValidPassword,
+  verifyPasswordSync
 } from './helper';
-import { getData, setData } from './dataStore';
+import { getData, setData, Session } from './dataStore';
 import { errorCategories as EC } from './testSamples';
 
 // Register a mission control user
@@ -49,33 +52,31 @@ function adminAuthRegister(email: string, password: string, nameFirst: string, n
   if (nameLast.trim().length < 2 || nameLast.trim().length > 20) {
     return { error: 'Invalid last name length', errorCategory: EC.BAD_INPUT };
   }
-
-  // Validate password length
-  if (typeof password !== 'string' || password.length < 8) {
+  
+  if (isValidPassword(password) === 0) {
     return { error: 'Password must be at least 8 characters long', errorCategory: EC.BAD_INPUT };
-  }
-
-  // Validate password content (must contain at least one number and one letter)
-  if (!/(?=.*[a-zA-Z])(?=.*[0-9])/.test(password)) {
+  } else if (isValidPassword(password) === 1) {
     return { error: 'Password must contain at least one letter and one number', errorCategory: EC.BAD_INPUT };
   }
-
+  
+  const hashedPassword = hashPasswordSync(password);
   // Create new user
   const controlUserId = controlUserIdGen();
   const newUser = {
     controlUserId,
     email,
-    password,
+    password: hashedPassword,
     nameFirst: nameFirst.trim(),
     nameLast: nameLast.trim(),
-    numSuccessfulLogins: 1,
+    numSuccessfulLogins: 0,
     numFailedPasswordsSinceLastLogin: 0,
     passwordHistory: [password],
   };
   data.controlUsers.push(newUser);
+  data.nextControlUserId++;
   setData(data);
-
-  return { controlUserId };
+  const controlUserSessionId = adminAuthLogin(email, password).controlUserSessionId;
+  return { controlUserSessionId: controlUserSessionId };
 }
 
 // Login a mission control user
@@ -96,10 +97,7 @@ function adminAuthLogin(email: string, password: string) {
   }
 
   // Check password
-  if (user.password !== password) {
-    if (!user.numFailedPasswordsSinceLastLogin) {
-      user.numFailedPasswordsSinceLastLogin = 0;
-    }
+  if (!verifyPasswordSync(password, user.password)) {
     user.numFailedPasswordsSinceLastLogin++;
     return { error: 'Incorrect password', errorCategory: EC.BAD_INPUT };
   }
@@ -122,17 +120,20 @@ function adminAuthLogin(email: string, password: string) {
 function adminAuthLogout(controlUserSessionId: string) {
   const data = getData();
 
-  if (!controlUserSessionId || typeof controlUserSessionId !== 'string') {
+  if (!controlUserSessionId) {
     return { error: 'ControlUserSessionId is empty or invalid', errorCategory: EC.INVALID_CREDENTIALS };
   }
 
-  const index = data.sessions.findIndex(s => s.controlUserSessionId === controlUserSessionId);
-  if (index === -1) {
+  const session = data.sessions.find(s => s.controlUserSessionId === controlUserSessionId);
+  if (!session) {
     return { error: 'ControlUserSessionId is empty or invalid', errorCategory: EC.INVALID_CREDENTIALS };
   }
 
   // Invalidate session
-  data.sessions.splice(index, 1);
+  const newSessions: Session[] = data.sessions.filter(s => s.controlUserSessionId !== controlUserSessionId);
+  data.sessions = newSessions;
+
+  setData(data);
   return {};
 }
 
@@ -147,8 +148,8 @@ function adminControlUserDetails(controlUserId: number) {
       controlUserId: user.controlUserId,
       name: `${user.nameFirst} ${user.nameLast}`,
       email: user.email,
-      numSuccessfulLogins: user.numSuccessfulLogins || 0,
-      numFailedPasswordsSinceLastLogin: user.numFailedPasswordsSinceLastLogin || 0,
+      numSuccessfulLogins: user.numSuccessfulLogins,
+      numFailedPasswordsSinceLastLogin: user.numFailedPasswordsSinceLastLogin,
     }
   };
 }

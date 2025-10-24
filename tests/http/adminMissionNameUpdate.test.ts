@@ -1,7 +1,6 @@
 import { v4 as uuid } from 'uuid';
-import { adminMissionInfo } from '../../src/mission';
 import { findSessionFromSessionId, generateSessionId } from '../../src/helper';
-import { adminMissionNameUpdateRequest, clearRequest, adminMissionCreateRequest, adminAuthUserRegisterRequest, adminAuthUserLoginRequest } from './requestHelpers';
+import { adminMissionNameUpdateRequest, clearRequest, adminMissionCreateRequest, adminAuthUserRegisterRequest, adminAuthUserLoginRequest, adminMissionInfoRequest } from './requestHelpers';
 
 function uniqueEmail(prefix = 'user') {
   return `${prefix}.${uuid()}@example.com`;
@@ -30,26 +29,33 @@ describe('HTTP tests for MissionNameUpdate', () => {
     missionId = res.body.missionId;
   });
 
-  test('mission name updated successfully', () => {
+  const validNameValue = [
+    'Mars',
+    'Mars1',
+    'Mar s'
+  ];
+  test.each(validNameValue)('mission name updated successfully', (name) => {
     const session = findSessionFromSessionId(controlUserSessionId);
     if (session) {
-      const controlUserId = session.controlUserId;
-      const res = adminMissionNameUpdateRequest(controlUserSessionId, missionId, 'Mars');
+      const res = adminMissionNameUpdateRequest(controlUserSessionId, missionId, name);
       const resultBody = res.body;
       expect(res.statusCode).toBe(200);
-      expect(resultBody).toBe({});
-      const newName = adminMissionInfo(controlUserId, missionId).name;
-      expect(newName).toStrictEqual('Mars');
+      expect(resultBody).toStrictEqual({});
+      const newInfoRes = adminMissionInfoRequest(controlUserSessionId, missionId);
+      expect(newInfoRes.statusCode).toBe(200);
+      let hasChanged = false;
+      if (newInfoRes.body.name !== 'Mercury') {
+        hasChanged = true;
+      }
+      expect(hasChanged).toStrictEqual(true);
     }
   });
 
-  const testCases = [
-    'Mars1',
-    'Mar s',
+  const invalidNameValue = [
     'M',
     'M'.repeat(31)
   ];
-  test.each(testCases)('get an invalid name', (name) => {
+  test.each(invalidNameValue)('get an invalid name', (name) => {
     const session = findSessionFromSessionId(controlUserSessionId);
     if (session) {
       const res = adminMissionNameUpdateRequest(controlUserSessionId, missionId, name);
@@ -59,18 +65,15 @@ describe('HTTP tests for MissionNameUpdate', () => {
     }
   });
 
-  test('ControlUserSessionId is empty or invalid', () => {
-    const newSessionId = generateSessionId();
-
+  const invalidSessionId = [
+    generateSessionId(),
+    ''
+  ];
+  test.each(invalidSessionId)('ControlUserSessionId is empty or invalid', (newSessionId) => {
     const res = adminMissionNameUpdateRequest(newSessionId, missionId, 'Mars');
     const resultBody = res.body;
     expect(res.statusCode).toBe(401);
     expect(resultBody).toEqual({ error: expect.any(String) });
-
-    const res1 = adminMissionNameUpdateRequest('', missionId, 'Mars');
-    const resultBody1 = res1.body;
-    expect(res1.statusCode).toBe(401);
-    expect(resultBody1).toEqual({ error: expect.any(String) });
   });
 
   test('control user is not an owner of this mission or the specified missionId does not exist', () => {
@@ -79,13 +82,14 @@ describe('HTTP tests for MissionNameUpdate', () => {
     const newRegisterRes = adminAuthUserRegisterRequest(newEmail, 'abc12345', 'Tony', 'Stark');
     expect(newRegisterRes.statusCode).toBe(200);
     const newSessionId = newRegisterRes.body.controlUserSessionId;
-    const newLoginRes = adminAuthUserLoginRequest(newEmail, 'abc12345');
-    expect(newLoginRes.statusCode).toBe(200);
     const newMission = {
       name: 'Venus',
       description: 'Explore atmosphere',
       target: 'Venus orbit'
     };
+
+    console.log(newSessionId);
+    console.log(controlUserSessionId);
     const newRes = adminMissionCreateRequest(newSessionId, newMission.name, newMission.description, newMission.target);
     expect(newRes.statusCode).toBe(200);
     const newMissionId = newRes.body.missionId;

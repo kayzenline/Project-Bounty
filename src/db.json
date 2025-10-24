@@ -3,7 +3,7 @@
   "spaceMissions": [],
   "nextControlUserId": 1,
   "nextMissionId": 1,
+  "nextAstronautId": 1,
   "sessions": [],
-  "astronauts": [],
-  "nextAstronautId": 157
+  "astronauts": []
 }

@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { adminAuthUserRegisterRequest, adminAuthUserLoginRequest, adminAstronautCreateRequest, clearRequest } from './requestHelpers';
+import { adminAuthUserRegisterRequest, adminAstronautCreateRequest, clearRequest } from './requestHelpers';
 
 function uniqueEmail(prefix = 'user') {
   return `${prefix}.${uuid()}@example.com`;
@@ -18,10 +18,7 @@ describe('POST /v1/admin/astronaut', () => {
     const nameLast = 'Doe';
     const registerRes = adminAuthUserRegisterRequest(email, password, nameFirst, nameLast);
     expect(registerRes.statusCode).toBe(200);
-
-    const loginRes = adminAuthUserLoginRequest(email, password);
-    expect(loginRes.statusCode).toBe(200);
-    controlUserSessionId = loginRes.body.controlUserSessionId;
+    controlUserSessionId = registerRes.body.controlUserSessionId;
   });
 
   describe('success: creates astronaut with valid data', () => {
