@@ -245,7 +245,6 @@ export function adminMissionAstronautAssign(
       buildError('missionId is invalid', EC.INACCESSIBLE_VALUE);
     }
 
-    console.log(missionId);
     const mission = data.spaceMissions.find(m => m.missionId === missionId);
     if (!mission) {
       throw buildError('mission not found', EC.INACCESSIBLE_VALUE);
@@ -263,10 +262,16 @@ export function adminMissionAstronautAssign(
     if (astronaut.assignedMission !== undefined) {
       buildError('astronaut is currently assigned to a mission', EC.BAD_INPUT);
     }
+    mission.assignedAstronauts.push({
+      astronautId,
+      designation: `${astronaut.rank} ${astronaut.nameFirst} ${astronaut.nameLast}`
+    });
+    mission.timeLastEdited = Math.floor(Date.now() / 1000);
     astronaut.assignedMission = {
       missionId,
       objective: 'Training for mission',
     };
+    astronaut.timeLastEdited = Math.floor(Date.now() / 1000);
     setData(data);
     return {};
   } catch (e) {
@@ -318,6 +323,7 @@ export function adminMissionAstronautUnassign(
     }
 
     mission.timeLastEdited = Math.floor(Date.now() / 1000);
+    astronaut.timeLastEdited = Math.floor(Date.now() / 1000);
     setData(data);
 
     return {};

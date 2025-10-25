@@ -15,7 +15,7 @@ let rank: string;
 
 
 
-describe.skip('DELETE /v1/admin/mission/{missionid}/assign/{astronautid}', () => {
+describe('DELETE /v1/admin/mission/{missionid}/assign/{astronautid}', () => {
   const email = uniqueEmail('test');
   beforeEach(() => {
     const clearRes = clearRequest();
