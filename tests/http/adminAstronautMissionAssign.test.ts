@@ -6,7 +6,7 @@ function uniqueEmail(prefix = 'user') {
   return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
 }
 
-describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
+describe('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
   let controlUserSessionId:string;
   let astronautId: number;
   let missionId: number;
@@ -15,7 +15,7 @@ describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
       expect(clearRes.statusCode).toBe(200);
   
       const email = uniqueEmail('success');
-      const password = 'password';
+      const password = 'ValidPass123';
       const nameFirst = 'namefirst';
       const nameLast = 'nameLast';
       const registerRes = adminAuthUserRegisterRequest(email, password, nameFirst, nameLast);
@@ -39,7 +39,7 @@ describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
         height
       );
       expect(createAstronautRes.statusCode).toBe(200);
-      astronautId = createAstronautRes.body;
+      astronautId = createAstronautRes.body.astronautId;
       const missionName = 'Mission test';
       const missionDescription = 'Mission Description test';
       const missionTarget = 'Mars';
@@ -50,7 +50,7 @@ describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
         missionTarget,
       );
       expect(adminMissionCreateRequestRes.statusCode).toBe(200);
-      missionId=adminMissionCreateRequestRes.body;
+      missionId=adminMissionCreateRequestRes.body.missionId;
   });
   test('assign mission successfully',() => {
     const assignAstronautRes = adminAstronautAssignRequest(
@@ -88,7 +88,7 @@ describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
       };
       const createMissionRes2 = adminMissionCreateRequest(controlUserSessionId, mission2.name, mission2.description, mission2.target);
       expect(createMissionRes2.statusCode).toBe(200);
-      const assignAstronautRes2 = adminAstronautAssignRequest(controlUserSessionId, astronautId, createMissionRes2.body);
+      const assignAstronautRes2 = adminAstronautAssignRequest(controlUserSessionId, astronautId, createMissionRes2.body.missionId);
       expect(assignAstronautRes2.statusCode).toBe(400);
       expect(assignAstronautRes2.body).toEqual({ error: expect.any(String) });
   });
@@ -115,11 +115,11 @@ describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
 
     test('mission does not belong to owner',() => {
       const email2 = uniqueEmail('user2');
-      const registerRes2 = adminAuthUserRegisterRequest(email2, 'password', 'nameFirst', 'nameLast');
+      const registerRes2 = adminAuthUserRegisterRequest(email2, 'ValidPass456', 'nameFirst', 'nameLast');
       expect(registerRes2.statusCode).toBe(200);
-      const loginRes2 = adminAuthUserLoginRequest(email2, 'password');
+      const loginRes2 = adminAuthUserLoginRequest(email2, 'ValidPass456');
       expect(loginRes2.statusCode).toBe(200);
-      const controlUserSessionId2 = loginRes2.body;
+      const controlUserSessionId2 = loginRes2.body.controlUserSessionId;
       const missionRes = adminMissionCreateRequest(
         controlUserSessionId2,
         'mission name',
@@ -127,7 +127,7 @@ describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{
         'target'
       );
       expect(missionRes.statusCode).toBe(200);
-      const user2MissionId = missionRes.body;
+      const user2MissionId = missionRes.body.missionId;
       const assignRes = adminAstronautAssignRequest(
         controlUserSessionId,  
         astronautId,           
