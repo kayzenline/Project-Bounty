@@ -252,8 +252,8 @@ export function adminAstronautDeleteRequest(
   controlUserSessionId: string,
   astronautId: number
 ) {
-  const res = request('POST', `${SERVER_URL}/v1/admin/astronaut/${astronautId}`, {
-    headers: { controUserSessionId: controlUserSessionId },
+  const res = request('DELETE', `${SERVER_URL}/v1/admin/astronaut/${astronautId}`, {
+    headers: { controlUserSessionId: controlUserSessionId },
   });
 
   return {

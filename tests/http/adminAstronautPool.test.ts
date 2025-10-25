@@ -7,7 +7,7 @@ function uniqueEmail(prefix = 'user') {
   return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
 }
 
-describe.skip('GET /v1/admin/astronaut/pool', () => {
+describe('GET /v1/admin/astronaut/pool', () => {
   let controlUserSessionId: string;
   let astronautId: number;
   beforeEach(() => {
@@ -15,7 +15,7 @@ describe.skip('GET /v1/admin/astronaut/pool', () => {
     expect(clearRes.statusCode).toBe(200);
 
     const email = uniqueEmail('success');
-    const password = 'password';
+    const password = 'ValidPass123';
     const nameFirst = 'namefirst';
     const nameLast = 'nameLast';
     const registerRes = adminAuthUserRegisterRequest(email, password, nameFirst, nameLast);
@@ -39,11 +39,11 @@ describe.skip('GET /v1/admin/astronaut/pool', () => {
       height
     );
     expect(createAstronautRes.statusCode).toBe(200);
-    astronautId = createAstronautRes.body;
+    astronautId = createAstronautRes.body.astronautId;
 
-    const astronautNameFirst2 = 'NameFirst2';
-    const astronautNameLast2 = 'NameLast2';
-    const rank2 = 'rankOfAstronaut2';
+    const astronautNameFirst2 = 'NameSecond';
+    const astronautNameLast2 = 'NameOther';
+    const rank2 = 'rankOfAstronautTwo';
     const age2 = 25;
     const weight2 = 75;
     const height2 = 175;
@@ -67,15 +67,16 @@ describe.skip('GET /v1/admin/astronaut/pool', () => {
     };
     const createMissionRes = adminMissionCreateRequest(controlUserSessionId, mission.name, mission.description, mission.target);
     expect(createMissionRes.statusCode).toBe(200);
-    const assignAstronautRes = adminAstronautAssignRequest(controlUserSessionId, astronautId, createMissionRes.body);
-    expect(assignAstronautRes).toBe(200);
+    const assignAstronautRes = adminAstronautAssignRequest(controlUserSessionId, astronautId, createMissionRes.body.missionId);
+    expect(assignAstronautRes.statusCode).toBe(200);
 
     const astronautPoolRes = adminAstronautPoolRequest(controlUserSessionId);
 
     // check the number of listed astronauts
     expect(astronautPoolRes.statusCode).toBe(200);
     const astronauts = getData().astronauts;
-    expect(astronautPoolRes.body.length).toBe(astronauts.length);
+    expect(astronautPoolRes.body.result).toHaveLength(astronauts.length);
+
   });
 
   const invalidSessionIdValue = [

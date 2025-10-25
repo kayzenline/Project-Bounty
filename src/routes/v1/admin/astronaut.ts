@@ -19,6 +19,19 @@ router.post('/', (req: Request, res: Response) => {
   return res.status(200).json(result);
 });
 
+router.get('/pool', (req: Request, res: Response) => {
+  const controlUserSessionId = req.header('controlUserSessionId');
+
+  const result = adminAstronautPool(controlUserSessionId);
+
+  if ('error' in result) {
+    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
+    return res.status(status).json({ error: result.error });
+  }
+
+  return res.status(200).json(result);
+});
+
 // GET /v1/admin/astronaut/:astronautid - Get astronaut info
 router.get('/:astronautid', (req: Request, res: Response) => {
   const controlUserSessionId = req.header('controlUserSessionId');
@@ -29,19 +42,6 @@ router.get('/:astronautid', (req: Request, res: Response) => {
   }
 
   const result = adminAstronautInfo(controlUserSessionId, astronautId);
-
-  if ('error' in result) {
-    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
-    return res.status(status).json({ error: result.error });
-  }
-
-  return res.status(200).json(result);
-});
-
-router.get('/pool', (req: Request, res: Response) => {
-  const controlUserSessionId = req.header('controlUserSessionId');
-
-  const result = adminAstronautPool(controlUserSessionId);
 
   if ('error' in result) {
     const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];

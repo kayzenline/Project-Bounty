@@ -42,6 +42,9 @@ function adminMissionRemove(controlUserId: number, missionId: number) {
       buildError('Mission does not belong to this user', EC.INACCESSIBLE_VALUE);
     }
     const data = getData();
+    if ((mission.assignedAstronauts ?? []).length > 0 || (data.astronauts || []).some(a => a.assignedMission?.missionId === missionId)) {
+      buildError('Astronauts have been assigned to this mission', EC.BAD_INPUT);
+    }
     const missions = data.spaceMissions || [];
     data.spaceMissions = missions.filter(m => m.missionId !== missionId);
     setData(data);
