@@ -37,7 +37,7 @@ describe('/v1/admin/mission/{missionid}', () => {
   });
   describe('invalid cases', () => {
     // status code 400 If any of the following are true:
-    test.skip('Astronauts have been assigned to this mission', () => {
+    test('Astronauts have been assigned to this mission', () => {
       const astronautId = adminAstronautCreateRequest(token, 'Elon', 'Musk', 'string', 36, 75, 178).body.astronautId;
       adminAstronautAssignRequest(token, astronautId, missionId);
       const res = adminMissionDeleteRequest(token, missionId);
