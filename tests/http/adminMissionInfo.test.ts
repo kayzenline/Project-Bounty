@@ -38,7 +38,7 @@ beforeEach(() => {
     height
   );
   expect(createAstronautRes.statusCode).toBe(200);
-  astronautId = createAstronautRes.body;
+  astronautId = createAstronautRes.body.astronautId;
 })
 
 afterAll(() => {
@@ -46,7 +46,7 @@ afterAll(() => {
   expect(clearRes.statusCode).toBe(200);
 });
 
-describe.skip(`/v1/admin/mission/{missionId}`, () => {
+describe(`/v1/admin/mission/{missionId}`, () => {
   describe('valid cases', () => {
     // status code 200 If any of the following are true:
     test('successful get the Space mission info without assign astronaut', () => {
@@ -84,7 +84,7 @@ describe.skip(`/v1/admin/mission/{missionId}`, () => {
 
   })
 
-  describe.skip('invalid cases', () => {
+  describe('invalid cases', () => {
     // status code 401 If any of the following are true:
     test('ControlUserSessionId is empty or invalid (does not refer to valid logged in user session)', () => {
       const res = adminMissionInfoRequest('', missionId);
