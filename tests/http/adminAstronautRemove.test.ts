@@ -7,7 +7,7 @@ function uniqueEmail(prefix = 'user') {
   return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
 }
 
-describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {
+describe('DELETE /v1/admin/astronaut/{astronautid}', () => {
   let controlUserSessionId: string;
   let astronautId: number;
   beforeEach(() => {
@@ -15,7 +15,7 @@ describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {
     expect(clearRes.statusCode).toBe(200);
 
     const email = uniqueEmail('success');
-    const password = 'password';
+    const password = 'ValidPass123';
     const nameFirst = 'namefirst';
     const nameLast = 'nameLast';
     const registerRes = adminAuthUserRegisterRequest(email, password, nameFirst, nameLast);
@@ -39,7 +39,7 @@ describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {
       height
     );
     expect(createAstronautRes.statusCode).toBe(200);
-    astronautId = createAstronautRes.body;
+    astronautId = createAstronautRes.body.astronautId;
   });
   test('delete an astronaut successfully', () => {
     const deleteAstronautRes = adminAstronautDeleteRequest(
@@ -74,8 +74,8 @@ describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {
     const createMissionRes = adminMissionCreateRequest(controlUserSessionId, mission.name, mission.description, mission.target);
     expect(createMissionRes.statusCode).toBe(200);
 
-    const assignAstronautRes = adminAstronautAssignRequest(controlUserSessionId, astronautId, createMissionRes.body);
-    expect(assignAstronautRes).toBe(200);
+    const assignAstronautRes = adminAstronautAssignRequest(controlUserSessionId, astronautId, createMissionRes.body.missionId);
+    expect(assignAstronautRes.statusCode).toBe(200);
 
     const deleteAstronautRes = adminAstronautDeleteRequest(
       controlUserSessionId,
