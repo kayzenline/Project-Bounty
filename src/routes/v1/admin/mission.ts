@@ -202,14 +202,15 @@ router.post('/:missionId/transfer', (req: Request, res: Response) => {
 
 router.post('/:missionid/assign/:astronautid', (req: Request, res: Response) => {
   const controlUserSessionId = req.headers.controlusersessionid as string;
+  const missionId = Number(req.params.missionid);
+  const astronautId = Number(req.params.astronautid);
+
   if (!controlUserSessionId) {
     return res.status(401).json({
       error: 'controlUserSessionId is invalid'
     });
   }
-  const missionId = parseInt(req.params.missionid);
-  const astronautId = parseInt(req.params.astronautid);
-  const result = adminMissionAstronautAssign(controlUserSessionId, missionId, astronautId);
+  const result = adminMissionAstronautAssign(controlUserSessionId, astronautId, missionId);
   if ('error' in result) {
     const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
     return res.status(status).json({ error: result.error });

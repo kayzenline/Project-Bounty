@@ -116,6 +116,20 @@ export function adminAstronautCreate(
     return { error: ne.error, errorCategory: ne.errorCategory };
   }
 }
+export interface AstronautResponse {
+  astronautId: number;
+  designation: string;
+  timeAdded: number;
+  timeLastEdited: number;
+  age: number;
+  weight: number;
+  height: number;
+  assignedMission?: AssignedMission;
+}
+export interface AssignedMission {
+  missionId: number;
+  objective: string;
+}
 
 export function adminAstronautInfo(controlUserSessionId: string, astronautId: number) {
   try {
@@ -136,7 +150,7 @@ export function adminAstronautInfo(controlUserSessionId: string, astronautId: nu
     }
 
     // Build response object
-    const response = {
+    const response: AstronautResponse = {
       astronautId: astronaut.astronautId,
       designation: astronaut.designation,
       timeAdded: astronaut.timeAdded,
@@ -230,6 +244,8 @@ export function adminMissionAstronautAssign(
     if (!missionIdCheck(missionId)) {
       buildError('missionId is invalid', EC.INACCESSIBLE_VALUE);
     }
+
+    console.log(missionId);
     const mission = data.spaceMissions.find(m => m.missionId === missionId);
     if (!mission) {
       throw buildError('mission not found', EC.INACCESSIBLE_VALUE);
