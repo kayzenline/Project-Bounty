@@ -49,7 +49,7 @@ router.put('/password', (req, res) => {
   const { oldPassword, newPassword } = req.body;
   const session = findSessionFromSessionId(controlUserSessionId);
   if (!session) {
-    return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid'});
+    return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
   }
   const controlUserId = session.controlUserId;
   const result = adminControlUserPasswordUpdate(controlUserId, oldPassword, newPassword);

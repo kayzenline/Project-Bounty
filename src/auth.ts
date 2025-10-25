@@ -57,13 +57,13 @@ function adminAuthRegister(email: string, password: string, nameFirst: string, n
   if (nameLast.trim().length < 2 || nameLast.trim().length > 20) {
     return { error: 'Invalid last name length', errorCategory: EC.BAD_INPUT };
   }
-  
+
   if (isValidPassword(password) === 0) {
     return { error: 'Password must be at least 8 characters long', errorCategory: EC.BAD_INPUT };
   } else if (isValidPassword(password) === 1) {
     return { error: 'Password must contain at least one letter and one number', errorCategory: EC.BAD_INPUT };
   }
-  
+
   const hashedPassword = hashPasswordSync(password);
   // Create new user
   const controlUserId = controlUserIdGen();
@@ -187,7 +187,6 @@ function adminControlUserDetailsUpdate(controlUserId: number, email: string, nam
 }
 
 function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: string, newPassword: string) {
-  
   const user = findUserById(controlUserId);
   if (!user) {
     return { error: 'ControlUserSessionId is empty or invalid', errorCategory: EC.INVALID_CREDENTIALS };

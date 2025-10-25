@@ -223,17 +223,17 @@ router.delete('/:missionid/assign/:astronautid', (req: Request, res: Response, n
   const astronautId = Number(req.params.astronautid);
 
   if (!controlUserSessionId) {
-      return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
-    }
+    return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
+  }
 
-    const result = adminMissionAstronautUnassign(controlUserSessionId, astronautId, missionId);
+  const result = adminMissionAstronautUnassign(controlUserSessionId, astronautId, missionId);
 
-    if ('error' in result) {
-      const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
-      return res.status(status).json({ error: result.error });
-    }
+  if ('error' in result) {
+    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
+    return res.status(status).json({ error: result.error });
+  }
 
-    return res.status(200).json(result);
+  return res.status(200).json(result);
 });
 
 export default router;

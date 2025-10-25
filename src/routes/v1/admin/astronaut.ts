@@ -8,7 +8,7 @@ const router = Router();
 router.post('/', (req: Request, res: Response) => {
   const controlUserSessionId = req.header('controlUserSessionId');
   const { nameFirst, nameLast, rank, age, weight, height } = req.body;
-  
+
   const result = adminAstronautCreate(controlUserSessionId, nameFirst, nameLast, rank, age, weight, height);
 
   if ('error' in result) {
@@ -40,7 +40,7 @@ router.get('/:astronautid', (req: Request, res: Response) => {
 
 router.get('/pool', (req: Request, res: Response) => {
   const controlUserSessionId = req.header('controlUserSessionId');
-  
+
   const result = adminAstronautPool(controlUserSessionId);
 
   if ('error' in result) {
