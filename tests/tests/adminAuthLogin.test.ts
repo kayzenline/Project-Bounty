@@ -10,7 +10,7 @@ describe('adminAuthLogin', () => {
 
   test('successful login', () => {
     const result = adminAuthLogin('test@example.com', 'password123');
-    expect(result).toEqual({ controlSessionUserId: expect.any(String) });
+    expect(result).toEqual({ controlUserSessionId: expect.any(String) });
     if (result.controlUserSessionId != undefined) {
       const session = findSessionFromSessionId(result.controlUserSessionId);
       if (session) {

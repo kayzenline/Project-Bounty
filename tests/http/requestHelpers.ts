@@ -286,7 +286,7 @@ export function adminAstronautEditRequest(
   weight: number,
   height: number
 ) {
-  const res = request('POST', `${SERVER_URL}/v1/admin/astronaut/${astronautId}`, {
+  const res = request('PUT', `${SERVER_URL}/v1/admin/astronaut/${astronautId}`, {
     headers: { controlUserSessionId: controlUserSessionId },
     json: {
       nameFirst,

@@ -1,10 +1,10 @@
 import { v4 as uuid } from 'uuid';
 import { adminMissionInfo } from '../../src/mission';
 import { findSessionFromSessionId, generateSessionId } from '../../src/helper';
-import { adminMissionDescriptionUpdateRequest, clearRequest, adminMissionCreateRequest, adminAuthUserRegisterRequest, adminAuthUserLoginRequest } from './requestHelpers';
+import { adminMissionDescriptionUpdateRequest, clearRequest, adminMissionCreateRequest, adminAuthUserRegisterRequest } from './requestHelpers';
 
 function uniqueEmail(prefix = 'user') {
-  return `${prefix}.${uuid()}@example.com`;
+  return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
 }
 
 let missionId: number;
@@ -19,8 +19,6 @@ describe('HTTP tests for MissionDescriptionUpdate', () => {
     const registerRes = adminAuthUserRegisterRequest(email, 'abc12345', 'John', 'Doe');
     expect(registerRes.statusCode).toBe(200);
     controlUserSessionId = registerRes.body.controlUserSessionId;
-    const loginRes = adminAuthUserLoginRequest(email, 'abc12345');
-    expect(loginRes.statusCode).toBe(200);
     const mission = {
       name: 'Mercury',
       description: 'Place a manned spacecraft in orbital flight around the earth. Investigate a persons performance capabilities and their ability to function in the environment of space. Recover the person and the spacecraft safely',
@@ -39,7 +37,7 @@ describe('HTTP tests for MissionDescriptionUpdate', () => {
       const res = adminMissionDescriptionUpdateRequest(controlUserSessionId, missionId, newDescription);
       const resultBody = res.body;
       expect(res.statusCode).toBe(200);
-      expect(resultBody).toBe({});
+      expect(resultBody).toStrictEqual({});
       const updatedDesc = adminMissionInfo(controlUserId, missionId).description;
       expect(updatedDesc).toStrictEqual('Land humans on the Moon and bring them safely back to Earth');
     }
@@ -76,8 +74,6 @@ describe('HTTP tests for MissionDescriptionUpdate', () => {
     const newRegisterRes = adminAuthUserRegisterRequest(newEmail, 'abc12345', 'Tony', 'Stark');
     expect(newRegisterRes.statusCode).toBe(200);
     const newSessionId = newRegisterRes.body.controlUserSessionId;
-    const newLoginRes = adminAuthUserLoginRequest(newEmail, 'abc12345');
-    expect(newLoginRes.statusCode).toBe(200);
     const newMission = {
       name: 'Venus',
       description: 'Explore atmosphere',

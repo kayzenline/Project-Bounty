@@ -1,5 +1,9 @@
+import { v4 as uuid } from 'uuid';
 import { clearRequest, adminMissionCreateRequest, adminMissionInfoRequest, adminAuthUserRegisterRequest, adminAstronautCreateRequest, adminAstronautAssignRequest } from './requestHelpers';
 
+function uniqueEmail(prefix = 'user') {
+  return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
+}
 
 const ERROR = { error: expect.any(String) };
 let missionId: number;

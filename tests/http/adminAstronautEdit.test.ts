@@ -4,10 +4,10 @@ import { getData } from '../../src/dataStore';
 import { generateSessionId } from '../../src/helper';
 
 function uniqueEmail(prefix = 'user') {
-  return `${prefix}.${uuid()}@example.com`;
+  return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
 }
 
-describe.skip('PUT /v1/admin/astronaut/{astronautid}', () => {
+describe('PUT /v1/admin/astronaut/{astronautid}', () => {
   let controlUserSessionId: string;
   let astronautId: number;
   beforeEach(() => {
@@ -15,15 +15,13 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}', () => {
     expect(clearRes.statusCode).toBe(200);
 
     const email = uniqueEmail('success');
-    const password = 'password';
+    const password = 'password123';
     const nameFirst = 'namefirst';
     const nameLast = 'nameLast';
     const registerRes = adminAuthUserRegisterRequest(email, password, nameFirst, nameLast);
     expect(registerRes.statusCode).toBe(200);
 
-    const loginRes = adminAuthUserLoginRequest(email, password);
-    expect(loginRes.statusCode).toBe(200);
-    controlUserSessionId = loginRes.body;
+    controlUserSessionId = registerRes.body.controlUserSessionId;
 
     const astronautNameFirst = 'NameFirst';
     const astronautNameLast = 'NameLast';
@@ -41,7 +39,7 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}', () => {
       height
     );
     expect(createAstronautRes.statusCode).toBe(200);
-    astronautId = createAstronautRes.body;
+    astronautId = createAstronautRes.body.astronautId;
   });
 
   test('edit astronaut successfully', () => {
@@ -62,8 +60,9 @@ describe.skip('PUT /v1/admin/astronaut/{astronautid}', () => {
       newWeight,
       newHeight
     );
+
     expect(editAstronautRes.statusCode).toBe(200);
-    expect(editAstronautRes.body).toBe({});
+    expect(editAstronautRes.body).toStrictEqual({});
 
     const astronaut = getData().astronauts.find(a => a.astronautId === astronautId);
     if (astronaut) {

@@ -1,5 +1,9 @@
-import { afterAll, beforeEach, describe, expect, test } from '@jest/globals';
+import { v4 as uuid } from 'uuid';
 import { adminMissionCreateRequest, adminAuthUserRegisterRequest, clearRequest, adminMissionDeleteRequest, adminAstronautCreateRequest, adminAstronautAssignRequest } from './requestHelpers';
+
+function uniqueEmail(prefix = 'user') {
+  return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
+}
 
 let missionId: number;
 let token: string;
@@ -8,7 +12,7 @@ beforeEach(() => {
   const clearRes = clearRequest();
   expect(clearRes.statusCode).toBe(200);
   // register a user and get the token
-  const registerRes = adminAuthUserRegisterRequest('test@example.com', 'ValidPass123', 'John', 'Doe');
+  const registerRes = adminAuthUserRegisterRequest(uniqueEmail('test'), 'ValidPass123', 'John', 'Doe');
   expect(registerRes.statusCode).toBe(200);
   token = registerRes.body.controlUserSessionId;
 

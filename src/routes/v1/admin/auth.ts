@@ -10,11 +10,10 @@ router.post('/register', (req, res) => {
   const result = adminAuthRegister(email, password, nameFirst, nameLast);
 
   if ('error' in result) {
-    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories] || 400;
+    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
     return res.status(status).json({ error: result.error });
   }
-  const controlUserSessionId = adminAuthLogin(email, password);
-  return res.status(200).json({ controlUserSessionId: controlUserSessionId.controlUserSessionId });
+  return res.status(200).json({ controlUserSessionId: result.controlUserSessionId });
 });
 router.post('/login', (req, res) => {
   const { email, password } = req.body || {};
@@ -22,7 +21,7 @@ router.post('/login', (req, res) => {
   const result = adminAuthLogin(email, password);
 
   if ('error' in result) {
-    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories] || 400;
+    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
     return res.status(status).json({ error: result.error });
   }
 
@@ -35,7 +34,7 @@ router.post('/logout', (req, res) => {
   const result = adminAuthLogout(controlUserSessionId as string);
 
   if ('error' in result) {
-    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories] || 401;
+    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
     return res.status(status).json({ error: result.error });
   }
 

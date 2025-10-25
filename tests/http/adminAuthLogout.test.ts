@@ -1,33 +1,40 @@
-import { beforeEach, describe, expect, test } from '@jest/globals';
-import { adminAuthUserRegisterRequest, adminAuthUserLoginRequest, adminAuthUserLogoutRequest, clearRequest, adminMissionCreateRequest } from './requestHelpers';
+import { v4 as uuid } from 'uuid';
+import { generateSessionId } from '../../src/helper';
+import { adminAuthUserRegisterRequest, adminAuthUserLogoutRequest, clearRequest, adminMissionCreateRequest } from './requestHelpers';
 
-beforeEach(() => {
-  const res = clearRequest();
-  expect(res.statusCode).toBe(200);
-});
-
-const ERROR = { error: expect.any(String) };
+function uniqueEmail(prefix = 'user') {
+  return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
+}
 
 describe('POST /v1/admin/auth/logout', () => {
-  test('success: valid session logs out and becomes invalid', () => {
-    const reg = adminAuthUserRegisterRequest('logout.user@example.com', 'ValidPass123', 'John', 'Doe');
+  let controlUserSessionId: string;
+  beforeEach(() => {
+    const res = clearRequest();
+    expect(res.statusCode).toBe(200);
+
+    const email = uniqueEmail('success');
+    const reg = adminAuthUserRegisterRequest(email, 'ValidPass123', 'John', 'Doe');
     expect(reg.statusCode).toBe(200);
-    const token = reg.body.controlUserSessionId;
-
-    const out = adminAuthUserLogoutRequest(token);
-    expect(out.statusCode).toBe(200);
-    expect(out.body).toEqual({});
-
-    const after = adminMissionCreateRequest(token, 'Post-logout Mission', 'Desc', 'Mars');
-    expect(after.statusCode).toBe(401);
-    expect(after.body).toEqual(ERROR);
+    controlUserSessionId = reg.body.controlUserSessionId;
   });
 
-  describe('invalid session header', () => {
-    test.each(['', 'invalid-session-id'])('ControlUserSessionId "%s" is empty or invalid', (sid) => {
-      const res = adminAuthUserLogoutRequest(sid);
-      expect(res.statusCode).toBe(401);
-      expect(res.body).toEqual(ERROR);
-    });
+  test('success: valid session logs out and becomes invalid', () => {
+    const out = adminAuthUserLogoutRequest(controlUserSessionId);
+    expect(out.statusCode).toBe(200);
+    expect(out.body).toStrictEqual({});
+
+    const after = adminMissionCreateRequest(controlUserSessionId, 'Post-logout Mission', 'Desc', 'Mars');
+    expect(after.statusCode).toBe(401);
+    expect(after.body).toEqual({ error: expect.any(String) });
+  });
+
+  const invalidSessionId = [
+    '',
+    generateSessionId()
+  ];
+  test.each(invalidSessionId)('ControlUserSessionId "%s" is empty or invalid', (sessionId) => {
+    const res = adminAuthUserLogoutRequest(sessionId);
+    expect(res.statusCode).toBe(401);
+    expect(res.body).toEqual({ error: expect.any(String) });
   });
 });

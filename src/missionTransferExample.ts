@@ -29,19 +29,22 @@ export function adminMissionTransfer(controlUserId: number, missionId: number, u
   if (!thisUser) {
     return { error: `Can not find this control user with controlUserId: ${controlUserId}`, errorCategory: errorCategories.INVALID_CREDENTIALS };
   } else if (thisUser.email === userEmail) {
-    return { error: `Can not transfer a mission to the same user: ${thisUser.email} -> ${userEmail}`, errorCategory: errorCategories.BAD_INPUT };
+    return { error: 'Can not transfer a mission to the same user', errorCategory: errorCategories.BAD_INPUT };
   }
-
-  const targetMission = data.spaceMissions.find((mission) => mission.controlUserId === controlUserId);
-
+  // control user is not an owner of this space mission
+  const targetMission = data.spaceMissions.find((mission) => mission.missionId === missionId);
   // not a required check, just a legacy from Iteration 1
   if (!targetMission) {
-    return { error: `Invalid mission to access: ${missionId}`, errorCategory: errorCategories.INACCESSIBLE_VALUE };
+    return { error: 'Mission dese not exist', errorCategory: errorCategories.INACCESSIBLE_VALUE };
   } else {
     const missionNameConflict = data.spaceMissions.find((mission) => mission.controlUserId === targetUser.controlUserId && mission.name === targetMission.name);
     if (missionNameConflict) {
-      return { error: `Can not transfer a mission to user: ${targetUser.email} as they they own a mission with the same name: ${targetMission.name}`, errorCategory: errorCategories.BAD_INPUT };
+      return { error: 'missionId refers to a space mission that has a name that is already used by the target user', errorCategory: errorCategories.BAD_INPUT };
     }
+  }
+
+  if (controlUserId !== targetMission.controlUserId) {
+    return { error: 'control user is not an owner of this space mission', errorCategory: errorCategories.INACCESSIBLE_VALUE };
   }
 
   targetMission.controlUserId = targetUser.controlUserId;

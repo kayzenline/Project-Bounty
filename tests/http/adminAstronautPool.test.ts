@@ -4,7 +4,7 @@ import { getData } from '../../src/dataStore';
 import { generateSessionId } from '../../src/helper';
 
 function uniqueEmail(prefix = 'user') {
-  return `${prefix}.${uuid()}@example.com`;
+  return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
 }
 
 describe.skip('GET /v1/admin/astronaut/pool', () => {
@@ -21,9 +21,7 @@ describe.skip('GET /v1/admin/astronaut/pool', () => {
     const registerRes = adminAuthUserRegisterRequest(email, password, nameFirst, nameLast);
     expect(registerRes.statusCode).toBe(200);
 
-    const loginRes = adminAuthUserLoginRequest(email, password);
-    expect(loginRes.statusCode).toBe(200);
-    controlUserSessionId = loginRes.body;
+    controlUserSessionId = registerRes.body.controlUserSessionId;
 
     const astronautNameFirst = 'NameFirst';
     const astronautNameLast = 'NameLast';

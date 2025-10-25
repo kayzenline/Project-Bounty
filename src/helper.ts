@@ -1,6 +1,19 @@
 import { getData } from './dataStore';
 import { errorCategories as EC } from './testSamples';
 import { v4 as uuidGen } from 'uuid';
+import bcrypt from 'bcrypt';
+import isEmail from 'validator/lib/isEmail';
+
+// hash function
+export function hashPasswordSync(plainPassword: string): string {
+  const salt = bcrypt.genSaltSync(10);
+  return bcrypt.hashSync(plainPassword, salt);
+}
+
+export function verifyPasswordSync(plainPassword: string, hashedPassword: string): boolean {
+  return bcrypt.compareSync(plainPassword, hashedPassword);
+}
+
 // Helper function to generate unique control user ID
 function controlUserIdGen() {
   const data = getData();
@@ -10,7 +23,14 @@ function controlUserIdGen() {
 // Helper function to validate password
 function isValidPassword(password: string) {
   // Password must be at least 8 characters long
-  return typeof password === 'string' && password.length >= 8;
+  if (typeof password !== 'string' || password.length < 8) {
+    return 0;
+  }
+  // Password does not contain at least one number and at least one letter
+  if (!/(?=.*[a-zA-Z])(?=.*[0-9])/.test(password)) {
+    return 1;
+  }
+  return 2;
 }
 
 // Helper function to validate name
@@ -25,15 +45,15 @@ function isValidName(name: string) {
     return false;
   }
   // Name can only contain letters, spaces, hyphens, or apostrophes
-  return /^[a-zA-Z\s\-']+$/.test(trimmedName);
+  return /^[a-zA-Z\-']+$/.test(trimmedName);
 }
 
 // Helper function to validate email
 
 function isValidEmail(email: string) {
   // Basic email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return typeof email === 'string' && emailRegex.test(email);
+  const isValid = isEmail(email);
+  return isValid;
 }
 
 // Helper function to find user by email
