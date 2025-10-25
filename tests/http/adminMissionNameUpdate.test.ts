@@ -3,7 +3,7 @@ import { findSessionFromSessionId, generateSessionId } from '../../src/helper';
 import { adminMissionNameUpdateRequest, clearRequest, adminMissionCreateRequest, adminAuthUserRegisterRequest, adminAuthUserLoginRequest, adminMissionInfoRequest } from './requestHelpers';
 
 function uniqueEmail(prefix = 'user') {
-  return `${prefix}.${uuid()}@example.com`;
+  return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
 }
 
 describe('HTTP tests for MissionNameUpdate', () => {

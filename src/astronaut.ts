@@ -1,4 +1,3 @@
-import { string } from 'yaml/dist/schema/common/string';
 import { getData, setData, Astronaut } from './dataStore';
 import {
   findSessionFromSessionId,
@@ -32,7 +31,6 @@ export function adminAstronautPool(controlUserSessionId: string) {
       designation: string,
       assigned: boolean
     }
-    
     const result: AstronautDetail[] = [];
 
     for (const astronaut of data.astronauts) {

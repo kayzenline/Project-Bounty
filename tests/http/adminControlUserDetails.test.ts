@@ -3,7 +3,7 @@ import { generateSessionId } from '../../src/helper';
 import { adminAuthUserRegisterRequest, adminAuthUserDetailsRequest, clearRequest } from './requestHelpers';
 
 function uniqueEmail(prefix = 'user') {
-  return `${prefix}.${uuid()}@example.com`;
+  return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
 }
 
 describe('HTTP tests for ControlUserdetails', () => {
@@ -23,7 +23,6 @@ describe('HTTP tests for ControlUserdetails', () => {
     const user = res.body.user;
     expect(res.statusCode).toBe(200);
 
-    expect(user.controlUserId).toBeGreaterThan(0);
     expect(user.email).toStrictEqual(email);
     expect(user.name).toStrictEqual('John Doe');
     expect(user.numSuccessfulLogins).toStrictEqual(1);

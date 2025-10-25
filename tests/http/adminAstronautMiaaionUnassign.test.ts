@@ -1,4 +1,9 @@
+import { v4 as uuid } from 'uuid';
 import { adminAstronautUnassignRequest, clearRequest, adminAuthUserRegisterRequest, adminMissionCreateRequest, adminAstronautCreateRequest, adminAstronautAssignRequest } from './requestHelpers';
+
+function uniqueEmail(prefix = 'user') {
+  return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
+}
 
 const ERROR = { error: expect.any(String) };
 let missionId: number;
@@ -11,10 +16,11 @@ let rank: string;
 
 
 describe.skip('DELETE /v1/admin/mission/{missionid}/assign/{astronautid}', () => {
+  const email = uniqueEmail('test');
   beforeEach(() => {
     const clearRes = clearRequest();
     expect(clearRes.statusCode).toBe(200);
-    const registerRes = adminAuthUserRegisterRequest('test@example.com', 'ValidPass123', 'John', 'Doe');
+    const registerRes = adminAuthUserRegisterRequest(email, 'ValidPass123', 'John', 'Doe');
     expect(registerRes.statusCode).toBe(200);
     controlUserSessionId = registerRes.body.controlUserSessionId;
 
@@ -89,7 +95,8 @@ describe.skip('DELETE /v1/admin/mission/{missionid}/assign/{astronautid}', () =>
     test('Valid controlUserSessionId is provided, but the control user is not an owner of this mission or the specified missionId does not exist', () => {
       // The control user is not an owner of this mission
       adminAstronautAssignRequest(controlUserSessionId, astronautId, missionId);
-      const otherUser = adminAuthUserRegisterRequest('other@example.com', 'ValidPass123', 'Alice', 'Smith');
+      const otherEmail = uniqueEmail('otherEmail');
+      const otherUser = adminAuthUserRegisterRequest(otherEmail, 'ValidPass123', 'Alice', 'Smith');
       expect(otherUser.statusCode).toBe(200);
       const otherSessionId = otherUser.body.controlUserSessionId;
       const notOwnerRes = adminAstronautUnassignRequest(otherSessionId, astronautId, missionId);

@@ -3,7 +3,7 @@ import { adminAuthUserRegisterRequest, adminAuthUserLoginRequest, clearRequest, 
 import { generateSessionId,} from '../../src/helper';
 
 function uniqueEmail(prefix = 'user') {
-  return `${prefix}.${uuid()}@example.com`;
+  return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
 }
 
 describe.skip('POST /v1/admin/mission/{missionid}/assign/{astronautid}',()=>{

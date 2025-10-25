@@ -1,8 +1,8 @@
 import { v4 as uuid } from 'uuid';
-import { adminAuthUserRegisterRequest, adminAuthUserLoginRequest, adminAstronautCreateRequest, adminAstronautInfoRequest, clearRequest } from './requestHelpers';
+import { adminAuthUserRegisterRequest, adminAstronautCreateRequest, adminAstronautInfoRequest, clearRequest } from './requestHelpers';
 
 function uniqueEmail(prefix = 'user') {
-  return `${prefix}.${uuid()}@example.com`;
+  return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
 }
 
 describe.skip('GET /v1/admin/astronaut/{astronautid}', () => {

@@ -1,18 +1,17 @@
 import { Router } from 'express';
 import { adminControlUserDetails, adminControlUserDetailsUpdate, adminControlUserPasswordUpdate } from '../../../auth';
 import { errorCategories as EC } from '../../../testSamples';
-import { getData, loadData, setData } from '../../../../src/dataStore';
+import { findSessionFromSessionId } from '../../../helper';
+import { httpToErrorCategories } from '../../../testSamples';
 const router = Router();
 
 router.get('/details', (req, res) => {
-  loadData();
-  const Id = req.header('ControlUserSessionId');
-  if (!Id) {
+  const controlUserSessionId = req.header('ControlUserSessionId');
+  if (!controlUserSessionId) {
     return res.status(401).json({ error: 'ControlUserSessionId is invalid', errorCategory: EC.INVALID_CREDENTIALS });
   }
 
-  const data = getData();
-  const session = data.sessions.find(s => String(s.controlUserSessionId) === String(Id));
+  const session = findSessionFromSessionId(controlUserSessionId);
   if (!session) {
     return res.status(401).json({ error: 'User not found', errorCategory: EC.INVALID_CREDENTIALS });
   }
@@ -20,64 +19,45 @@ router.get('/details', (req, res) => {
 
   const result = adminControlUserDetails(controlUserId);
   if ('error' in result) {
-    if (String(result.errorCategory).toUpperCase() === 'BAD_INPUT') {
-      return res.status(400).json(result);
-    } else {
-      return res.status(401).json(result);
-    }
-  }
-  return res.status(200).json({ user: result.user });
-});// if head is invalid(sessionid->NaN)
-router.put('/details', (req, res) => {
-  loadData();
-  const Id = req.header('ControlUserSessionId');
-  if (!Id) {
-    return res.status(401).json({ error: 'ControlUserSessionId is invalid', errorCategory: EC.INVALID_CREDENTIALS });
+    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
+    return res.status(status).json({ error: result.error });
   }
 
-  const data = getData();
-  const session = data.sessions.find(s => String(s.controlUserSessionId) === String(Id));
-  if (!session) {
-    return res.status(401).json({ error: 'controlUserId not found', errorCategory: EC.INVALID_CREDENTIALS });
-  }
-  const controlUserId = session.controlUserId;
+  return res.status(200).json({ user: result.user });
+});
+
+router.put('/details', (req, res) => {
+  const controlUserSessionId = req.header('ControlUserSessionId');
   const { email, nameFirst, nameLast } = req.body;
+  const session = findSessionFromSessionId(controlUserSessionId);
+  if (!session) {
+    return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
+  }
+
+  const controlUserId = session.controlUserId;
   const result = adminControlUserDetailsUpdate(controlUserId, email, nameFirst, nameLast);
   if ('error' in result) {
-    if (String(result.errorCategory).toUpperCase() === 'BAD_INPUT') {
-      return res.status(400).json(result);
-    } else {
-      return res.status(401).json(result);
-    }
-  }
-  return res.status(200).json({});
-});
-router.put('/password', (req, res) => {
-  loadData();
-  const Id = req.header('ControlUserSessionId');
-  if (!Id) {
-    return res.status(401).json({
-      error: 'ControlUserSessionId is invalid',
-      errorCategory: 'INVALID_CREDENTIALS',
-    });
+    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
+    return res.status(status).json({ error: result.error });
   }
 
-  const data = getData();
-  const session = data.sessions.find(s => String(s.controlUserSessionId) === String(Id));
+  return res.status(200).json({});
+});
+
+router.put('/password', (req, res) => {
+  const controlUserSessionId = req.header('ControlUserSessionId');
+  const { oldPassword, newPassword } = req.body;
+  const session = findSessionFromSessionId(controlUserSessionId);
   if (!session) {
-    return res.status(401).json({ error: 'invalid user', errorCategory: 'INVALID_CREDENTIALS' });
+    return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid'});
   }
   const controlUserId = session.controlUserId;
-  const { oldPassword, newPassword } = req.body;
   const result = adminControlUserPasswordUpdate(controlUserId, oldPassword, newPassword);
   if ('error' in result) {
-    if (String(result.errorCategory).toUpperCase() === 'BAD_INPUT') {
-      return res.status(400).json(result);
-    } else {
-      return res.status(401).json(result);
-    }
+    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
+    return res.status(status).json({ error: result.error });
   }
-  setData(data);
+
   return res.status(200).json({});
 });
 

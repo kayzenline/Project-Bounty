@@ -7,15 +7,20 @@ import {
   isValidEmail,
   isValidName,
   controlUserIdCheck,
-  findUserById,
   normalizeError,
   generateSessionId,
   hashPasswordSync,
   isValidPassword,
-  verifyPasswordSync
+  verifyPasswordSync,
+  findUserById,
+  ServiceError
 } from './helper';
 import { getData, setData, Session } from './dataStore';
 import { errorCategories as EC } from './testSamples';
+
+function buildError(message: string, code: string): never {
+  throw new ServiceError(message, code);
+}
 
 // Register a mission control user
 function adminAuthRegister(email: string, password: string, nameFirst: string, nameLast: string) {
@@ -70,7 +75,7 @@ function adminAuthRegister(email: string, password: string, nameFirst: string, n
     nameLast: nameLast.trim(),
     numSuccessfulLogins: 0,
     numFailedPasswordsSinceLastLogin: 0,
-    passwordHistory: [password],
+    passwordHistory: [password]
   };
   data.controlUsers.push(newUser);
   data.nextControlUserId++;
@@ -83,25 +88,20 @@ function adminAuthRegister(email: string, password: string, nameFirst: string, n
 function adminAuthLogin(email: string, password: string) {
   // Validate password is provided
   if (!password || password === '') {
-    // wo sh sb
     return { error: 'Password is required', errorCategory: EC.BAD_INPUT };
   }
 
-  // Get current data
   const data = getData();
 
-  // Find user by email
   const user = data.controlUsers.find(u => u.email === email);
   if (!user) {
     return { error: 'User not found', errorCategory: EC.BAD_INPUT };
   }
-
   // Check password
   if (!verifyPasswordSync(password, user.password)) {
     user.numFailedPasswordsSinceLastLogin++;
     return { error: 'Incorrect password', errorCategory: EC.BAD_INPUT };
   }
-
   // Successful login
   user.numSuccessfulLogins++;
   user.numFailedPasswordsSinceLastLogin = 0;
@@ -141,7 +141,7 @@ function adminControlUserDetails(controlUserId: number) {
   const data = getData();
   const user = data.controlUsers.find(a => a.controlUserId === controlUserId);
   if (!user) {
-    return { error: 'User not found', errorCategory: 'INVALID_CREDENTIALS' };
+    return { error: 'User not found', errorCategory: EC.INVALID_CREDENTIALS };
   }
   return {
     user: {
@@ -154,20 +154,14 @@ function adminControlUserDetails(controlUserId: number) {
   };
 }
 
-type ErrorWithCode = Error & { code?: string };
-
 function adminControlUserDetailsUpdate(controlUserId: number, email: string, nameFirst: string, nameLast: string) {
   try {
     controlUserIdCheck(controlUserId);
     if (!isValidEmail(email)) {
-      const e = new Error('this email is invalid') as ErrorWithCode;
-      e.code = 'BAD_INPUT';
-      throw e;
+      buildError('excluding the current authorised user', EC.BAD_INPUT);
     }
     if (!(isValidName(nameFirst) && isValidName(nameLast))) {
-      const e = new Error('this name is invalid') as ErrorWithCode;
-      e.code = 'BAD_INPUT';
-      throw e;
+      buildError('excluding the current authorised user', EC.BAD_INPUT);
     }
 
     const data = getData();
@@ -176,12 +170,10 @@ function adminControlUserDetailsUpdate(controlUserId: number, email: string, nam
     );
     if (exists) {
       // something woring here
-      const e = new Error('excluding the current authorised user') as ErrorWithCode;
-      e.code = 'BAD_INPUT';
-      throw e;
+      buildError('excluding the current authorised user', EC.BAD_INPUT);
       //
     } else {
-      const theUser = findUserById(controlUserId);
+      const theUser = data.controlUsers.find(u => u.controlUserId === controlUserId);
       theUser.email = email;
       theUser.nameFirst = nameFirst;
       theUser.nameLast = nameLast;
@@ -190,40 +182,42 @@ function adminControlUserDetailsUpdate(controlUserId: number, email: string, nam
     return {};
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory || 'BAD_INPUT' };
+    return { error: ne.error, errorCategory: ne.errorCategory };
   }
 }
 
 function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: string, newPassword: string) {
-  const data = getData();
-  const user = (data.controlUsers || []).find(u => u.controlUserId === controlUserId);
+  
+  const user = findUserById(controlUserId);
   if (!user) {
-    return { error: 'invalid user', errorCategory: 'INVALID_CREDENTIALS' };
+    return { error: 'ControlUserSessionId is empty or invalid', errorCategory: EC.INVALID_CREDENTIALS };
   }
-  if (user.password !== oldPassword) {
-    return { error: 'wrong old password', errorCategory: 'BAD_INPUT' };
+
+  const userOldPassword = user.passwordHistory.pop();
+  if (userOldPassword !== oldPassword) {
+    return { error: 'Old Password is not the correct old password', errorCategory: EC.BAD_INPUT };
   }
 
   if (oldPassword === newPassword) {
-    return { error: 'same as old', errorCategory: 'BAD_INPUT' };
+    return { error: 'Old Password and New Password match exactly', errorCategory: EC.BAD_INPUT };
   }
-  const strong =
-    typeof newPassword === 'string' &&
-    newPassword.length >= 8 &&
-    /[A-Za-z]/.test(newPassword) &&
-    /[0-9]/.test(newPassword);
-  if (!strong) {
-    return { error: 'weak password', errorCategory: 'BAD_INPUT' };
-  }
-  user.passwordHistory = user.passwordHistory || [];
-  if (user.passwordHistory.includes(newPassword)) {
-    return { error: 'password reused', errorCategory: 'BAD_INPUT' };
-  }
-  if (!user.passwordHistory.includes(user.password)) {
-    user.passwordHistory.push(user.password);
-  }
-  user.password = newPassword;
 
+  if (isValidPassword(newPassword) === 0) {
+    return { error: 'New Password is less than 8 characters', errorCategory: EC.BAD_INPUT };
+  } else if (isValidPassword(newPassword) === 1) {
+    return { error: 'New Password does not contain at least one number and at least one letter', errorCategory: EC.BAD_INPUT };
+  }
+
+  if (user.passwordHistory.some(p => p === newPassword)) {
+    return { error: 'New Password has already been used before by this user', errorCategory: EC.BAD_INPUT };
+  }
+
+  const data = getData();
+  const dataNeedToStore = data.controlUsers.find(u => u.controlUserId === controlUserId);
+  dataNeedToStore.password = hashPasswordSync(newPassword);
+  dataNeedToStore.passwordHistory.push(newPassword);
+
+  setData(data);
   return {};
 }
 
@@ -233,5 +227,5 @@ export {
   adminAuthLogout,
   adminControlUserDetails,
   adminControlUserDetailsUpdate,
-  adminControlUserPasswordUpdate,
+  adminControlUserPasswordUpdate
 };

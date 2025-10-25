@@ -1,12 +1,12 @@
-
-import { beforeEach, describe, expect, test } from '@jest/globals';
 import {
   adminAuthUserRegisterRequest,
   adminMissionCreateRequest,
   adminMissionTransferRequest,
-  adminMissionDeleteRequest,
-  clearRequest
+  clearRequest,
+  adminMissionListRequest,
+  adminAuthUserLoginRequest
 } from './requestHelpers';
+import { generateSessionId, missionIdGen } from '../../src/helper';
 
 const ERROR = { error: expect.any(String) };
 let u1Session: string;
@@ -40,65 +40,65 @@ beforeEach(() => {
   expect(c21.statusCode).toBe(200);
   m1_u2 = c21.body.missionId;
 });
-// skipping these tests for now
-describe.skip('Success Tests', () => {
+describe('Success Tests', () => {
   test('Correct output', () => {
-    // call adminMissionTransfer to transfer Mission 2 from User 1 to User 2
-    // expect empty output {}
+    const transferRes = adminMissionTransferRequest(u1Session, m1_u1, 'user2@example.com');
+    expect(transferRes.statusCode).toBe(200);
+    expect(transferRes.body).toStrictEqual({});
   });
   test('Datastore modification', () => {
-    // call adminMissionTransfer to transfer Mission 2 from User 1 to User 2
-    // call adminMissionListRequest() for User 2
-    // expect User 2 to now have 2 missions with the second mission having a missionid to the original Mission 2 from User 1
+    const transferRes = adminMissionTransferRequest(u1Session, m2_u1, 'user2@example.com');
+    expect(transferRes.statusCode).toBe(200);
+    const newLoginRes = adminAuthUserLoginRequest('user2@example.com', 'abc12345');
+    expect(newLoginRes.statusCode).toBe(200);
+    const missionListRes = adminMissionListRequest(newLoginRes.body.controlUserSessionId);
+    expect(missionListRes.statusCode).toBe(200);
+    expect(missionListRes.body.missions.find((m: { missionId: number, name: string }) => m.name === 'MissionTwo').missionId).toStrictEqual(2);
   });
 });
-// skipping these tests for now
-describe.skip('Expected Errors', () => {
-  test('ControlUserSessionId is empty', () => {
-    // call adminMissionTransfer with an empty controlUserSessionId
-    // expect the response body to equal {error: expect.any(String)}
-    // expect the response status code to have a status of 401.
-  });
-  test('ControlUserSessionId is invalid', () => {
-    // call adminMissionTransfer with an invalid controlUserSessionId (concatenate User 1 controlUserSessionId and User 2 controlUserSessionId)
-    // expect the response body to equal {error: expect.any(String)}
-    // expect the response status code to have a status of 401.
-  });
-  test('ControlUserSessionId is invalid', () => {
-    // call adminMissionTransfer with an invalid controlUserSessionId (concatenate User 1 controlUserSessionId and User 2 controlUserSessionId)
-    // expect the response body to equal {error: expect.any(String)}
-    // expect the response status code to have a status of 401.
-  });
-  test('ControlUserSessionId is invalid', () => {
-    // call adminMissionTransfer with an invalid controlUserSessionId (concatenate User 1 controlUserSessionId and User 2 controlUserSessionId)
-    // expect the response body to equal {error: expect.any(String)}
-    // expect the response status code to have a status of 401.
-  });
-  test('missionid is empty', () => {
-    // call adminMissionTransfer with empty missionid
-    // expect the response body to equal {error: expect.any(String)}
-    // expect the response status code to have a status of 403.
-  });
-  test('Mission does not belong to this User', () => {
-    // call adminMissionTransfer with Mission 2 missionid but for User 2 controlUserSessionId.
-    // expect the response body to equal {error: expect.any(String)}
-    // expect the response status code to have a status of 403.
-  });
 
+describe('Expected Errors', () => {
+  // tests for error 400
   test('userEmail is not a real control user', () => {
-    // call adminMissionTransfer with an email not in the system
-    // expect the response body to equal {error: expect.any(String)}
-    // expect the response status code to have a status of 400.
+    const transferRes = adminMissionTransferRequest(u1Session, m1_u1, 'user3@example.com');
+    expect(transferRes.statusCode).toBe(400);
+    expect(transferRes.body).toStrictEqual(ERROR);
   });
   test('userEmail is the current logged in control user', () => {
-    // call adminMissionTransfer with Mission 2 for User 1 to User 1
-    // expect the response body to equal {error: expect.any(String)}
-    // expect the response status code to have a status of 403.
+    const transferRes = adminMissionTransferRequest(u1Session, m2_u1, 'user1@example.com');
+    expect(transferRes.statusCode).toBe(400);
+    expect(transferRes.body).toStrictEqual(ERROR);
   });
   test('missionId refers to a space mission that has a name that is already used by the target user', () => {
-    // create Mission 4 using Sample Mission 2 for User 2
-    // call adminMissionTransfer with Mission 2 to User 2.
-    // expect the response body to equal {error: expect.any(String)}
-    // expect the response status code to have a status of 403.
+    const c24 = adminMissionCreateRequest(u2Session, 'MissionTwo', 'Test Description', 'Moon');
+    expect(c24.statusCode).toBe(200);
+    const transferRes = adminMissionTransferRequest(u1Session, m2_u1, 'user2@example.com');
+    expect(transferRes.statusCode).toBe(400);
+    expect(transferRes.body).toStrictEqual(ERROR);
+  });
+
+  // tests for error 401
+  const invalidSessionId = [
+    '',
+    generateSessionId()
+  ];
+  test.each(invalidSessionId)('ControlUserSessionId is empty', (sessionId) => {
+    const transferRes = adminMissionTransferRequest(sessionId, m2_u1, 'user2@example.com');
+    expect(transferRes.statusCode).toBe(401);
+    expect(transferRes.body).toStrictEqual(ERROR);
+  });
+
+  // tests for error 403
+  test('space mission does not exist', () => {
+    const transferRes = adminMissionTransferRequest(u2Session, missionIdGen(), 'user1@example.com');
+    expect(transferRes.statusCode).toBe(403);
+    expect(transferRes.body).toStrictEqual(ERROR);
+  });
+  test('Mission does not belong to this User', () => {
+    const newUserSessionId = adminAuthUserRegisterRequest('user3@example.com', 'abc12345', 'Zhennan', 'Chen').body.controlUserSessionId;
+    const newMissionId = adminMissionCreateRequest(newUserSessionId, 'MissionFour', 'New Test Description', 'New Test Target').body.missionId;
+    const transferRes = adminMissionTransferRequest(u2Session, newMissionId, 'user1@example.com');
+    expect(transferRes.statusCode).toBe(403);
+    expect(transferRes.body).toStrictEqual(ERROR);
   });
 });

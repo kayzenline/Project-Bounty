@@ -4,7 +4,7 @@ import { getData } from '../../src/dataStore';
 import { generateSessionId } from '../../src/helper';
 
 function uniqueEmail(prefix = 'user') {
-  return `${prefix}.${uuid()}@example.com`;
+  return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
 }
 
 describe.skip('DELETE /v1/admin/astronaut/{astronautid}', () => {

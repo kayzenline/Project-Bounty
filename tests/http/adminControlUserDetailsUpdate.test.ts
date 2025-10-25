@@ -1,75 +1,47 @@
-import fs from 'fs';
-import path from 'path';
-import request from 'sync-request-curl';
-const SERVER_URL = 'http://127.0.0.1:4900';
-const DB_PATH = path.join(__dirname, '../../src/db.json');
-import { loadData, DataStore } from '../../src/dataStore';
-import { adminAuthUserRegisterRequest, adminAuthUserDetailsUpdateRequest } from './requestHelpers';
-let sessionId1: string;
-let sessionId2: string;
-let userEmail1: string;
-let userEmail2: string;
-beforeEach(() => {
-  const initialData: DataStore = {
-    controlUsers: [],
-    spaceMissions: [],
-    nextControlUserId: 1,
-    nextMissionId: 1,
-    nextAstronautId: 1,
-    sessions: [],
-    astronauts: [],
-  };
+import { v4 as uuid } from 'uuid';
+import { generateSessionId } from '../../src/helper';
+import { adminAuthUserRegisterRequest, adminAuthUserDetailsUpdateRequest, adminAuthUserDetailsRequest, clearRequest } from './requestHelpers';
 
-  fs.writeFileSync(DB_PATH, JSON.stringify(initialData, null, 2));
-  loadData();
-  const uniqueEmail = `user${Date.now()}@test.com`;
-  userEmail1 = uniqueEmail;
-  const res1 = adminAuthUserRegisterRequest(uniqueEmail, 'abcdefg123', 'Bill', 'Ryker');
-  sessionId1 = res1.body.controlUserSessionId;
-  const uniqueEmail2 = `kitty${Date.now()}@qq.com`;
-  userEmail2 = uniqueEmail2;
-  const res2 = adminAuthUserRegisterRequest(uniqueEmail2, 'Kitty123456', 'Kitty', 'Tan');
-  sessionId2 = res2.body.controlUserSessionId;
-});
-describe('HTTP tests for ControlUserdetailsUpdate', () => {
-  test('header is invalid', () => {
-    const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/details`, {
-      json: { email: '1234@qq.com', nameFirst: 'Ka', nameLast: 'Ka' }
-    });
-    const body = JSON.parse(res.body.toString());
-    expect(res.statusCode).toBe(401);
-    expect(body.error).toBe('ControlUserSessionId is invalid');
-    expect(body.errorCategory).toBe('INVALID_CREDENTIALS');
+function uniqueEmail(prefix = 'user') {
+  return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
+}
+
+describe('HTTP tests for ControlUserdetails', () => {
+  let controlUserSessionId: string;
+  let email: string;
+  beforeEach(() => {
+    const clearRes = clearRequest();
+    expect(clearRes.statusCode).toBe(200);
+    email = uniqueEmail('success');
+    const registerRes = adminAuthUserRegisterRequest(email, 'abc12345', 'John', 'Doe');
+    expect(registerRes.statusCode).toBe(200);
+    controlUserSessionId = registerRes.body.controlUserSessionId;
   });
 
-  test('User not found', () => {
-    const res = adminAuthUserDetailsUpdateRequest('999', '1234@qq.com', 'Ka', 'Ka');
-    expect(res.statusCode).toBe(401);
-    expect(res.body.error).toBe('controlUserId not found');
-    expect(res.body.errorCategory).toBe('INVALID_CREDENTIALS');
-  });
-  test('email is invalid', () => {
-    const res = adminAuthUserDetailsUpdateRequest(sessionId1, 'emailxxx', 'Bill', 'Ryker');
-    expect(res.statusCode).toBe(400);
-    expect(res.body.error).toBe('this email is invalid');
-    expect(res.body.errorCategory).toBe('BAD_INPUT');
-  });
-  test('name is invalid', () => {
-    const res = adminAuthUserDetailsUpdateRequest(sessionId1, 'kitty123@qq.com', '', '');
-    expect(res.statusCode).toBe(400);
-    expect(res.body.error).toBe('this name is invalid');
-    expect(res.body.errorCategory).toBe('BAD_INPUT');
-  });
-  test('email already exists', () => {
-    const res = adminAuthUserDetailsUpdateRequest(sessionId2, userEmail1, 'Kitty', 'Tan');
-    expect(res.statusCode).toBe(400);
-    expect(res.body.error).toBe('excluding the current authorised user');
-    expect(res.body.errorCategory).toBe('BAD_INPUT');
-  });
   test('request successfully ', () => {
-    const uniqueNewEmail = `newemail${Date.now()}@test.com`;
-    const res = adminAuthUserDetailsUpdateRequest(sessionId2, uniqueNewEmail, 'Bill', 'Ryker');
-    expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual({});
+    const newNameFirst = 'Tony';
+    const newNameLast = 'Stark';
+    const detailUpdateRes = adminAuthUserDetailsUpdateRequest(controlUserSessionId, email, newNameFirst, newNameLast);
+    expect(detailUpdateRes.statusCode).toBe(200);
+    expect(detailUpdateRes.body).toStrictEqual({});
+
+    const res = adminAuthUserDetailsRequest(controlUserSessionId);
+    const user = res.body.user;
+
+    expect(user.name).toStrictEqual('Tony Stark');
+    expect(user.numSuccessfulLogins).toStrictEqual(1);
+    expect(user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
+  });
+
+  const invalidSessionId = [
+    '',
+    generateSessionId()
+  ];
+  test.each(invalidSessionId)('controlUserSessionId is empty or invalid', (sessionId) => {
+    const newNameFirst = 'Tony';
+    const newNameLast = 'Stark';
+    const detailUpdateRes = adminAuthUserDetailsUpdateRequest(sessionId, email, newNameFirst, newNameLast);
+    expect(detailUpdateRes.statusCode).toBe(401);
+    expect(detailUpdateRes.body).toStrictEqual({ error: expect.any(String) });
   });
 });

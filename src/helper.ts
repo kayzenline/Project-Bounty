@@ -2,6 +2,7 @@ import { getData } from './dataStore';
 import { errorCategories as EC } from './testSamples';
 import { v4 as uuidGen } from 'uuid';
 import bcrypt from 'bcrypt';
+import isEmail from 'validator/lib/isEmail';
 
 // hash function
 export function hashPasswordSync(plainPassword: string): string {
@@ -51,8 +52,8 @@ function isValidName(name: string) {
 
 function isValidEmail(email: string) {
   // Basic email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return typeof email === 'string' && emailRegex.test(email);
+  const isValid = isEmail(email);
+  return isValid;
 }
 
 // Helper function to find user by email

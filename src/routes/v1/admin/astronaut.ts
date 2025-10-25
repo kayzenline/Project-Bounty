@@ -40,7 +40,7 @@ router.get('/:astronautid', (req: Request, res: Response) => {
 
 router.get('/pool', (req: Request, res: Response) => {
   const controlUserSessionId = req.header('controlUserSessionId');
-
+  
   const result = adminAstronautPool(controlUserSessionId);
 
   if ('error' in result) {
@@ -53,7 +53,7 @@ router.get('/pool', (req: Request, res: Response) => {
 
 router.put('/:astronautid', (req, res) => {
   const controlUserSessionId = req.header('controlUserSessionId');
-  const astronautId = Number(req.params.astronautid);
+  const astronautId = parseInt(req.params.astronautid);
   const { nameFirst, nameLast, rank, age, weight, height } = req.body || {};
 
   const result = adminAstronautEdit(
@@ -75,7 +75,7 @@ router.put('/:astronautid', (req, res) => {
 
 router.delete('/:astronautid', (req, res) => {
   const controlUserSessionId = req.header('controlUserSessionId');
-  const astronautId = Number(req.params.astronautid);
+  const astronautId = parseInt(req.params.astronautid);
 
   const result = adminAstronautDelete(controlUserSessionId, astronautId);
   if ('error' in result) {

@@ -4,7 +4,7 @@ import { findSessionFromSessionId, generateSessionId } from '../../src/helper';
 import { adminMissionDescriptionUpdateRequest, clearRequest, adminMissionCreateRequest, adminAuthUserRegisterRequest } from './requestHelpers';
 
 function uniqueEmail(prefix = 'user') {
-  return `${prefix}.${uuid()}@example.com`;
+  return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
 }
 
 let missionId: number;

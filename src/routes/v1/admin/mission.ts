@@ -1,15 +1,15 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { getData } from '../../../dataStore';
 import { adminMissionAstronautAssign, adminMissionAstronautUnassign } from '../../../astronaut';
-import { adminMissionNameUpdate, adminMissionTargetUpdate, adminMissionDescriptionUpdate, adminMissionRemove, adminMissionCreate, adminMissionList, adminMissionTransfer, adminMissionInfo } from '../../../mission';
+import { adminMissionNameUpdate, adminMissionTargetUpdate, adminMissionDescriptionUpdate, adminMissionRemove, adminMissionCreate, adminMissionList, adminMissionInfo } from '../../../mission';
 import { httpToErrorCategories } from '../../../testSamples';
+import { adminMissionTransfer } from '../../../missionTransferExample';
 import { findSessionFromSessionId } from '../../../helper';
 
 const router = Router();
 
 router.get('/list', (req: Request, res: Response, next: NextFunction) => {
   const controlUserSessionId = req.header('controlUserSessionId');
-
   try {
     if (!controlUserSessionId) {
       return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
@@ -180,41 +180,24 @@ router.put('/:missionId/target', (req: Request, res: Response) => {
   return res.status(200).json({});
 });
 
-router.post('/:missionid/transfer', (req: Request, res: Response, next: NextFunction) => {
+router.post('/:missionId/transfer', (req: Request, res: Response) => {
   const controlUserSessionId = req.header('controlUserSessionId');
-  const missionId = Number(req.params.missionid);
-  const { userEmail } = req.body;
+  const missionId = Number(req.params.missionId);
+  const userEmail = req.body || {};
 
-  try {
-    if (!controlUserSessionId) {
-      return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
-    }
-
-    const data = getData();
-    const sessions = (data.sessions || []) as { controlUserSessionId: string; controlUserId: number }[];
-    const session = sessions.find(s => s.controlUserSessionId === controlUserSessionId);
-    if (!session) {
-      return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
-    }
-
-    type TransferError = {
-      error: string;
-      errorCategory: keyof typeof httpToErrorCategories;
-    };
-    type TransferSuccess = Record<string, never>;
-    type TransferResult = TransferError | TransferSuccess;
-
-    const result: TransferResult = adminMissionTransfer(session.controlUserId, missionId, userEmail);
-
-    if ('error' in result) {
-      const status = httpToErrorCategories[result.errorCategory] ?? 400;
-      return res.status(status).json({ error: result.error });
-    }
-
-    return res.status(200).json(result);
-  } catch (err) {
-    return next(err);
+  if (!(controlUserSessionId && findSessionFromSessionId(controlUserSessionId))) {
+    return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
   }
+
+  const session = findSessionFromSessionId(controlUserSessionId);
+  const result = adminMissionTransfer(session.controlUserId, missionId, userEmail.email);
+
+  if ('error' in result) {
+    const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
+    return res.status(status).json({ error: result.error });
+  }
+
+  return res.status(200).json(result);
 });
 
 router.post('/:missionid/assign/:astronautid', (req: Request, res: Response) => {
@@ -239,24 +222,18 @@ router.delete('/:missionid/assign/:astronautid', (req: Request, res: Response, n
   const missionId = Number(req.params.missionid);
   const astronautId = Number(req.params.astronautid);
 
-  try {
-    if (!controlUserSessionId) {
+  if (!controlUserSessionId) {
       return res.status(401).json({ error: 'ControlUserSessionId is empty or invalid' });
     }
 
     const result = adminMissionAstronautUnassign(controlUserSessionId, astronautId, missionId);
 
     if ('error' in result) {
-      const status = httpToErrorCategories[
-        result.errorCategory as keyof typeof httpToErrorCategories
-      ] ?? 400;
+      const status = httpToErrorCategories[result.errorCategory as keyof typeof httpToErrorCategories];
       return res.status(status).json({ error: result.error });
     }
 
     return res.status(200).json(result);
-  } catch (err) {
-    return next(err);
-  }
 });
 
 export default router;

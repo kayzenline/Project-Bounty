@@ -3,11 +3,11 @@ import { generateSessionId } from '../../src/helper';
 import { adminAuthUserRegisterRequest, adminAuthUserLogoutRequest, clearRequest, adminMissionCreateRequest } from './requestHelpers';
 
 function uniqueEmail(prefix = 'user') {
-  return `${prefix}.${uuid()}@example.com`;
+  return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
 }
 
 describe('POST /v1/admin/auth/logout', () => {
-  let controlSessionUserId: string;
+  let controlUserSessionId: string;
   beforeEach(() => {
     const res = clearRequest();
     expect(res.statusCode).toBe(200);
@@ -15,15 +15,15 @@ describe('POST /v1/admin/auth/logout', () => {
     const email = uniqueEmail('success');
     const reg = adminAuthUserRegisterRequest(email, 'ValidPass123', 'John', 'Doe');
     expect(reg.statusCode).toBe(200);
-    controlSessionUserId = reg.body.controlUserSessionId;
+    controlUserSessionId = reg.body.controlUserSessionId;
   });
 
   test('success: valid session logs out and becomes invalid', () => {
-    const out = adminAuthUserLogoutRequest(controlSessionUserId);
+    const out = adminAuthUserLogoutRequest(controlUserSessionId);
     expect(out.statusCode).toBe(200);
     expect(out.body).toStrictEqual({});
 
-    const after = adminMissionCreateRequest(controlSessionUserId, 'Post-logout Mission', 'Desc', 'Mars');
+    const after = adminMissionCreateRequest(controlUserSessionId, 'Post-logout Mission', 'Desc', 'Mars');
     expect(after.statusCode).toBe(401);
     expect(after.body).toEqual({ error: expect.any(String) });
   });

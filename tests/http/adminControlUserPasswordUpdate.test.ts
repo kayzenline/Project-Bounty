@@ -1,87 +1,73 @@
-import fs from 'fs';
-import path from 'path';
-import request from 'sync-request-curl';
-const SERVER_URL = 'http://127.0.0.1:4900';
-const DB_PATH = path.join(__dirname, '../../src/db.json');
-import { loadData, DataStore } from '../../src/dataStore';
-import { adminAuthUserRegisterRequest, adminAuthUserLoginRequest, adminAuthUserPasswordUpdateRequest } from './requestHelpers';
-let sessionId1: string;
-let userEmail: string;
-beforeEach(() => {
-  const initialData :DataStore = {
-    controlUsers: [],
-    spaceMissions: [],
-    nextControlUserId: 1,
-    nextMissionId: 1,
-    nextAstronautId: 1,
-    sessions: [],
-    astronauts: [],
-  };
+import { v4 as uuid } from 'uuid';
+import { generateSessionId } from '../../src/helper';
+import { adminAuthUserRegisterRequest, adminAuthUserLoginRequest, adminAuthUserPasswordUpdateRequest, clearRequest } from './requestHelpers';
 
-  fs.writeFileSync(DB_PATH, JSON.stringify(initialData, null, 2));
-  loadData();
-  const uniqueEmail = `user${Date.now()}@test.com`;
-  userEmail = uniqueEmail;
-  const res1 = adminAuthUserRegisterRequest(uniqueEmail, 'StrongPass123', 'Bill', 'Ryker');
-  sessionId1 = res1.body.controlUserSessionId;
-});
+function uniqueEmail(prefix = 'user') {
+  return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
+}
+
 describe('HTTP tests for ControlUserPasswordUpdate', () => {
-  test('header is invalid', () => {
-    const res = request('PUT', `${SERVER_URL}/v1/admin/controluser/password`, {
-      json: { oldPassword: '123456abcdefg!!', newPassword: '11223344acbdgh**' }
-    });
-    const body = JSON.parse(res.body.toString());
-    expect(res.statusCode).toBe(401);
-    expect(body.error).toBe('ControlUserSessionId is invalid');
-    expect(body.errorCategory).toBe('INVALID_CREDENTIALS');
+  let controlUserSessionId: string;
+  let email: string;
+
+  beforeEach(() => {
+    const clearRes = clearRequest();
+    expect(clearRes.statusCode).toBe(200);
+    email = uniqueEmail('user');
+    const registerRes = adminAuthUserRegisterRequest(email, 'OldStrongPass123', 'Bill', 'Ryker');
+    controlUserSessionId = registerRes.body.controlUserSessionId;
+    const passwordUpdateRes = adminAuthUserPasswordUpdateRequest(controlUserSessionId, 'OldStrongPass123', 'StrongPass123');
+    expect(passwordUpdateRes.statusCode).toBe(200);
   });
 
-  test('User not found', () => {
-    const res = adminAuthUserPasswordUpdateRequest('999', '123456abcdefg!!', '11223344acbdgh**');
-    expect(res.statusCode).toBe(401);
-    expect(res.body.error).toBe('invalid user');
-    expect(res.body.errorCategory).toBe('INVALID_CREDENTIALS');
+  test('user password updated successfully', () => {
+    const passwordUpdateRes = adminAuthUserPasswordUpdateRequest(controlUserSessionId, 'StrongPass123', 'NewPassword123');
+    expect(passwordUpdateRes.statusCode).toBe(200);
+    expect(passwordUpdateRes.body).toStrictEqual({});
+    const loginRes = adminAuthUserLoginRequest(email, 'NewPassword123');
+    expect(loginRes.statusCode).toBe(200);
+    expect(loginRes.body).toStrictEqual({ controlUserSessionId: expect.any(String) });
   });
 
-  test('wrong old password', () => {
-    const res = adminAuthUserPasswordUpdateRequest(sessionId1, 'abcdefg111', '1234%$#@ac');
-    expect(res.statusCode).toBe(400);
-    expect(res.body.error).toBe('wrong old password');
-    expect(res.body.errorCategory).toBe('BAD_INPUT');
+  const invalidPassword = [
+    {
+      oldPassword: 'StrongPass321',
+      newPassword: 'NewPassword123'
+    },
+    {
+      oldPassword: 'StrongPass123',
+      newPassword: 'StrongPass123'
+    },
+    {
+      oldPassword: 'StrongPass123',
+      newPassword: 'OldStrongPass123'
+    },
+    {
+      oldPassword: 'StrongPass123',
+      newPassword: 'NewP123'
+    },
+    {
+      oldPassword: 'StrongPass123',
+      newPassword: 'NewPassword'
+    },
+    {
+      oldPassword: 'StrongPass123',
+      newPassword: '123456789'
+    }
+  ];
+  test.each(invalidPassword)('invalid password', ({ oldPassword, newPassword }) => {
+    const passwordUpdateRes = adminAuthUserPasswordUpdateRequest(controlUserSessionId, oldPassword, newPassword);
+    expect(passwordUpdateRes.statusCode).toBe(400);
+    expect(passwordUpdateRes.body).toStrictEqual({ error: expect.any(String) });
   });
 
-  test('same as old', () => {
-    const res = adminAuthUserPasswordUpdateRequest(sessionId1, 'StrongPass123', 'StrongPass123');
-    expect(res.statusCode).toBe(400);
-    expect(res.body.error).toBe('same as old');
-    expect(res.body.errorCategory).toBe('BAD_INPUT');
-  });
-
-  test('weak password', () => {
-    const res = adminAuthUserPasswordUpdateRequest(sessionId1, 'StrongPass123', '000');
-    expect(res.statusCode).toBe(400);
-    expect(res.body.error).toBe('weak password');
-    expect(res.body.errorCategory).toBe('BAD_INPUT');
-  });
-
-  test('password reused', () => {
-    const res1 = adminAuthUserPasswordUpdateRequest(sessionId1, 'StrongPass123', 'Abcd1234567!!');
-    expect(res1.statusCode).toBe(200);
-    const loginRes = adminAuthUserLoginRequest(userEmail, 'Abcd1234567!!');
-    const newSessionId = loginRes.body.controlUserSessionId;
-    const res2 = adminAuthUserPasswordUpdateRequest(newSessionId, 'Abcd1234567!!', 'StrongPass123');
-    expect(res2.statusCode).toBe(400);
-    expect(res2.body.error).toBe('password reused');
-    expect(res2.body.errorCategory).toBe('BAD_INPUT');
-  });
-
-  test('request successfully', () => {
-    const res1 = adminAuthUserPasswordUpdateRequest(sessionId1, 'StrongPass123', 'Abcd1234567!!');
-    expect(res1.statusCode).toBe(200);
-    const loginRes = adminAuthUserLoginRequest(userEmail, 'Abcd1234567!!');
-    const newSessionId = loginRes.body.controlUserSessionId;
-    const res2 = adminAuthUserPasswordUpdateRequest(newSessionId, 'Abcd1234567!!', '1234abcd!!@@kkk');
-    expect(res2.statusCode).toBe(200);
-    expect(res2.body).toEqual({});
+  const invalidSessionId = [
+    '',
+    generateSessionId()
+  ];
+  test.each(invalidSessionId)('controlUserSessionId is invalid', (sessionId) => {
+    const passwordUpdateRes = adminAuthUserPasswordUpdateRequest(sessionId, 'StrongPass123', 'NewPassword123');
+    expect(passwordUpdateRes.statusCode).toBe(401);
+    expect(passwordUpdateRes.body).toStrictEqual({ error: expect.any(String) });
   });
 });

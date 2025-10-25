@@ -2,7 +2,7 @@ import { v4 as uuid } from 'uuid';
 import { adminAuthUserRegisterRequest, adminAstronautCreateRequest, clearRequest } from './requestHelpers';
 
 function uniqueEmail(prefix = 'user') {
-  return `${prefix}.${uuid()}@example.com`;
+  return `${prefix}.${uuid().split('-').pop() || ''}@example.com`;
 }
 
 describe('POST /v1/admin/astronaut', () => {
