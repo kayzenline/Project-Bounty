@@ -262,7 +262,6 @@ export function adminMissionAstronautAssign(
     if (astronaut.assignedMission !== undefined) {
       buildError('astronaut is currently assigned to a mission', EC.BAD_INPUT);
     }
-    mission.assignedAstronauts = mission.assignedAstronauts;
     if (mission.assignedAstronauts.some(a => a.astronautId === astronautId)) {
       buildError('astronaut already assigned to this mission', EC.BAD_INPUT);
     }
