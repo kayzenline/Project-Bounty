@@ -82,7 +82,6 @@ describe('HTTP tests for MissionDescriptionUpdate', () => {
     const newRes = adminMissionCreateRequest(newSessionId, newMission.name, newMission.description, newMission.target);
     expect(newRes.statusCode).toBe(200);
     const newMissionId = newRes.body.missionId;
-    console.log('the new session id:', newSessionId);
 
     const newDescription = 'Land humans on the Moon and bring them safely back to Earth';
     const res = adminMissionDescriptionUpdateRequest(newSessionId, missionId, newDescription);

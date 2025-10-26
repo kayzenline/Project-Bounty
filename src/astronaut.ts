@@ -66,8 +66,6 @@ export function adminAstronautCreate(
   height: number
 ) {
   try {
-    console.log(controlUserSessionId);
-
     if (!controlUserSessionId || typeof controlUserSessionId !== 'string') {
       buildError('ControlUserSessionId is empty or invalid', EC.INVALID_CREDENTIALS);
     }
