@@ -12,6 +12,7 @@ export function clear() {
   data.sessions = [];
   data.nextControlUserId = 1;
   data.nextMissionId = 1;
+  data.nextAstronautId = 1;
   data.astronauts = [];
   setData(data);
   return {};

@@ -34,7 +34,7 @@ export function adminAstronautPool(controlUserSessionId: string) {
     const result: AstronautDetail[] = [];
 
     for (const astronaut of data.astronauts) {
-      if (astronaut.assignedMission) {
+      if (astronaut.assignedMission.missionId !== null) {
         result.push({
           astronautId: astronaut.astronautId,
           designation: astronaut.designation,
@@ -49,7 +49,7 @@ export function adminAstronautPool(controlUserSessionId: string) {
       }
     }
 
-    return { result: result };
+    return { result };
   } catch (e) {
     const ne = normalizeError(e);
     return { error: ne.error, errorCategory: ne.errorCategory };
@@ -66,8 +66,6 @@ export function adminAstronautCreate(
   height: number
 ) {
   try {
-    console.log(controlUserSessionId);
-
     if (!controlUserSessionId || typeof controlUserSessionId !== 'string') {
       buildError('ControlUserSessionId is empty or invalid', EC.INVALID_CREDENTIALS);
     }
@@ -104,7 +102,10 @@ export function adminAstronautCreate(
       age,
       weight,
       height,
-      assignedMission: undefined
+      assignedMission: {
+        missionId: null,
+        objective: ''
+      }
     };
 
     data.astronauts.push(newAstronaut);
@@ -161,7 +162,7 @@ export function adminAstronautInfo(controlUserSessionId: string, astronautId: nu
       assignedMission: astronaut.assignedMission
     };
 
-    return { response: response };
+    return { response };
   } catch (e) {
     const ne = normalizeError(e);
     return { error: ne.error, errorCategory: ne.errorCategory };
@@ -178,7 +179,7 @@ export function adminAstronautDelete(controlUserSessionId: string, astronautId: 
 
     const data = getData();
     const astronaut = data.astronauts.find(a => a.astronautId === astronautId);
-    if (astronaut.assignedMission !== undefined) {
+    if (astronaut.assignedMission.missionId !== null) {
       buildError('astronaut is currently assigned to a mission', EC.BAD_INPUT);
     }
 
@@ -259,7 +260,7 @@ export function adminMissionAstronautAssign(
     if (!astronaut) {
       buildError('astronaut not found', EC.BAD_INPUT);
     }
-    if (astronaut.assignedMission !== undefined) {
+    if (astronaut.assignedMission.missionId !== null) {
       buildError('astronaut is currently assigned to a mission', EC.BAD_INPUT);
     }
     if (mission.assignedAstronauts.some(a => a.astronautId === astronautId)) {

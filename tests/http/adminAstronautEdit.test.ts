@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { adminAuthUserRegisterRequest, adminAuthUserLoginRequest, adminAstronautEditRequest, clearRequest, adminAstronautCreateRequest } from './requestHelpers';
+import { adminAuthUserRegisterRequest, adminAstronautEditRequest, clearRequest, adminAstronautCreateRequest } from './requestHelpers';
 import { getData } from '../../src/dataStore';
 import { generateSessionId } from '../../src/helper';
 

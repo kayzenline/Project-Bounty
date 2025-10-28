@@ -113,7 +113,7 @@ function adminAuthLogin(email: string, password: string) {
   };
   data.sessions.push(newSession);
   setData(data);
-  return { controlUserSessionId };
+  return { controlUserSessionId: controlUserSessionId };
 }
 
 // Logout a mission control user session

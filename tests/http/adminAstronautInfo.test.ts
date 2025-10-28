@@ -132,30 +132,35 @@ describe('GET /v1/admin/astronaut/{astronautid}', () => {
 
       // Get info for second astronaut
       const response2 = adminAstronautInfoRequest(controlUserSessionId, astronautId2);
+      console.log('response', response2);
       InfoResCheck(response2);
     });
   });
 });
 
-function InfoResCheck(response: { statusCode: number, body: any}) {
+function InfoResCheck(response: { statusCode: number, body: any }) {
   expect(response.statusCode).toBe(200);
-  expect(response.body.response).toMatchObject({
-    astronautId: expect.any(Number),
-    designation: expect.any(String),
-    timeAdded: expect.any(Number),
-    timeLastEdited: expect.any(Number),
-    age: expect.any(Number),
-    weight: expect.any(Number),
-    height: expect.any(Number)
-  });
-
-  if (response.body.response.assignedMission) {
-    const mission: AssignedMission = response.body.response.assignedMission;
-    expect(mission).toStrictEqual({
-      missionId: expect.any(Number),
-      objective: expect.any(String)
+  if (response.body.assignedMission.missionId !== null) {
+    expect(response.body).toMatchObject({
+      astronautId: expect.any(Number),
+      designation: expect.any(String),
+      timeAdded: expect.any(Number),
+      timeLastEdited: expect.any(Number),
+      age: expect.any(Number),
+      weight: expect.any(Number),
+      height: expect.any(Number),
+      assignedMission: {
+        missionId: expect.any(Number),
+        objective: expect.any(String)
+      }
     });
   } else {
-    expect(response.body.response.assignedMission).toBeUndefined();
+    expect(response.body.astronautId).toStrictEqual(expect.any(Number));
+    expect(response.body.designation).toStrictEqual(expect.any(String));
+    expect(response.body.timeAdded).toStrictEqual(expect.any(Number));
+    expect(response.body.timeLastEdited).toStrictEqual(expect.any(Number));
+    expect(response.body.age).toStrictEqual(expect.any(Number));
+    expect(response.body.weight).toStrictEqual(expect.any(Number));
+    expect(response.body.height).toStrictEqual(expect.any(Number));
   }
 }

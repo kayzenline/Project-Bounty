@@ -27,7 +27,6 @@ describe('HTTP tests for ControlUserdetails', () => {
     expect(user.name).toStrictEqual('John Doe');
     expect(user.numSuccessfulLogins).toStrictEqual(1);
 
-    console.log(user.numFailedPasswordsSinceLastLogin);
     expect(user.numFailedPasswordsSinceLastLogin).toStrictEqual(0);
   });
 

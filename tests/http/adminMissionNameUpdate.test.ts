@@ -86,8 +86,6 @@ describe('HTTP tests for MissionNameUpdate', () => {
       target: 'Venus orbit'
     };
 
-    console.log(newSessionId);
-    console.log(controlUserSessionId);
     const newRes = adminMissionCreateRequest(newSessionId, newMission.name, newMission.description, newMission.target);
     expect(newRes.statusCode).toBe(200);
     const newMissionId = newRes.body.missionId;

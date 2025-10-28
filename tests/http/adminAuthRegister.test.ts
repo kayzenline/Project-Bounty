@@ -33,45 +33,28 @@ describe('POST /v1/admin/auth/register', () => {
     expect(res.body).toEqual({ error: expect.any(String) });
   });
 
-  test('error: nameFirst invalid characters', () => {
-    const res = adminAuthUserRegisterRequest(uniqueEmail('nfchars'), 'abc12345', 'John!', 'Doe');
+
+  const invalidNameValue = [
+    { nameFirst: 'John!', nameLast: 'Doe'},
+    { nameFirst: 'John', nameLast: 'Doe!'},
+    { nameFirst: 'John', nameLast: 'D'},
+    { nameFirst: 'J', nameLast: 'Doe'},
+    { nameFirst: 'John'.repeat(20), nameLast: 'Doe'},
+    { nameFirst: 'John!', nameLast: 'Doe'.repeat(20)}
+  ];
+  test.each(invalidNameValue)('invalid name', ({ nameFirst, nameLast }) => {
+    const res = adminAuthUserRegisterRequest(uniqueEmail('nfchars'), 'abc12345', nameFirst, nameLast);
     expect(res.statusCode).toBe(400);
     expect(res.body).toEqual({ error: expect.any(String) });
   });
 
-  test('error: nameFirst too short', () => {
-    const res = adminAuthUserRegisterRequest(uniqueEmail('nfshort'), 'abc12345', 'A', 'Doe');
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toEqual({ error: expect.any(String) });
-  });
-
-  test('error: nameLast invalid characters', () => {
-    const res = adminAuthUserRegisterRequest(uniqueEmail('nlchars'), 'abc12345', 'John', 'Doe!');
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toEqual({ error: expect.any(String) });
-  });
-
-  test('error: nameLast too long', () => {
-    const longName = 'A'.repeat(21);
-    const res = adminAuthUserRegisterRequest(uniqueEmail('nllong'), 'abc12345', 'John', longName);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toEqual({ error: expect.any(String) });
-  });
-
-  test('error: password too short', () => {
-    const res = adminAuthUserRegisterRequest(uniqueEmail('pshort'), 'a1b2c3', 'John', 'Doe');
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toEqual({ error: expect.any(String) });
-  });
-
-  test('error: password lacks number', () => {
-    const res = adminAuthUserRegisterRequest(uniqueEmail('pnonum'), 'abcdefgh', 'John', 'Doe');
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toEqual({ error: expect.any(String) });
-  });
-
-  test('error: password lacks letter', () => {
-    const res = adminAuthUserRegisterRequest(uniqueEmail('pnolet'), '12345678', 'John', 'Doe');
+  const invalidPasswordValue = [
+    'abcdefgh',
+    '12345678',
+    'abc123'
+  ];
+  test.each(invalidPasswordValue)('invalid password', (password) => {
+    const res = adminAuthUserRegisterRequest(uniqueEmail('pnonum'), password, 'John', 'Doe');
     expect(res.statusCode).toBe(400);
     expect(res.body).toEqual({ error: expect.any(String) });
   });
