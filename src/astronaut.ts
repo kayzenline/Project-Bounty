@@ -332,9 +332,9 @@ export function adminMissionAstronautUnassign(
     mission.assignedAstronauts = mission.assignedAstronauts.filter(a => a.astronautId !== astronautId);
     // Remove mission linkage from astronaut record if it matches this mission
     astronaut.assignedMission = {
-        missionId: null,
-        objective: ''
-      };
+      missionId: null,
+      objective: ''
+    };
 
     mission.timeLastEdited = Math.floor(Date.now() / 1000);
     astronaut.timeLastEdited = Math.floor(Date.now() / 1000);
