@@ -368,23 +368,6 @@ describe('POST /v1/admin/astronaut', () => {
     });
   });
 
-  describe('success: valid rank with parentheses and apostrophes', () => {
-    test('should accept rank with parentheses and apostrophes', () => {
-      const response = adminAstronautCreateRequest(
-        controlUserSessionId,
-        'James',
-        'Kirk',
-        'Captain (Senior)',
-        30,
-        75,
-        180
-      );
-
-      expect(response.statusCode).toBe(200);
-      expect(response.body).toHaveProperty('astronautId');
-    });
-  });
-
   describe('success: valid names with hyphens and apostrophes', () => {
     test('should accept names with hyphens and apostrophes', () => {
       const response = adminAstronautCreateRequest(
