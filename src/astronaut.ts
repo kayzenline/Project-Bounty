@@ -224,6 +224,7 @@ export function adminAstronautEdit(
 
     const data = getData();
     const astronaut = data.astronauts.find(a => a.astronautId === astronautId);
+    astronaut.designation = `${rank} ${nameFirst} ${nameLast}`;
     astronaut.nameFirst = nameFirst;
     astronaut.nameLast = nameLast;
     astronaut.rank = rank;
@@ -331,10 +332,10 @@ export function adminMissionAstronautUnassign(
 
     mission.assignedAstronauts = mission.assignedAstronauts.filter(a => a.astronautId !== astronautId);
     // Remove mission linkage from astronaut record if it matches this mission
-    const missionLink = (astronaut as { assignedMission: { missionId: number } }).assignedMission;
-    if (missionLink.missionId === missionId) {
-      delete (astronaut as { assignedMission: { missionId: number } }).assignedMission;
-    }
+    astronaut.assignedMission = {
+      missionId: null,
+      objective: ''
+    };
 
     mission.timeLastEdited = Math.floor(Date.now() / 1000);
     astronaut.timeLastEdited = Math.floor(Date.now() / 1000);

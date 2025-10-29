@@ -244,7 +244,7 @@ function isValidRank(rank: string) {
     return false;
   }
   // rank can only contain letters, spaces, hyphens, parentheses, or apostrophes
-  return /^[a-zA-Z\s\-'()]+$/.test(trimmedRank);
+  return /^[a-zA-Z\s\-']+$/.test(trimmedRank);
 }
 
 function astronautNameCheck(newNameFirst: string, newNamelast: string) {

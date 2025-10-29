@@ -29,7 +29,7 @@ router.get('/pool', (req: Request, res: Response) => {
     return res.status(status).json({ error: result.error });
   }
 
-  return res.status(200).json(result.astronauts);
+  return res.status(200).json(result);
 });
 
 // GET /v1/admin/astronaut/:astronautid - Get astronaut info
@@ -54,7 +54,7 @@ router.get('/:astronautid', (req: Request, res: Response) => {
 router.put('/:astronautid', (req, res) => {
   const controlUserSessionId = req.header('controlUserSessionId');
   const astronautId = parseInt(req.params.astronautid);
-  const { nameFirst, nameLast, rank, age, weight, height } = req.body || {};
+  const { nameFirst, nameLast, rank, age, weight, height } = req.body;
 
   const result = adminAstronautEdit(
     controlUserSessionId,
