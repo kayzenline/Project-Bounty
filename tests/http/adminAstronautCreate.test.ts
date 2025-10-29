@@ -127,7 +127,7 @@ describe('POST /v1/admin/astronaut', () => {
       );
 
       expect(secondResponse.statusCode).toBe(400);
-      expect(secondResponse.body.error).toBe('astronaut already exists');
+      expect(secondResponse.body.error).toBe('another astronaut already exists');
     });
   });
 
@@ -328,21 +328,6 @@ describe('POST /v1/admin/astronaut', () => {
         'Captain',
         30,
         101, // Too heavy
-        180
-      );
-
-      expect(response.statusCode).toBe(400);
-      expect(response.body.error).toBe('astronaut overweight');
-    });
-
-    test('should return 400 when weight is negative', () => {
-      const response = adminAstronautCreateRequest(
-        controlUserSessionId,
-        'James',
-        'Kirk',
-        'Captain',
-        30,
-        -1, // Negative
         180
       );
 

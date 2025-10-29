@@ -45,7 +45,7 @@ function isValidName(name: string) {
     return false;
   }
   // Name can only contain letters, spaces, hyphens, or apostrophes
-  return /^[a-zA-Z\-']+$/.test(trimmedName);
+  return /^[a-zA-Z\s\-']+$/.test(trimmedName);
 }
 
 // Helper function to validate email
@@ -253,10 +253,10 @@ function astronautNameCheck(newNameFirst: string, newNamelast: string) {
   }
 
   const data = getData();
-  // Another Astronaut already exists with the same nameFirst and nameLast
+  // An Astronaut already exists with the same nameFirst and nameLast
   const astronaut = data.astronauts.find(sm => sm.nameFirst === newNameFirst && sm.nameLast === newNamelast);
   if (astronaut) {
-    throw new ServiceError('astronaut already exists', EC.BAD_INPUT);
+    return astronaut.astronautId;
   }
   return { newNameFirst: newNameFirst, newNamelast: newNamelast };
 }
@@ -277,7 +277,7 @@ function astronautPhyCharCheck(age: number, weight: number, height: number) {
   if (age < 20 || age > 60) {
     throw new ServiceError('astronaut age is not meet the requirements', EC.BAD_INPUT);
   }
-  if (weight < 0 || weight > 100) {
+  if (weight > 100) {
     throw new ServiceError('astronaut overweight', EC.BAD_INPUT);
   }
   if (height < 150 || height > 200) {

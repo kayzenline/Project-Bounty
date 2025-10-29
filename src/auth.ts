@@ -73,6 +73,7 @@ function adminAuthRegister(email: string, password: string, nameFirst: string, n
     password: hashedPassword,
     nameFirst: nameFirst.trim(),
     nameLast: nameLast.trim(),
+    flagLastLogin: false,
     numSuccessfulLogins: 0,
     numFailedPasswordsSinceLastLogin: 0,
     passwordHistory: [password]
@@ -87,26 +88,35 @@ function adminAuthRegister(email: string, password: string, nameFirst: string, n
 // Login a mission control user
 function adminAuthLogin(email: string, password: string) {
   // Validate password is provided
-  if (!password || password === '') {
-    return { error: 'Password is required', errorCategory: EC.BAD_INPUT };
-  }
-
   const data = getData();
-
   const user = data.controlUsers.find(u => u.email === email);
+
   if (!user) {
     return { error: 'User not found', errorCategory: EC.BAD_INPUT };
   }
+
+  if (user.flagLastLogin === true) {
+    user.numFailedPasswordsSinceLastLogin = 0;
+  }
+
+  if (!password || password === '') {
+    user.flagLastLogin = false;
+    setData(data);
+    return { error: 'Password is required', errorCategory: EC.BAD_INPUT };
+  }
+
   // Check password
   if (!verifyPasswordSync(password, user.password)) {
+    user.flagLastLogin = false;
     user.numFailedPasswordsSinceLastLogin++;
+    setData(data);
     return { error: 'Incorrect password', errorCategory: EC.BAD_INPUT };
   }
   // Successful login
   user.numSuccessfulLogins++;
-  user.numFailedPasswordsSinceLastLogin = 0;
 
   const controlUserSessionId = generateSessionId();
+  user.flagLastLogin = true;
   const newSession = {
     controlUserSessionId,
     controlUserId: user.controlUserId,

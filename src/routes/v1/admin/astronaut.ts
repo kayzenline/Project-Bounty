@@ -29,7 +29,7 @@ router.get('/pool', (req: Request, res: Response) => {
     return res.status(status).json({ error: result.error });
   }
 
-  return res.status(200).json(result.result);
+  return res.status(200).json(result.astronauts);
 });
 
 // GET /v1/admin/astronaut/:astronautid - Get astronaut info
