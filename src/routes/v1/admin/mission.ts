@@ -218,7 +218,7 @@ router.post('/:missionid/assign/:astronautid', (req: Request, res: Response) => 
   return res.status(200).json({});
 });
 
-router.delete('/:missionid/assign/:astronautid', (req: Request, res: Response, next: NextFunction) => {
+router.delete('/:missionid/assign/:astronautid', (req: Request, res: Response) => {
   const controlUserSessionId = req.header('controlUserSessionId');
   const missionId = Number(req.params.missionid);
   const astronautId = Number(req.params.astronautid);

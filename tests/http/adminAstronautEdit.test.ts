@@ -42,13 +42,65 @@ describe('PUT /v1/admin/astronaut/{astronautid}', () => {
     astronautId = createAstronautRes.body.astronautId;
   });
 
-  test('edit astronaut successfully', () => {
-    const newAstronautNameFirst = 'newNameFirst';
-    const newAstronautNameLast = 'newNameLast';
-    const newRank = 'newRankOfAstronaut';
-    const newAge = 25;
-    const newWeight = 75;
-    const newHeight = 175;
+  const dataCase = [
+    {
+      newAstronautNameFirst: 'newNameFirst',
+      newAstronautNameLast: 'newNameLast',
+      newRank: 'newRankOfAstronaut',
+      newAge: 25,
+      newWeight: 75,
+      newHeight: 175,
+    },
+    {
+      newAstronautNameFirst: 'newNameFirst',
+      newAstronautNameLast: 'NameLast',
+      newRank: 'RankOfAstronaut',
+      newAge: 20,
+      newWeight: 70,
+      newHeight: 170,
+    },
+    {
+      newAstronautNameFirst: 'NameFirst',
+      newAstronautNameLast: 'newNameLast',
+      newRank: 'RankOfAstronaut',
+      newAge: 20,
+      newWeight: 70,
+      newHeight: 170,
+    },
+    {
+      newAstronautNameFirst: 'NameFirst',
+      newAstronautNameLast: 'NameLast',
+      newRank: 'newRankOfAstronaut',
+      newAge: 20,
+      newWeight: 70,
+      newHeight: 170,
+    },
+    {
+      newAstronautNameFirst: 'NameFirst',
+      newAstronautNameLast: 'NameLast',
+      newRank: 'RankOfAstronaut',
+      newAge: 25,
+      newWeight: 70,
+      newHeight: 170,
+    },
+    {
+      newAstronautNameFirst: 'NameFirst',
+      newAstronautNameLast: 'NameLast',
+      newRank: 'RankOfAstronaut',
+      newAge: 20,
+      newWeight: 75,
+      newHeight: 170,
+    },
+    {
+      newAstronautNameFirst: 'NameFirst',
+      newAstronautNameLast: 'NameLast',
+      newRank: 'RankOfAstronaut',
+      newAge: 20,
+      newWeight: 70,
+      newHeight: 175,
+    },
+  ];
+  test.each(dataCase)('edit astronaut successfully', ({ newAstronautNameFirst, newAstronautNameLast, newRank, newAge, newWeight, newHeight }) => {
 
     const editAstronautRes = adminAstronautEditRequest(
       controlUserSessionId,
@@ -66,11 +118,11 @@ describe('PUT /v1/admin/astronaut/{astronautid}', () => {
 
     const astronaut = getData().astronauts.find(a => a.astronautId === astronautId);
     if (astronaut) {
-      expect(astronaut.nameFirst).toBe('newNameFirst');
-      expect(astronaut.nameLast).toBe('newNameLast');
-      expect(astronaut.age).toBe(25);
-      expect(astronaut.weight).toBe(75);
-      expect(astronaut.height).toBe(175);
+      expect(astronaut.nameFirst).toBe(newAstronautNameFirst);
+      expect(astronaut.nameLast).toBe(newAstronautNameLast);
+      expect(astronaut.age).toBe(newAge);
+      expect(astronaut.weight).toBe(newWeight);
+      expect(astronaut.height).toBe(newHeight);
     }
   });
 

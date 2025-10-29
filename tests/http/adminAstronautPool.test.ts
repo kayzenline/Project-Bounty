@@ -75,7 +75,7 @@ describe('GET /v1/admin/astronaut/pool', () => {
     // check the number of listed astronauts
     expect(astronautPoolRes.statusCode).toBe(200);
     const astronauts = getData().astronauts;
-    expect(astronautPoolRes.body).toHaveLength(astronauts.length);
+    expect(astronautPoolRes.body.astronauts).toHaveLength(astronauts.length);
 
   });
 
