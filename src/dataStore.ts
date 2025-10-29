@@ -8,6 +8,7 @@ interface MissionControlUser {
   password: string,
   nameFirst: string,
   nameLast: string,
+  flagLastLogin: boolean,
   numSuccessfulLogins: number,
   numFailedPasswordsSinceLastLogin: number,
   passwordHistory: string[]

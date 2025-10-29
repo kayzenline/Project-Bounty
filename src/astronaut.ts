@@ -31,17 +31,17 @@ export function adminAstronautPool(controlUserSessionId: string) {
       designation: string,
       assigned: boolean
     }
-    const result: AstronautDetail[] = [];
+    const astronauts: AstronautDetail[] = [];
 
     for (const astronaut of data.astronauts) {
       if (astronaut.assignedMission.missionId !== null) {
-        result.push({
+        astronauts.push({
           astronautId: astronaut.astronautId,
           designation: astronaut.designation,
           assigned: true
         });
       } else {
-        result.push({
+        astronauts.push({
           astronautId: astronaut.astronautId,
           designation: astronaut.designation,
           assigned: false
@@ -49,7 +49,7 @@ export function adminAstronautPool(controlUserSessionId: string) {
       }
     }
 
-    return { result };
+    return { astronauts: astronauts };
   } catch (e) {
     const ne = normalizeError(e);
     return { error: ne.error, errorCategory: ne.errorCategory };
@@ -75,7 +75,11 @@ export function adminAstronautCreate(
     }
 
     // Validate input parameters
-    astronautNameCheck(nameFirst, nameLast);
+    const nameCheckResult = astronautNameCheck(nameFirst, nameLast);
+    if (typeof nameCheckResult === 'number') {
+      throw new ServiceError('another astronaut already exists', EC.BAD_INPUT);
+    }
+    
     astronautRankCheck(rank);
     astronautPhyCharCheck(age, weight, height);
 
@@ -209,7 +213,12 @@ export function adminAstronautEdit(
       buildError('controlUserSessionId is invalid', EC.INVALID_CREDENTIALS);
     }
     astronautIdCheck(astronautId);
-    astronautNameCheck(nameFirst, nameLast);
+    const nameCheckResult = astronautNameCheck(nameFirst, nameLast);
+    if (typeof nameCheckResult === 'number') {
+      if (nameCheckResult !== astronautId) {
+        throw new ServiceError('another astronaut already exists', EC.BAD_INPUT);
+      }
+    }
     astronautRankCheck(rank);
     astronautPhyCharCheck(age, weight, height);
 
@@ -271,9 +280,10 @@ export function adminMissionAstronautAssign(
       designation: `${astronaut.rank} ${astronaut.nameFirst} ${astronaut.nameLast}`
     });
     mission.timeLastEdited = Math.floor(Date.now() / 1000);
+    const objective = '[' + mission.target + ']' + ' ' + mission.name;
     astronaut.assignedMission = {
       missionId,
-      objective: 'Training for mission',
+      objective: objective,
     };
     astronaut.timeLastEdited = Math.floor(Date.now() / 1000);
     setData(data);
