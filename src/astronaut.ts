@@ -224,6 +224,7 @@ export function adminAstronautEdit(
 
     const data = getData();
     const astronaut = data.astronauts.find(a => a.astronautId === astronautId);
+    astronaut.designation = `${rank} ${nameFirst} ${nameLast}`;
     astronaut.nameFirst = nameFirst;
     astronaut.nameLast = nameLast;
     astronaut.rank = rank;
