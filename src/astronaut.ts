@@ -79,7 +79,7 @@ export function adminAstronautCreate(
     if (typeof nameCheckResult === 'number') {
       throw new ServiceError('another astronaut already exists', EC.BAD_INPUT);
     }
-    
+
     astronautRankCheck(rank);
     astronautPhyCharCheck(age, weight, height);
 
