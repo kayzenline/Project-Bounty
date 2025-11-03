@@ -295,45 +295,131 @@ function findSessionFromSessionId(controlUserSessionId: string) {
 // Launch Vehicale helper functions
 
 export function launchVehicleNameValidityCheck(name:string) : boolean {
-  return true;
+  if (typeof name !== 'string') {
+    return false;
+  }
+  const trimmedName = name.trim();
+  // Name must be between 2 and 20 characters (inclusive)
+  if (trimmedName.length < 2 || trimmedName.length > 20) {
+    return false;
+  }
+  // Name can only contain letters, spaces, hyphens, or apostrophes
+  return /^[a-zA-Z\s\-']+$/.test(trimmedName);
 }
 
 export function launchVehicleDescriptionValidityCheck(description:string) : boolean {
-  return true;
+  if (typeof description !== 'string') {
+    return false;
+  }
+  const trimmedDescription = description.trim();
+  // Description must be between 2 and 50 characters (inclusive)
+  if (trimmedDescription.length < 2 || trimmedDescription.length > 50) {
+    return false;
+  }
+  // Description can only contain letters, spaces, hyphens, or apostrophes
+  return /^[a-zA-Z\s\-']+$/.test(trimmedDescription);
 }
 
 export function launchVehicleCrewWeightValidityCheck(maxCrewWeight: number) : boolean {
+  if (maxCrewWeight < 100 || maxCrewWeight > 1000) {
+    return false;
+  }
   return true;
 }
 
 export function launchVehiclePayloadWeightValidityCheck(maxPayloadWeight: number) : boolean {
+  if (maxPayloadWeight < 100 || maxPayloadWeight > 1000) {
+    return false;
+  }
   return true;
 }
 
 export function launchVehicleWeightValidityCheck(launchVehicleWeight: number) : boolean {
+  if (launchVehicleWeight < 1000 || launchVehicleWeight > 100000) {
+    return false;
+  }
   return true;
 }
 
 export function launchVehicleThrustCapacityValidityCheck(thrustCapacity: number) : boolean {
+  if (thrustCapacity < 100000 || thrustCapacity > 10000000) {
+    return false;
+  }
   return true;
 }
 
 export function launchVehicleManeuveringFuelValidityCheck(maneuveringFuel: number) : boolean {
+  if (maneuveringFuel < 10 || maneuveringFuel > 100) {
+    return false;
+  }
   return true;
 }
 
 interface LaunchVehicleLaunchSummary {
-  // write some thing
+  launchVehicleId: number,
+  name: string,
+  assigned: boolean
 }
 
 export function launchVehicleLaunchSummary(launchVehicleId: number) : LaunchVehicleLaunchSummary {
-  return true;
+  const launch = getData().launchVehicles.find(l => l.launchVehicleId === launchVehicleId);
+  if (launch) {
+    const summary: LaunchVehicleLaunchSummary = {
+      launchVehicleId: launch.launchVehicleId,
+      name: launch.name,
+      assigned: launch.retired
+    }
+  }
+  return ;
 }
+
 
 export function launchVehicleIdCheck(launchVehicleId: number) : boolean {
   return true;
 }
+// Launch helper functions
+export function launchIdCheck() : boolean {
+  return true;
+}
+interface LaunchCalcParameters {
 
+}
+export function launchCalculationParameterCorrectnessCheck(launchParams: LaunchCalcParameters): boolean {
+  return true;
+}
+
+export function canThisLaunchReachTargetDistanceCheck(): boolean {
+  return true;
+}
+export function checkValidActionForCurrentState() : boolean {
+  return true;
+}
+export function initializeLaunching() {
+
+}
+export function initializeManeuvering() {
+
+}
+export function initializeCoasting() {
+
+}
+export function initializeMissionComplete() {
+
+}
+export function initializeReEntry() {
+
+}
+export function initializeOnEarth() {
+
+}
+// Payload helper functions
+export function payloadDescriptionValidityCheck(description: string): boolean {
+  return true;
+}
+
+export function payloadIdCheck(payloadId: number) : boolean {
+  return true;
+}
 
 export {
   controlUserIdGen,
