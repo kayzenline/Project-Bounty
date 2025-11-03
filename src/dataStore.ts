@@ -57,6 +57,49 @@ export interface Astronaut {
   }
 }
 
+export interface LaunchVehicle {
+  launchVehicleId: any // unknow
+  name: string,
+  description: string,
+  maxCrewWeight: number,
+  maxPayloadWeight: number,
+  launchVehicleWeight:number,
+  ThrustCapacity : number,
+  maneuveringFuel: number,
+  timeAdded: number,
+  timeLastEdited: number,
+  retired: boolean,
+  launches: LaunchSummary[]
+}
+
+interface LaunchSummary {
+  // unknow
+}
+
+export interface Launch {
+  launchId: number,
+  missionCopy: Mission,
+  launchCreationTime: number,
+  state : LaunchState,
+  assignedLaunchVehicleId: number,
+  remainingLaunchVehicleFuel: number,
+  payloadId: number,
+  allocatedAstronauts: number[],
+  launchCalculationParameters: LaunchCalcParameters
+}
+
+interface LaunchState {
+  
+}
+
+interface LaunchCalcParameters {
+  targetDistance: number,
+  fuelBurnRate: number,
+  thrustFuel: number,
+  activeGravityForce: number,
+  maneuveringDelay: number
+}
+
 const DB_PATH = path.join(__dirname, 'db.json');
 
 let data: DataStore = {

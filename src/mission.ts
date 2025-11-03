@@ -116,8 +116,8 @@ function adminMissionInfo(controlUserId: number, missionId: number) {
       target: mission.target,
       assignedAstronauts: mission.assignedAstronauts ?? []
     };
-  } catch (err) {
-    const ne = normalizeError(err);
+  } catch (e) {
+    const ne = normalizeError(e);
     return { error: ne.error, errorCategory: ne.errorCategory };
   }
 }

@@ -291,6 +291,50 @@ function findSessionFromSessionId(controlUserSessionId: string) {
   return getData().sessions.find(s => s.controlUserSessionId === controlUserSessionId);
 }
 
+// ITER 3 Launch Vehicle, Launch and Payload helper functions
+// Launch Vehicale helper functions
+
+export function launchVehicleNameValidityCheck(name:string) : boolean {
+  return true;
+}
+
+export function launchVehicleDescriptionValidityCheck(description:string) : boolean {
+  return true;
+}
+
+export function launchVehicleCrewWeightValidityCheck(maxCrewWeight: number) : boolean {
+  return true;
+}
+
+export function launchVehiclePayloadWeightValidityCheck(maxPayloadWeight: number) : boolean {
+  return true;
+}
+
+export function launchVehicleWeightValidityCheck(launchVehicleWeight: number) : boolean {
+  return true;
+}
+
+export function launchVehicleThrustCapacityValidityCheck(thrustCapacity: number) : boolean {
+  return true;
+}
+
+export function launchVehicleManeuveringFuelValidityCheck(maneuveringFuel: number) : boolean {
+  return true;
+}
+
+interface LaunchVehicleLaunchSummary {
+  // write some thing
+}
+
+export function launchVehicleLaunchSummary(launchVehicleId: number) : LaunchVehicleLaunchSummary {
+  return true;
+}
+
+export function launchVehicleIdCheck(launchVehicleId: number) : boolean {
+  return true;
+}
+
+
 export {
   controlUserIdGen,
   isValidPassword,
