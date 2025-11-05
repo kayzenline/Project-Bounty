@@ -62,25 +62,25 @@ export interface Astronaut {
 
 // these would most likely be defined in your dataStore or interfaces
 export enum missionLaunchState {
-  READY_TO_LAUNCH = "READY_TO_LAUNCH",
-  LAUNCHING = "LAUNCHING",
-  MANEUVERING = "MANEUVERING",
-  COASTING = "COASTING",
-  MISSION_COMPLETE = "MISSION_COMPLETE",
-  REENTRY = "REENTRY",
-  ON_EARTH = "ON_EARTH"
-};
+  READY_TO_LAUNCH = 'READY_TO_LAUNCH',
+  LAUNCHING = 'LAUNCHING',
+  MANEUVERING = 'MANEUVERING',
+  COASTING = 'COASTING',
+  MISSION_COMPLETE = 'MISSION_COMPLETE',
+  REENTRY = 'REENTRY',
+  ON_EARTH = 'ON_EARTH'
+}
 
 export enum missionLaunchAction {
-  LIFTOFF = "LIFTOFF",
-  CORRECTION = "CORRECTION",
-  FIRE_THRUSTERS = "FIRE_THRUSTERS",
-  DEPLOY_PAYLOAD = "DEPLOY_PAYLOAD",
-  GO_HOME = "GO_HOME",
-  FAULT = "FAULT",
-  RETURN = "RETURN",
-  SKIP_WAITING = "SKIP_WAITING" 
-};
+  LIFTOFF = 'LIFTOFF',
+  CORRECTION = 'CORRECTION',
+  FIRE_THRUSTERS = 'FIRE_THRUSTERS',
+  DEPLOY_PAYLOAD = 'DEPLOY_PAYLOAD',
+  GO_HOME = 'GO_HOME',
+  FAULT = 'FAULT',
+  RETURN = 'RETURN',
+  SKIP_WAITING = 'SKIP_WAITING' 
+}
 export interface LaunchVehicle {
   launchVehicleId: number, // an id for this entity
   name: string, // a name for this launch vehicle
@@ -93,7 +93,7 @@ export interface LaunchVehicle {
   timeLastEdited: number, // last time a value was edited in seconds
   retired: boolean // is this launch vehicle active or not
   // launches?: LaunchSummary // this is computed value so it does not need to be stored
-};
+}
 
 export interface Payload {
   payloadId: number, // an id for this entity
@@ -101,12 +101,12 @@ export interface Payload {
   weight: number, // a weight (kg) for this payload
   deployed: boolean // has this payload been deployed or not?
   // extra properties can be added to this payload to help with the bonus tasks
-};
+}
 
 export interface PayloadInput {
   description: string,
   weight: number
-};
+}
 
 export interface LaunchCalcParameters {
   targetDistance: number, // distance (m) to the target destination for this launch
@@ -114,7 +114,7 @@ export interface LaunchCalcParameters {
   fuelBurnRate: number, // rate at which the launch vehicle burns its `thrustFuel`    
   activeGravityForce: number, // downward force of gravity acting against the thrust capacity of the launch vehicle
   maneuveringDelay: number // how long does the launch wait before automatically going from `MANEUVERING` state to `COASTING` state
-};
+}
 
 export interface Launch {
   launchId: number, // an id for this entity
@@ -126,14 +126,13 @@ export interface Launch {
   payloadId: number, // payload assigned to this launch
   allocatedAstronauts: number[], // array of astronautId's that are allocated to this launch
   launchCalculationParameters: LaunchCalcParameters  
-};
+}
 
 export interface LaunchInput {
   launchVehicleId: number,
   payload: PayloadInput,
   launchParameters: LaunchCalcParameters
-};
-
+}
 
 const DB_PATH = path.join(__dirname, 'db.json');
 
