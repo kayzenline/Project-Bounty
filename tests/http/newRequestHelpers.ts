@@ -8,10 +8,10 @@ export function adminMissionAstronautUnassignRequest(
   astronautid: number,
   missionid: number
 ) {
-  const res = request('DELETE', `${SERVER_URL}/v2/admin/mission/${missionid}/assign/${astronautid}`, {
+  const response = request('DELETE', `${SERVER_URL}/v2/admin/mission/${missionid}/assign/${astronautid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return res;
+  return response;
 }
 
 export function adminLaunchVehicleCreateRequest(
@@ -24,7 +24,7 @@ export function adminLaunchVehicleCreateRequest(
   thrustCapacity: number,
   maneuveringFuel: number
 ) {
-  const res = request('POST', `/v1/admin/launchvehicle`, {
+  const response = request('POST', `/v1/admin/launchvehicle`, {
     headers: { controlUserSessionId: controlUserSessionId },
     json: {
       name,
@@ -36,17 +36,17 @@ export function adminLaunchVehicleCreateRequest(
       maneuveringFuel
     }
   });
-  return res;
+  return response;
 }
 
 export function adminLaunchVehicleInfoRequest(
   controlUserSessionId: string,
   launchvehicleid: number
 ) {
-  const res = request('GET', `/v1/admin/launchvehicle/${launchvehicleid}`, {
+  const response = request('GET', `/v1/admin/launchvehicle/${launchvehicleid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return res;
+  return response;
 }
 
 export function adminMissionLaunchOrganiseRequest(
@@ -64,14 +64,14 @@ export function adminMissionLaunchOrganiseRequest(
     maneuveringDelay: number
   }
 ) {
-  const res = request('POST', `/v1/admin/mission/${missionid}/launch`, {
+  const response = request('POST', `/v1/admin/mission/${missionid}/launch`, {
     headers: { controlUserSessionId: controlUserSessionId },
     json: {
       payload,
       launchParameters
     }
   });
-  return res;
+  return response;
 }
 
 export function adminMissionLaunchDetailsRequest(
@@ -79,10 +79,10 @@ export function adminMissionLaunchDetailsRequest(
   missionid: number,
   launchid: number
 ) {
-  const res = request('GET', `/v1/admin/mission/${missionid}/launch/${launchid}`, {
+  const response = request('GET', `/v1/admin/mission/${missionid}/launch/${launchid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return res;
+  return response;
 }
 
 export function adminMissionLaunchStatusUpdateRequest(
@@ -91,32 +91,32 @@ export function adminMissionLaunchStatusUpdateRequest(
   launchid: number,
   action: string
 ) {
-  const res = request('PUT', `/v1/admin/mission/${missionid}/launch/${launchid}/status`, {
+  const response = request('PUT', `/v1/admin/mission/${missionid}/launch/${launchid}/status`, {
     headers: { controlUserSessionId: controlUserSessionId },
     json: {
       action
     }
   });
-  return res;
+  return response;
 }
 
 export function adminLaunchVehicleDetailsRequest(
   controlUserSessionId: string
 ) {
-  const res = request('GET', `/v1/admin/launchvehicle/list`, {
+  const response = request('GET', `/v1/admin/launchvehicle/list`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return res;
+  return response;
 }
 
 export function adminLaunchVehicleRetireRequest(
   controlUserSessionId: string,
   launchvehicleid: number
 ) {
-  const res = request('DELETE', `/v1/admin/launchvehicle/${launchvehicleid}`, {
+  const response = request('DELETE', `/v1/admin/launchvehicle/${launchvehicleid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return res;
+  return response;
 }
 
 export function adminLaunchVehicleEditRequest(
@@ -130,7 +130,7 @@ export function adminLaunchVehicleEditRequest(
   thrustCapacity: number,
   maneuveringFuel: number
 ) {
-  const res = request('PUT', `/v1/admin/launchvehicle/${launchvehicleid}`, {
+  const response = request('PUT', `/v1/admin/launchvehicle/${launchvehicleid}`, {
     headers: { controlUserSessionId: controlUserSessionId },
     json: {
       name,
@@ -142,16 +142,16 @@ export function adminLaunchVehicleEditRequest(
       maneuveringFuel
     }
   });
-  return res;
+  return response;
 }
 
 export function adminLaunchDetailsRequest(
   controlUserSessionId: string
 ) {
-  const res = request('GET', `/v1/admin/launch/list`, {
+  const response = request('GET', `/v1/admin/launch/list`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return res;
+  return response;
 }
 
 export function adminMissionLaunchAllocateRequest(
@@ -160,10 +160,10 @@ export function adminMissionLaunchAllocateRequest(
   missionid: number,
   launchid: number
 ) {
-  const res = request('POST', `/v1/admin/mission/${missionid}/launch/${launchid}/allocate/${astronautid}`, {
+  const response = request('POST', `/v1/admin/mission/${missionid}/launch/${launchid}/allocate/${astronautid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return res;
+  return response;
 }
 
 export function adminMissionLaunchRemoveRequest(
@@ -172,8 +172,8 @@ export function adminMissionLaunchRemoveRequest(
   missionid: number,
   launchid: number
 ) {
-  const res = request('DELETE', `/v1/admin/mission/${missionid}/launch/${launchid}/allocate/${astronautid}`, {
+  const response = request('DELETE', `/v1/admin/mission/${missionid}/launch/${launchid}/allocate/${astronautid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return res;
+  return response;
 }
