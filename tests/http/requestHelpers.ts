@@ -14,10 +14,7 @@ export function adminMissionTransferRequest(
       email
     }
   });
-  return {
-    statusCode: response.statusCode,
-    body: JSON.parse(response.body.toString())
-  };
+  return response;
 }
 
 export function adminAuthUserRegisterRequest(
@@ -34,11 +31,7 @@ export function adminAuthUserRegisterRequest(
       nameLast
     }
   });
-
-  return {
-    statusCode: response.statusCode,
-    body: JSON.parse(response.body.toString())
-  };
+  return response;
 }
 
 export function adminAuthUserLoginRequest(email: string, password: string) {
@@ -46,32 +39,23 @@ export function adminAuthUserLoginRequest(email: string, password: string) {
     json: {
       email,
       password,
-    },
+    }
   });
-  return {
-    statusCode: response.statusCode,
-    body: JSON.parse(response.body.toString()),
-  };
+  return response;
 }
 
-export function adminAuthUserLogoutRequest(sessionId: string) {
+export function adminAuthUserLogoutRequest(controlUserSessionId: string) {
   const response = request('POST', `${SERVER_URL}/v1/admin/auth/logout`, {
-    headers: { controlusersessionid: sessionId }
+    headers: { controlusersessionid: controlUserSessionId }
   });
-  return {
-    statusCode: response.statusCode,
-    body: JSON.parse(response.body.toString()),
-  };
+  return response;
 }
 
 export function adminAuthUserDetailsRequest(controlUserSessionId: string) {
   const response = request('GET', `${SERVER_URL}/v1/admin/controluser/details`, {
     headers: { ControlUserSessionId: controlUserSessionId }
   });
-  return {
-    statusCode: response.statusCode,
-    body: JSON.parse(response.body.toString())
-  };
+  return response;
 }
 
 export function adminAuthUserPasswordUpdateRequest(
@@ -83,10 +67,7 @@ export function adminAuthUserPasswordUpdateRequest(
     headers: { ControlUserSessionId: controlUserSessionId },
     json: { oldPassword, newPassword }
   });
-  return {
-    statusCode: response.statusCode,
-    body: JSON.parse(response.body.toString())
-  };
+  return response;
 }
 
 export function adminAuthUserDetailsUpdateRequest(
@@ -99,31 +80,24 @@ export function adminAuthUserDetailsUpdateRequest(
     headers: { ControlUserSessionId: controlUserSessionId },
     json: { email, nameFirst, nameLast }
   });
-  return {
-    statusCode: response.statusCode,
-    body: JSON.parse(response.body.toString())
-  };
+  return response;
 }
 
 export function adminMissionCreateRequest(
-  sessionId: string,
+  controlUserSessionId: string,
   name: string,
   description: string,
   target: string
 ) {
   const response = request('POST', `${SERVER_URL}/v1/admin/mission`, {
+    headers: { controlUserSessionId: controlUserSessionId },
     json: {
       name,
       description,
       target
-    },
-    headers: { controlUserSessionId: sessionId }
+    }
   });
-
-  return {
-    statusCode: response.statusCode,
-    body: JSON.parse(response.body.toString())
-  };
+  return response;
 }
 
 export function adminMissionNameUpdateRequest(
@@ -137,11 +111,7 @@ export function adminMissionNameUpdateRequest(
       name
     }
   });
-
-  return {
-    statusCode: response.statusCode,
-    body: JSON.parse(response.body.toString())
-  };
+  return response;
 }
 
 export function adminMissionTargetUpdateRequest(
@@ -155,11 +125,7 @@ export function adminMissionTargetUpdateRequest(
       target
     }
   });
-
-  return {
-    statusCode: response.statusCode,
-    body: JSON.parse(response.body.toString())
-  };
+  return response;
 }
 
 export function adminMissionDescriptionUpdateRequest(
@@ -174,51 +140,39 @@ export function adminMissionDescriptionUpdateRequest(
     }
   });
 
-  return {
-    statusCode: response.statusCode,
-    body: JSON.parse(response.body.toString())
-  };
+  return response;
 }
 
 export function adminMissionDeleteRequest(
   controlUserSessionId: string,
   missionId: number
 ) {
-  const res = request('DELETE', `${SERVER_URL}/v1/admin/mission/${missionId}`, {
+  const response = request('DELETE', `${SERVER_URL}/v1/admin/mission/${missionId}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
 
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return response;
 }
 
 export function adminMissionInfoRequest(
   controlUserSessionId: string,
   missionId: number
 ) {
-  const res = request('GET', `${SERVER_URL}/v1/admin/mission/${missionId}`, {
-    headers: { controlUserSessionId: controlUserSessionId },
+  const response = request('GET', `${SERVER_URL}/v1/admin/mission/${missionId}`, {
+    headers: { controlUserSessionId: controlUserSessionId }
   });
 
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return response;
 }
 
 export function adminAstronautPoolRequest(
   controlUserSessionId: string
 ) {
-  const res = request('GET', `${SERVER_URL}/v1/admin/astronaut/pool`, {
-    headers: { controlUserSessionId: controlUserSessionId },
+  const response = request('GET', `${SERVER_URL}/v1/admin/astronaut/pool`, {
+    headers: { controlUserSessionId: controlUserSessionId }
   });
 
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return response;
 }
 
 export function adminAstronautCreateRequest(
@@ -230,7 +184,7 @@ export function adminAstronautCreateRequest(
   weight: number,
   height: number
 ) {
-  const res = request('POST', `${SERVER_URL}/v1/admin/astronaut`, {
+  const response = request('POST', `${SERVER_URL}/v1/admin/astronaut`, {
     headers: { controlUserSessionId: controlUserSessionId },
     json: {
       nameFirst,
@@ -241,39 +195,27 @@ export function adminAstronautCreateRequest(
       height
     }
   });
-
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return response;
 }
 
 export function adminAstronautDeleteRequest(
   controlUserSessionId: string,
   astronautId: number
 ) {
-  const res = request('DELETE', `${SERVER_URL}/v1/admin/astronaut/${astronautId}`, {
-    headers: { controlUserSessionId: controlUserSessionId },
+  const response = request('DELETE', `${SERVER_URL}/v1/admin/astronaut/${astronautId}`, {
+    headers: { controlUserSessionId: controlUserSessionId }
   });
-
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return response;
 }
 
 export function adminAstronautInfoRequest(
   controlUserSessionId: string,
   astronautId: number
 ) {
-  const res = request('GET', `${SERVER_URL}/v1/admin/astronaut/${astronautId}`, {
-    headers: { controlUserSessionId: controlUserSessionId },
+  const response = request('GET', `${SERVER_URL}/v1/admin/astronaut/${astronautId}`, {
+    headers: { controlUserSessionId: controlUserSessionId }
   });
-
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return response;
 }
 
 export function adminAstronautEditRequest(
@@ -286,7 +228,7 @@ export function adminAstronautEditRequest(
   weight: number,
   height: number
 ) {
-  const res = request('PUT', `${SERVER_URL}/v1/admin/astronaut/${astronautId}`, {
+  const response = request('PUT', `${SERVER_URL}/v1/admin/astronaut/${astronautId}`, {
     headers: { controlUserSessionId: controlUserSessionId },
     json: {
       nameFirst,
@@ -297,11 +239,7 @@ export function adminAstronautEditRequest(
       height
     }
   });
-
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return response;
 }
 
 export function adminAstronautAssignRequest(
@@ -309,13 +247,10 @@ export function adminAstronautAssignRequest(
   astronautid: number,
   missionid: number
 ) {
-  const res = request('POST', `${SERVER_URL}/v1/admin/mission/${missionid}/assign/${astronautid}`, {
-    headers: { controlUserSessionId: controlUserSessionId },
+  const response = request('POST', `${SERVER_URL}/v1/admin/mission/${missionid}/assign/${astronautid}`, {
+    headers: { controlUserSessionId: controlUserSessionId }
   });
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return response;
 }
 
 export function adminAstronautUnassignRequest(
@@ -323,31 +258,22 @@ export function adminAstronautUnassignRequest(
   astronautid: number,
   missionid: number
 ) {
-  const res = request('DELETE', `${SERVER_URL}/v1/admin/mission/${missionid}/assign/${astronautid}`, {
-    headers: { controlUserSessionId: controlUserSessionId },
+  const response = request('DELETE', `${SERVER_URL}/v1/admin/mission/${missionid}/assign/${astronautid}`, {
+    headers: { controlUserSessionId: controlUserSessionId }
   });
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return response;
 }
 
 export function adminMissionListRequest(
   controlUserSessionId: string
 ) {
-  const res = request('GET', `${SERVER_URL}/v1/admin/mission/list`, {
-    headers: { controlUserSessionId: controlUserSessionId },
+  const response = request('GET', `${SERVER_URL}/v1/admin/mission/list`, {
+    headers: { controlUserSessionId: controlUserSessionId }
   });
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return response;
 }
 
 export function clearRequest() {
-  const res = request('DELETE', `${SERVER_URL}/v1/clear`);
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString()),
-  };
+  const response = request('DELETE', `${SERVER_URL}/v1/clear`);
+  return response;
 }
