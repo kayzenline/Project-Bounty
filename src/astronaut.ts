@@ -10,9 +10,21 @@ import {
   missionIdCheck
 } from './helper';
 import { errorCategories as EC } from './testSamples';
+import HTTPError from 'http-errors';
 
 function buildError(message: string, code: string): never {
   throw new ServiceError(message, code);
+}
+
+function throwErrorForFunction(code: string, message: string) {
+  switch(code) {
+    case 'INVALID_CREDENTIALS':
+      throw HTTPError(401, message);
+    case 'INACCESSIBLE_VALUE':
+      throw HTTPError(403, message);
+    default:
+      throw HTTPError(400, message);
+  }
 }
 
 export function adminAstronautPool(controlUserSessionId: string) {
@@ -52,7 +64,7 @@ export function adminAstronautPool(controlUserSessionId: string) {
     return { astronauts: astronauts };
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 
@@ -118,7 +130,7 @@ export function adminAstronautCreate(
     return { astronautId };
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 export interface AstronautResponse {
@@ -169,7 +181,7 @@ export function adminAstronautInfo(controlUserSessionId: string, astronautId: nu
     return { response };
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 
@@ -194,7 +206,7 @@ export function adminAstronautDelete(controlUserSessionId: string, astronautId: 
     return {};
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 
@@ -237,7 +249,7 @@ export function adminAstronautEdit(
     return {};
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 
@@ -291,7 +303,7 @@ export function adminMissionAstronautAssign(
     return {};
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 
@@ -344,6 +356,6 @@ export function adminMissionAstronautUnassign(
     return {};
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }

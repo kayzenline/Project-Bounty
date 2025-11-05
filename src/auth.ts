@@ -17,9 +17,21 @@ import {
 } from './helper';
 import { getData, setData, Session } from './dataStore';
 import { errorCategories as EC } from './testSamples';
+import HTTPError from 'http-errors';
 
 function buildError(message: string, code: string): never {
   throw new ServiceError(message, code);
+}
+
+function throwErrorForFunction(code: string, message: string) {
+  switch(code) {
+    case 'INVALID_CREDENTIALS':
+      throw HTTPError(401, message);
+    case 'INACCESSIBLE_VALUE':
+      throw HTTPError(403, message);
+    default:
+      throw HTTPError(400, message);
+  }
 }
 
 // Register a mission control user
@@ -74,7 +86,7 @@ function adminAuthRegister(email: string, password: string, nameFirst: string, n
     return { controlUserSessionId: controlUserSessionId };
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 
@@ -120,7 +132,7 @@ function adminAuthLogin(email: string, password: string) {
     return { controlUserSessionId: controlUserSessionId };
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 
@@ -145,7 +157,7 @@ function adminAuthLogout(controlUserSessionId: string) {
     return {};
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 
@@ -167,7 +179,7 @@ function adminControlUserDetails(controlUserId: number) {
     };
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 
@@ -199,7 +211,7 @@ function adminControlUserDetailsUpdate(controlUserId: number, email: string, nam
     return {};
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 
@@ -238,7 +250,7 @@ function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: stri
     return {};
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 

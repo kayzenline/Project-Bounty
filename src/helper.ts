@@ -378,7 +378,7 @@ export function launchVehicleIdCheck(launchVehicleId: number) : boolean {
   return true;
 }
 // Launch helper functions
-export function launchIdCheck() : boolean {
+export function launchIdCheck(launchId: number) : boolean {
   return true;
 }
 interface LaunchCalcParameters {
@@ -394,24 +394,7 @@ export function canThisLaunchReachTargetDistanceCheck(): boolean {
 export function checkValidActionForCurrentState() : boolean {
   return true;
 }
-export function initializeLaunching() {
 
-}
-export function initializeManeuvering() {
-
-}
-export function initializeCoasting() {
-
-}
-export function initializeMissionComplete() {
-
-}
-export function initializeReEntry() {
-
-}
-export function initializeOnEarth() {
-
-}
 // Payload helper functions
 export function payloadDescriptionValidityCheck(description: string): boolean {
   return true;

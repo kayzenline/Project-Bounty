@@ -12,9 +12,21 @@ import {
   ServiceError
 } from './helper';
 import { errorCategories as EC } from './testSamples';
+import HTTPError from 'http-errors';
 
 function buildError(message: string, code: string): never {
   throw new ServiceError(message, code);
+}
+
+function throwErrorForFunction(code: string, message: string) {
+  switch(code) {
+    case 'INVALID_CREDENTIALS':
+      throw HTTPError(401, message);
+    case 'INACCESSIBLE_VALUE':
+      throw HTTPError(403, message);
+    default:
+      throw HTTPError(400, message);
+  }
 }
 
 function adminMissionList(controlUserId: number) {
@@ -29,7 +41,7 @@ function adminMissionList(controlUserId: number) {
     return { missions };
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: EC.INVALID_CREDENTIALS };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 
@@ -50,7 +62,8 @@ function adminMissionRemove(controlUserId: number, missionId: number) {
     setData(data);
     return {};
   } catch (e) {
-    return normalizeError(e);
+    const ne = normalizeError(e);
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 
@@ -95,7 +108,7 @@ function adminMissionCreate(controlUserId: number, name: string, description: st
     return { missionId };
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 
@@ -118,7 +131,7 @@ function adminMissionInfo(controlUserId: number, missionId: number) {
     };
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 
@@ -148,7 +161,7 @@ function adminMissionNameUpdate(controlUserId: number, missionId: number, name: 
     return {};
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 
@@ -171,7 +184,7 @@ function adminMissionTargetUpdate(controlUserId: number, missionId: number, targ
     return {};
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 
@@ -195,7 +208,7 @@ function adminMissionDescriptionUpdate(controlUserId: number, missionId: number,
     return {};
   } catch (e) {
     const ne = normalizeError(e);
-    return { error: ne.error, errorCategory: ne.errorCategory };
+    throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
 

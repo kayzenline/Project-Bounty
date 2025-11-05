@@ -11,10 +11,7 @@ export function adminMissionAstronautUnassignRequest(
   const res = request('DELETE', `${SERVER_URL}/v2/admin/mission/${missionid}/assign/${astronautid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return res;
 }
 
 export function adminLaunchVehicleCreateRequest(
@@ -39,10 +36,7 @@ export function adminLaunchVehicleCreateRequest(
       maneuveringFuel
     }
   });
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return res;
 }
 
 export function adminLaunchVehicleInfoRequest(
@@ -52,10 +46,7 @@ export function adminLaunchVehicleInfoRequest(
   const res = request('GET', `/v1/admin/launchvehicle/${launchvehicleid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return res;
 }
 
 export function adminMissionLaunchOrganiseRequest(
@@ -80,10 +71,7 @@ export function adminMissionLaunchOrganiseRequest(
       launchParameters
     }
   });
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return res;
 }
 
 export function adminMissionLaunchDetailsRequest(
@@ -94,10 +82,7 @@ export function adminMissionLaunchDetailsRequest(
   const res = request('GET', `/v1/admin/mission/${missionid}/launch/${launchid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return res;
 }
 
 export function adminMissionLaunchStatusUpdateRequest(
@@ -112,10 +97,7 @@ export function adminMissionLaunchStatusUpdateRequest(
       action
     }
   });
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return res;
 }
 
 export function adminLaunchVehicleDetailsRequest(
@@ -124,10 +106,7 @@ export function adminLaunchVehicleDetailsRequest(
   const res = request('GET', `/v1/admin/launchvehicle/list`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return res;
 }
 
 export function adminLaunchVehicleRetireRequest(
@@ -137,10 +116,7 @@ export function adminLaunchVehicleRetireRequest(
   const res = request('DELETE', `/v1/admin/launchvehicle/${launchvehicleid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return res;
 }
 
 export function adminLaunchVehicleEditRequest(
@@ -166,10 +142,7 @@ export function adminLaunchVehicleEditRequest(
       maneuveringFuel
     }
   });
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return res;
 }
 
 export function adminLaunchDetailsRequest(
@@ -178,10 +151,7 @@ export function adminLaunchDetailsRequest(
   const res = request('GET', `/v1/admin/launch/list`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return res;
 }
 
 export function adminMissionLaunchAllocateRequest(
@@ -193,10 +163,7 @@ export function adminMissionLaunchAllocateRequest(
   const res = request('POST', `/v1/admin/mission/${missionid}/launch/${launchid}/allocate/${astronautid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return res;
 }
 
 export function adminMissionLaunchRemoveRequest(
@@ -208,8 +175,5 @@ export function adminMissionLaunchRemoveRequest(
   const res = request('DELETE', `/v1/admin/mission/${missionid}/launch/${launchid}/allocate/${astronautid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return {
-    statusCode: res.statusCode,
-    body: JSON.parse(res.body.toString())
-  };
+  return res;
 }
