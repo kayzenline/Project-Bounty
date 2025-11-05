@@ -147,10 +147,10 @@ export function updateLaunchState(newAction: missionLaunchAction, launchId: numb
   // assumes launch is part the datastore as a property called "launches" which is an array of the Launch type and that it has a property called 'state'
   const launch: Launch = data.launches.find(singleLaunch => singleLaunch.launchId === launchId);
 
-  switch(newAction) {
+  switch (newAction) {
     case missionLaunchAction.LIFTOFF:
-      if(launch.state === missionLaunchState.READY_TO_LAUNCH) {
-          // this is ok, lets proceed with the actions
+      if (launch.state === missionLaunchState.READY_TO_LAUNCH) {
+        // this is ok, lets proceed with the actions
         if (!canThisLaunchReachTargetDistanceCheck(launchId)) {
           // bad launch, abort!
           updateLaunchState(missionLaunchAction.FAULT, launchId);
@@ -171,7 +171,7 @@ export function updateLaunchState(newAction: missionLaunchAction, launchId: numb
       }
       break;
     case missionLaunchAction.CORRECTION:
-      if(launch.state === missionLaunchState.MANEUVERING) {
+      if (launch.state === missionLaunchState.MANEUVERING) {
         // this is ok, lets proceed with the actions
         if (!checkManeuveringFuel(launchId)) {
           // not enough fuel, abort!
@@ -185,7 +185,7 @@ export function updateLaunchState(newAction: missionLaunchAction, launchId: numb
       }
       break;
     case missionLaunchAction.FIRE_THRUSTERS:
-      if(launch.state === missionLaunchState.MANEUVERING) {
+      if (launch.state === missionLaunchState.MANEUVERING) {
         // this is ok, lets proceed with the actions
         if (!checkManeuveringFuel(launchId)) {
           // not enough fuel, abort!
@@ -199,14 +199,14 @@ export function updateLaunchState(newAction: missionLaunchAction, launchId: numb
       }
       break;
     case missionLaunchAction.DEPLOY_PAYLOAD:
-      if(launch.state === missionLaunchState.COASTING) {
+      if (launch.state === missionLaunchState.COASTING) {
         // this is ok, lets proceed with the actions
         deployPayload(launchId);
         initializeMissionComplete(launchId);
       } else {
         badActionForStateError(newAction, launch.state);
       }
-      break; 
+      break;
     case missionLaunchAction.GO_HOME:
       if(launch.state === missionLaunchState.MISSION_COMPLETE) {
         // this is ok, lets proceed with the actions
@@ -216,7 +216,7 @@ export function updateLaunchState(newAction: missionLaunchAction, launchId: numb
       }
       break;
     case missionLaunchAction.RETURN:
-      if(launch.state === missionLaunchState.REENTRY) {
+      if (launch.state === missionLaunchState.REENTRY) {
         // this is ok, lets proceed with the actions
         initializeOnEarth(launchId);
       } else {
@@ -224,11 +224,11 @@ export function updateLaunchState(newAction: missionLaunchAction, launchId: numb
       }
       break;
     case missionLaunchAction.FAULT:
-      if(launch.state === missionLaunchState.REENTRY || launch.state === missionLaunchState.MISSION_COMPLETE) {
+      if (launch.state === missionLaunchState.REENTRY || launch.state === missionLaunchState.MISSION_COMPLETE) {
         // this is an unpermitted action in this state.
         badActionForStateError(newAction, launch.state);
       } else if (launch.state === missionLaunchState.READY_TO_LAUNCH){
-          initializeOnEarth(launchId);
+        initializeOnEarth(launchId);
       } else {
         // this can proceed.
         initializeRentry(launchId);
