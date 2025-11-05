@@ -8,7 +8,7 @@ function checkManeuveringFuel(launchId: number) : boolean {
   // a helper function that checks if there is at least 3 units of fuel left
   // TODO - you must complete this helper function
   const data = getData();
-  const launch: Launch = data.launches.find( (singleLaunch) => singleLaunch.launchId === launchId);
+  const launch: Launch = data.launches.find(singleLaunch => singleLaunch.launchId === launchId);
   // fuel left less than 3 units
   if (launch.remainingLaunchVehicleManeuveringFuel < 3) {
     return false;
@@ -20,8 +20,8 @@ function checkManeuveringFuel(launchId: number) : boolean {
 function canThisLaunchReachTargetDistanceCheck(launchId: number) : boolean {
   // a helper function that does calculations using the launchParameters to see if this launch can go ahead.
   // TODO - you must complete this helper function
-  const launch = getData().launches.find( (singleLaunch) => singleLaunch.launchId === launchId);
-  const launchvehicle = getData().launchVehicles.find( (LaunchVehicle) => LaunchVehicle.launchVehicleId === launch.assignedLaunchVehicleId);
+  const launch = getData().launches.find(singleLaunch => singleLaunch.launchId === launchId);
+  const launchvehicle = getData().launchVehicles.find(LaunchVehicle => LaunchVehicle.launchVehicleId === launch.assignedLaunchVehicleId);
   // launch can not go ahead
   if (launch.launchCalculationParameters.thrustFuel < launchvehicle.maneauveringFuel) {
     return false;
@@ -40,10 +40,10 @@ function initializeLaunching(launchId: number) {
   // assumes a valid launchId since this can only be accessed from other functions that have done the check
   // assumes launch is part the datastore as a property called "launches" which is an array of the Launch type and that it has a property called 'state'
   const data = getData();
-  const launch: Launch = data.launches.find( (singleLaunch) => singleLaunch.launchId === launchId);
+  const launch: Launch = data.launches.find(singleLaunch => singleLaunch.launchId === launchId);
   launch.state = missionLaunchState.LAUNCHING;
   clearTimeout(timerId);
-  timerId = setTimeout(initializeManeuvering , 3 * 1000);
+  timerId = setTimeout(initializeManeuvering, 3 * 1000);
 
   setData(data);
   // You do not need to return anything, you can use this for checks to see if something has gone wrong
@@ -54,10 +54,10 @@ function initializeManeuvering(launchId: number) {
   // assumes a valid launchId since this can only be accessed from other functions that have done the check
   // assumes launch is part the datastore as a property called "launches" which is an array of the Launch type and that it has a property called 'state'
   const data = getData();
-  const launch: Launch = data.launches.find( (singleLaunch) => singleLaunch.launchId === launchId);
+  const launch: Launch = data.launches.find(singleLaunch => singleLaunch.launchId === launchId);
   launch.state = missionLaunchState.ON_EARTH;
   clearTimeout(timerId);
-  timerId = setTimeout(initializeCoasting , launch.launchCalculationParameters.maneuveringDelay * 1000);
+  timerId = setTimeout(initializeCoasting, launch.launchCalculationParameters.maneuveringDelay * 1000);
 
   setData(data);
   // You do not need to return anything, you can use this for checks to see if something has gone wrong
@@ -68,7 +68,7 @@ function initializeCoasting(launchId: number) {
   // assumes a valid launchId since this can only be accessed from other functions that have done the check
   // assumes launch is part the datastore as a property called "launches" which is an array of the Launch type and that it has a property called 'state'
   const data = getData();
-  const launch: Launch = data.launches.find( (singleLaunch) => singleLaunch.launchId === launchId);
+  const launch: Launch = data.launches.find(singleLaunch => singleLaunch.launchId === launchId);
   launch.state = missionLaunchState.COASTING;
   clearTimeout(timerId);
 
@@ -81,7 +81,7 @@ function initializeMissionComplete(launchId: number) {
   // assumes a valid launchId since this can only be accessed from other functions that have done the check
   // assumes launch is part the datastore as a property called "launches" which is an array of the Launch type and that it has a property called 'state'
   const data = getData();
-  const launch: Launch = data.launches.find( (singleLaunch) => singleLaunch.launchId === launchId);
+  const launch: Launch = data.launches.find(singleLaunch => singleLaunch.launchId === launchId);
   launch.state = missionLaunchState.MISSION_COMPLETE;
   clearTimeout(timerId);
 
@@ -94,7 +94,7 @@ function initializeRentry(launchId: number) {
   // assumes a valid launchId since this can only be accessed from other functions that have done the check
   // assumes launch is part the datastore as a property called "launches" which is an array of the Launch type and that it has a property called 'state'
   const data = getData();
-  const launch: Launch = data.launches.find( (singleLaunch) => singleLaunch.launchId === launchId);
+  const launch: Launch = data.launches.find(singleLaunch => singleLaunch.launchId === launchId);
   launch.state = missionLaunchState.REENTRY;
   clearTimeout(timerId);
 
@@ -107,7 +107,7 @@ function initializeOnEarth(launchId: number) {
   // assumes a valid launchId since this can only be accessed from other functions that have done the check
   // assumes launch is part the datastore as a property called "launches" which is an array of the Launch type and that it has a property called 'state'
   const data = getData();
-  const launch: Launch = data.launches.find( (singleLaunch) => singleLaunch.launchId === launchId);
+  const launch: Launch = data.launches.find(singleLaunch => singleLaunch.launchId === launchId);
   launch.state = missionLaunchState.ON_EARTH;
   clearTimeout(timerId);
   //  3. De-allocate astronauts (and launch vehicle)
@@ -123,7 +123,7 @@ function deployPayload(launchId: number) {
   // assumes launch is part the datastore as a property called "launches" which is an array of the Launch type and that it has a property called 'state'
   const data = getData();
   const launch: Launch = data.launches.find( (singleLaunch) => singleLaunch.launchId === launchId);
-  const payload = data.payload.find( (singlePayload) => singlePayload.payloadId === launch.payloadId);
+  const payload = data.payload.find(singlePayload => singlePayload.payloadId === launch.payloadId);
   payload.deployed = true;
 
   setData(data);
@@ -145,7 +145,7 @@ export function updateLaunchState(newAction: missionLaunchAction, launchId: numb
   // big switch statement to check if action is permitted in current state and if it is, what to do
   const data = getData();
   // assumes launch is part the datastore as a property called "launches" which is an array of the Launch type and that it has a property called 'state'
-  const launch: Launch = data.launches.find( (singleLaunch) => singleLaunch.launchId === launchId);
+  const launch: Launch = data.launches.find(singleLaunch => singleLaunch.launchId === launchId);
 
   switch(newAction) {
     case missionLaunchAction.LIFTOFF:

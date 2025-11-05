@@ -1,6 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { adminControlUserDetails, adminControlUserDetailsUpdate, adminControlUserPasswordUpdate } from '../../../auth';
-import { errorCategories as EC } from '../../../testSamples';
 import { findSessionFromSessionId } from '../../../helper';
 import HTTPError from 'http-errors';
 const router = Router();

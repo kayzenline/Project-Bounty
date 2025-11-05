@@ -24,7 +24,7 @@ function buildError(message: string, code: string): never {
 }
 
 function throwErrorForFunction(code: string, message: string) {
-  switch(code) {
+  switch (code) {
     case 'INVALID_CREDENTIALS':
       throw HTTPError(401, message);
     case 'INACCESSIBLE_VALUE':
