@@ -79,7 +79,7 @@ export enum missionLaunchAction {
   GO_HOME = 'GO_HOME',
   FAULT = 'FAULT',
   RETURN = 'RETURN',
-  SKIP_WAITING = 'SKIP_WAITING' 
+  SKIP_WAITING = 'SKIP_WAITING'
 }
 export interface LaunchVehicle {
   launchVehicleId: number, // an id for this entity
@@ -111,21 +111,21 @@ export interface PayloadInput {
 export interface LaunchCalcParameters {
   targetDistance: number, // distance (m) to the target destination for this launch
   thrustFuel: number, // amount of fuel that is allocated to the launch vehicle for this launch
-  fuelBurnRate: number, // rate at which the launch vehicle burns its `thrustFuel`    
+  fuelBurnRate: number, // rate at which the launch vehicle burns its `thrustFuel`
   activeGravityForce: number, // downward force of gravity acting against the thrust capacity of the launch vehicle
   maneuveringDelay: number // how long does the launch wait before automatically going from `MANEUVERING` state to `COASTING` state
 }
 
 export interface Launch {
   launchId: number, // an id for this entity
-  missionCopy: Mission, // copy of the mission that this launch is based on. Note - it must be deep copy so that if the original mission is changed, this copy remains unchanged 
+  missionCopy: Mission, // copy of the mission that this launch is based on. Note - it must be deep copy so that if the original mission is changed, this copy remains unchanged
   createdAt: number, // time in seconds that this launch was created
   state: missionLaunchState, // what is the current state of this launch, always begins at 'READY_TO_LAUNCH'
   assignedLaunchVehicleId: number, // launch vehicle assigned to this launch
   remainingLaunchVehicleManeuveringFuel: number, // how much maneuvering fuel is left in the launch vehicle currently assigned to this launch
   payloadId: number, // payload assigned to this launch
   allocatedAstronauts: number[], // array of astronautId's that are allocated to this launch
-  launchCalculationParameters: LaunchCalcParameters  
+  launchCalculationParameters: LaunchCalcParameters
 }
 
 export interface LaunchInput {

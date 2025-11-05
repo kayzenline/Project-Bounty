@@ -368,11 +368,9 @@ export function launchVehicleLaunchSummary(launchVehicleId: number) : LaunchVehi
       launchVehicleId: launch.launchVehicleId,
       name: launch.name,
       assigned: launch.retired
-    }
+    };
   }
-  return ;
 }
-
 
 export function launchVehicleIdCheck(launchVehicleId: number) : boolean {
   return true;

@@ -40,7 +40,7 @@ function adminAuthRegister(email: string, password: string, nameFirst: string, n
     if (!isValidEmail(email)) {
       buildError('Invalid email format', EC.BAD_INPUT);
     }
-1
+    1;
     // Get current data
     const data = getData();
 
