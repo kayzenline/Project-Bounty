@@ -363,13 +363,15 @@ interface LaunchVehicleLaunchSummary {
 
 export function launchVehicleLaunchSummary(launchVehicleId: number) : LaunchVehicleLaunchSummary {
   const launch = getData().launchVehicles.find(l => l.launchVehicleId === launchVehicleId);
-  if (launch) {
-    const summary: LaunchVehicleLaunchSummary = {
-      launchVehicleId: launch.launchVehicleId,
-      name: launch.name,
-      assigned: launch.retired
-    };
+  if (!launch) {
+    throw new ServiceError('launchVehicleId not found', EC.BAD_INPUT);
   }
+
+  return {
+    launchVehicleId: launch.launchVehicleId,
+    name: launch.name,
+    assigned: launch.retired
+  };
 }
 
 export function launchVehicleIdCheck(launchVehicleId: number) : boolean {
