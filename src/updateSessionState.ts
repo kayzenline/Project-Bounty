@@ -31,9 +31,9 @@ function canThisLaunchReachTargetDistanceCheck(launchId: number) : boolean {
 }
 
 // error constant defined becuase it is used frequently
-const badActionForStateError = ((action:missionLaunchAction, state: missionLaunchState) => {
+const badActionForStateError = (action:missionLaunchAction, state: missionLaunchState) => {
   throw HTTPError(400, `invalid action: Cannot do action ${action} in state ${state}`);
-});
+};
 
 // helper functions to initialize states
 function initializeLaunching(launchId: number) {
@@ -122,12 +122,12 @@ function deployPayload(launchId: number) {
   // assumes a valid launchId since this can only be accessed from other functions that have done the check
   // assumes launch is part the datastore as a property called "launches" which is an array of the Launch type and that it has a property called 'state'
   const data = getData();
-  const launch: Launch = data.launches.find( (singleLaunch) => singleLaunch.launchId === launchId);
+  const launch: Launch = data.launches.find((singleLaunch) => singleLaunch.launchId === launchId);
   const payload = data.payload.find(singlePayload => singlePayload.payloadId === launch.payloadId);
   payload.deployed = true;
 
   setData(data);
-} 
+}
 
 // function assumes that controlUserId checks are done and missionId checks are done - i.e. the user exists, the user is logged in, the mission exists and the current user has permission to access this launch (because they own the mission)
 export function updateLaunchState(newAction: missionLaunchAction, launchId: number) {
@@ -208,7 +208,7 @@ export function updateLaunchState(newAction: missionLaunchAction, launchId: numb
       }
       break;
     case missionLaunchAction.GO_HOME:
-      if(launch.state === missionLaunchState.MISSION_COMPLETE) {
+      if (launch.state === missionLaunchState.MISSION_COMPLETE) {
         // this is ok, lets proceed with the actions
         initializeRentry(launchId);
       } else {
@@ -227,7 +227,7 @@ export function updateLaunchState(newAction: missionLaunchAction, launchId: numb
       if (launch.state === missionLaunchState.REENTRY || launch.state === missionLaunchState.MISSION_COMPLETE) {
         // this is an unpermitted action in this state.
         badActionForStateError(newAction, launch.state);
-      } else if (launch.state === missionLaunchState.READY_TO_LAUNCH){
+      } else if (launch.state === missionLaunchState.READY_TO_LAUNCH) {
         initializeOnEarth(launchId);
       } else {
         // this can proceed.
