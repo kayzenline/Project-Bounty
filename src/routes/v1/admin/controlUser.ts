@@ -36,7 +36,7 @@ router.put('/details', (req: Request, res: Response, next: NextFunction) => {
     const result = adminControlUserDetailsUpdate(controlUserId, email, nameFirst, nameLast);
     return res.status(200).json(result);
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 
@@ -52,7 +52,7 @@ router.put('/password', (req: Request, res: Response, next: NextFunction) => {
     const result = adminControlUserPasswordUpdate(controlUserId, oldPassword, newPassword);
     return res.status(200).json(result);
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 

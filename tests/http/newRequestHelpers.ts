@@ -11,7 +11,10 @@ export function adminMissionAstronautUnassignRequest(
   const response = request('DELETE', `${SERVER_URL}/v2/admin/mission/${missionid}/assign/${astronautid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return response;
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
 }
 
 export function adminLaunchVehicleCreateRequest(
@@ -36,7 +39,10 @@ export function adminLaunchVehicleCreateRequest(
       maneuveringFuel
     }
   });
-  return response;
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
 }
 
 export function adminLaunchVehicleInfoRequest(
@@ -46,7 +52,10 @@ export function adminLaunchVehicleInfoRequest(
   const response = request('GET', `/v1/admin/launchvehicle/${launchvehicleid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return response;
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
 }
 
 export function adminMissionLaunchOrganiseRequest(
@@ -71,7 +80,10 @@ export function adminMissionLaunchOrganiseRequest(
       launchParameters
     }
   });
-  return response;
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
 }
 
 export function adminMissionLaunchDetailsRequest(
@@ -82,7 +94,10 @@ export function adminMissionLaunchDetailsRequest(
   const response = request('GET', `/v1/admin/mission/${missionid}/launch/${launchid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return response;
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
 }
 
 export function adminMissionLaunchStatusUpdateRequest(
@@ -97,7 +112,10 @@ export function adminMissionLaunchStatusUpdateRequest(
       action
     }
   });
-  return response;
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
 }
 
 export function adminLaunchVehicleDetailsRequest(
@@ -106,7 +124,10 @@ export function adminLaunchVehicleDetailsRequest(
   const response = request('GET', `/v1/admin/launchvehicle/list`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return response;
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
 }
 
 export function adminLaunchVehicleRetireRequest(
@@ -116,7 +137,10 @@ export function adminLaunchVehicleRetireRequest(
   const response = request('DELETE', `/v1/admin/launchvehicle/${launchvehicleid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return response;
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
 }
 
 export function adminLaunchVehicleEditRequest(
@@ -142,7 +166,10 @@ export function adminLaunchVehicleEditRequest(
       maneuveringFuel
     }
   });
-  return response;
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
 }
 
 export function adminLaunchDetailsRequest(
@@ -151,7 +178,10 @@ export function adminLaunchDetailsRequest(
   const response = request('GET', `/v1/admin/launch/list`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return response;
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
 }
 
 export function adminMissionLaunchAllocateRequest(
@@ -163,7 +193,10 @@ export function adminMissionLaunchAllocateRequest(
   const response = request('POST', `/v1/admin/mission/${missionid}/launch/${launchid}/allocate/${astronautid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return response;
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
 }
 
 export function adminMissionLaunchRemoveRequest(
@@ -175,5 +208,8 @@ export function adminMissionLaunchRemoveRequest(
   const response = request('DELETE', `/v1/admin/mission/${missionid}/launch/${launchid}/allocate/${astronautid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
-  return response;
+  return {
+    statusCode: response.statusCode,
+    body: JSON.parse(response.body.toString())
+  };
 }

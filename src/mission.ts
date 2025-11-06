@@ -105,7 +105,7 @@ function adminMissionCreate(controlUserId: number, name: string, description: st
 
     data.nextMissionId++;
     setData(data);
-    return { missionId };
+    return { missionId: missionId };
   } catch (e) {
     const ne = normalizeError(e);
     throwErrorForFunction(ne.errorCategory, ne.error);

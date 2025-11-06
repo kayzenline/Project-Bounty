@@ -44,7 +44,15 @@ export const sampleLaunchVehicle1 = {
     maneuveringFuel: 10
 };
 
-
+export const sampleLaunchVehicle2 = {
+    name: "Saturn VI",
+    description: "Multi-stage Booster Rocket Pro",
+    maxCrewWeight: 400,
+    maxPayloadWeight: 900,
+    launchVehicleWeight: 3000,
+    thrustCapacity: 900000,
+    maneuveringFuel: 20
+};
 
 export const sampleLaunch1: LaunchInput = {
     launchVehicleId : -1,

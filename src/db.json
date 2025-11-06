@@ -1,9 +1,28 @@
 {
-  "controlUsers": [],
+  "controlUsers": [
+    {
+      "controlUserId": 1,
+      "email": "james.kirk@starfleet.gov.au",
+      "password": "$2b$10$vwmIPk50/wzchBOG4FKbceKtmPiFvgHHeLqo7y1ztzXlZYEyC5nUC",
+      "nameFirst": "John",
+      "nameLast": "Carter",
+      "flagLastLogin": true,
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "livelong123"
+      ]
+    }
+  ],
   "spaceMissions": [],
-  "nextControlUserId": 1,
+  "nextControlUserId": 2,
   "nextMissionId": 1,
-  "sessions": [],
+  "sessions": [
+    {
+      "controlUserSessionId": "4b1acc44-ae6e-4480-a776-f3edcf9f697d",
+      "controlUserId": 1
+    }
+  ],
   "astronauts": [],
   "nextAstronautId": 1
 }

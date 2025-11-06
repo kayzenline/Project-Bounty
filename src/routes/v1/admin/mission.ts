@@ -22,7 +22,7 @@ router.get('/list', (req: Request, res: Response, next: NextFunction) => {
     const result = adminMissionList(session.controlUserId);
     return res.status(200).json(result);
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 
@@ -42,7 +42,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
     const result = adminMissionCreate(session.controlUserId, name, description, target);
     res.status(200).json(result);
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 
@@ -60,7 +60,7 @@ router.get('/:missionid', (req: Request, res: Response, next: NextFunction) => {
     const result = adminMissionInfo(session.controlUserId, missionId);
     res.status(200).json(result);
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 
@@ -78,7 +78,7 @@ router.delete('/:missionid', (req: Request, res: Response, next: NextFunction) =
     const result = adminMissionRemove(session.controlUserId, missionId);
     res.status(200).json(result);
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 
@@ -97,7 +97,7 @@ router.put('/:missionId/name', (req: Request, res: Response, next: NextFunction)
     const result = adminMissionNameUpdate(controlUserId, missionId, name.name);
     return res.status(200).json(result);
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 
@@ -116,7 +116,7 @@ router.put('/:missionId/description', (req: Request, res: Response, next: NextFu
     const result = adminMissionDescriptionUpdate(controlUserId, missionId, description.description);
     return res.status(200).json(result);
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 
@@ -149,7 +149,7 @@ router.post('/:missionId/transfer', (req: Request, res: Response, next: NextFunc
     const result = adminMissionTransfer(session.controlUserId, missionId, userEmail.email);
     return res.status(200).json(result);
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 
@@ -165,7 +165,7 @@ router.post('/:missionid/assign/:astronautid', (req: Request, res: Response, nex
     const result = adminMissionAstronautAssign(controlUserSessionId, astronautId, missionId);
     return res.status(200).json(result);
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 
@@ -182,7 +182,7 @@ router.delete('/:missionid/assign/:astronautid', (req: Request, res: Response, n
     const result = adminMissionAstronautUnassign(controlUserSessionId, astronautId, missionId);
     return res.status(200).json(result);
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 
