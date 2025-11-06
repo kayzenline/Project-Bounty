@@ -368,7 +368,7 @@ export function launchVehicleLaunchSummary(launchVehicleId: number) : LaunchVehi
       launchVehicleId: launch.launchVehicleId,
       name: launch.name,
       assigned: launch.retired
-    }
+    };
     return summary;
   }
 }
