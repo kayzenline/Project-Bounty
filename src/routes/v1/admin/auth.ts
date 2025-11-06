@@ -10,7 +10,7 @@ router.post('/register', (req: Request, res: Response, next: NextFunction) => {
     const result = adminAuthRegister(email, password, nameFirst, nameLast);
     return res.status(200).json({ controlUserSessionId: result.controlUserSessionId });
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 router.post('/login', (req: Request, res: Response, next: NextFunction) => {
@@ -20,7 +20,7 @@ router.post('/login', (req: Request, res: Response, next: NextFunction) => {
     const result = adminAuthLogin(email, password);
     return res.status(200).json({ controlUserSessionId: result.controlUserSessionId });
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 router.post('/logout', (req: Request, res: Response, next: NextFunction) => {
@@ -31,7 +31,7 @@ router.post('/logout', (req: Request, res: Response, next: NextFunction) => {
     const result = adminAuthLogout(controlUserSessionId as string);
     return res.status(200).json(result);
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 

@@ -25,7 +25,7 @@ router.get('/pool', (req: Request, res: Response, next: NextFunction) => {
 
     return res.status(200).json(result);
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 
@@ -42,7 +42,7 @@ router.get('/:astronautid', (req: Request, res: Response, next: NextFunction) =>
     const result = adminAstronautInfo(controlUserSessionId, astronautId);
     return res.status(200).json(result.response);
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 
@@ -64,7 +64,7 @@ router.put('/:astronautid', (req: Request, res: Response, next: NextFunction) =>
     );
     return res.status(200).json(result);
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 
@@ -76,7 +76,7 @@ router.delete('/:astronautid', (req: Request, res: Response, next: NextFunction)
     const result = adminAstronautDelete(controlUserSessionId, astronautId);
     return res.status(200).json(result);
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 
