@@ -17,7 +17,7 @@ export function adminLaunchVehicleCreate(
   return notImplemented();
 }
 
-export function adminLaunchVehicleList(controlUserSessionId: string) {
+export function adminLaunchVehicleDetails(controlUserSessionId: string) {
   return notImplemented();
 }
 
