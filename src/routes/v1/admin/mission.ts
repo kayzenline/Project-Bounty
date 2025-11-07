@@ -1,8 +1,16 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { getData } from '../../../dataStore';
-import { adminMissionAstronautAssign, adminMissionAstronautUnassign } from '../../../astronaut';
-import { adminMissionNameUpdate, adminMissionTargetUpdate, adminMissionDescriptionUpdate, adminMissionRemove, adminMissionCreate, adminMissionList, adminMissionInfo } from '../../../mission';
-import { adminMissionTransfer } from '../../../missionTransferExample';
+import { adminMissionAstronautAssign, adminMissionAstronautUnassign } from '../../../logic/astronaut';
+import {
+  adminMissionNameUpdate,
+  adminMissionTargetUpdate,
+  adminMissionDescriptionUpdate,
+  adminMissionRemove,
+  adminMissionCreate,
+  adminMissionList,
+  adminMissionInfo
+} from '../../../logic/mission';
+import { adminMissionTransfer } from '../../../logic/missionTransferExample';
 import { findSessionFromSessionId } from '../../../helper';
 import HTTPError from 'http-errors';
 

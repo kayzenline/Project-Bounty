@@ -1,4 +1,4 @@
-import { getData, setData, Astronaut } from './dataStore';
+import { getData, setData, Astronaut } from '../dataStore';
 import {
   findSessionFromSessionId,
   astronautIdCheck,
@@ -8,8 +8,8 @@ import {
   normalizeError,
   ServiceError,
   missionIdCheck
-} from './helper';
-import { errorCategories as EC } from './testSamples';
+} from '../helper';
+import { errorCategories as EC } from '../testSamples';
 import HTTPError from 'http-errors';
 
 function buildError(message: string, code: string): never {

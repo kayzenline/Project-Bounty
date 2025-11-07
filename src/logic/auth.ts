@@ -14,9 +14,9 @@ import {
   verifyPasswordSync,
   findUserById,
   ServiceError
-} from './helper';
-import { getData, setData, Session } from './dataStore';
-import { errorCategories as EC } from './testSamples';
+} from '../helper';
+import { getData, setData, Session } from '../dataStore';
+import { errorCategories as EC } from '../testSamples';
 import HTTPError from 'http-errors';
 
 function buildError(message: string, code: string): never {

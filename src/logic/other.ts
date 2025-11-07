@@ -1,6 +1,6 @@
 // This file should contain your functions relating to:
 // - clear
-import { getData, setData } from './dataStore';
+import { getData, setData } from '../dataStore';
 import type { Request, Response } from 'express';
 // Reset application state
 // Function to clear all data (for testing)

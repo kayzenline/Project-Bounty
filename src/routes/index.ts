@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import v1Router from './v1';
-import { clear } from '../other';
+import { clear } from '../logic/other';
 const router = Router();
 
 router.use('/v1', v1Router);
