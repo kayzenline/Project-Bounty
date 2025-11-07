@@ -68,3 +68,15 @@ export const sampleLaunch1: LaunchInput = {
         maneuveringDelay: 2
     }
 };
+
+export const launchVehicleInfo = {
+    name: sampleLaunchVehicle1.name,
+    description: sampleLaunchVehicle1.description,
+    maxCrewWeight: sampleLaunchVehicle1.maxCrewWeight,
+    maxPayloadWeight: sampleLaunchVehicle1.maxPayloadWeight,
+    launchVehicleWeight: sampleLaunchVehicle1.launchVehicleWeight,
+    thrustCapacity: sampleLaunchVehicle1.thrustCapacity,
+    startingManeuveringFuel: sampleLaunchVehicle1.maneuveringFuel,
+    retired: false,
+    launches: []
+};
