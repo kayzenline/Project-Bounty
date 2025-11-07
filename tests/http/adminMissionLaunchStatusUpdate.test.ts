@@ -89,7 +89,23 @@ describe.skip('Need to write a description', () => {
   //bad launch parameters
     test('A LIFTOFF action has been attempted with bad launch parameters ', () => {
       //problem: bad parameters
-      const statusupdateRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,launchId,'LIFTOFF')
+      const createRes=adminMissionLaunchOrganiseRequest(
+        controlUserSessionId,
+        missionId,
+        {
+          description: 'bad parameters',
+          weight: 400
+        },
+        {
+          "targetDistance": 0,
+          "fuelBurnRate": 0,
+          "thrustFuel": 0,
+          "activeGravityForce": 9.8,
+          "maneuveringDelay": 0
+        }
+      )
+      const badlaunchId=createRes.body.launchId;
+      const statusupdateRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,badlaunchId,'LIFTOFF');
       expect(statusupdateRes.statusCode).toBe(400);
       expect(statusupdateRes.body.state).toBe(missionLaunchAction.FAULT);
       expect(statusupdateRes.body.error).toEqual(expect.any(String));
@@ -97,14 +113,50 @@ describe.skip('Need to write a description', () => {
     //invalid action
     test('A CORRECTION action been attempted with insufficient fuel available ', () => {
       //insufficient fuel available
-      const statusupdateRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,launchId,'CORRECTION')
+      const createRes=adminMissionLaunchOrganiseRequest(
+        controlUserSessionId,
+        missionId,
+        {
+          description: 'insufficient fuel available',
+          weight: 400
+        },
+        {
+          "targetDistance": 12000,
+          "fuelBurnRate": 20,
+          "thrustFuel": 1,
+          "activeGravityForce": 9.8,
+          "maneuveringDelay": 2
+        }
+      )
+      const badlaunchId=createRes.body.launchId;
+      const liftoffRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,badlaunchId,'LIFTOFF')
+      expect(liftoffRes.statusCode).toBe(200);
+      const statusupdateRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,badlaunchId,'CORRECTION')
       expect(statusupdateRes.statusCode).toBe(400);
       expect(statusupdateRes.body.state).toBe(missionLaunchAction.FAULT);
       expect(statusupdateRes.body.error).toEqual(expect.any(String));
   });
   test('A FIRE_THRUSTERS action been attempted with insufficient fuel available ', () => {
     //insufficient fuel available
-    const statusupdateRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,launchId,'FIRE_THRUSTERS')
+    const createRes=adminMissionLaunchOrganiseRequest(
+      controlUserSessionId,
+      missionId,
+      {
+        description: 'insufficient fuel available',
+        weight: 400
+      },
+      {
+        "targetDistance": 12000,
+        "fuelBurnRate": 20,
+        "thrustFuel": 1,
+        "activeGravityForce": 9.8,
+        "maneuveringDelay": 2
+      }
+    )
+    const badlaunchId=createRes.body.launchId;
+    const liftoffRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,badlaunchId,'LIFTOFF')
+    expect(liftoffRes.statusCode).toBe(200);
+    const statusupdateRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,badlaunchId,'FIRE_THRUSTERS')
     expect(statusupdateRes.statusCode).toBe(400);
     expect(statusupdateRes.body.state).toBe(missionLaunchAction.FAULT);
     expect(statusupdateRes.body.error).toEqual(expect.any(String));
