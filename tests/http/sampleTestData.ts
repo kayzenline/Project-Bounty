@@ -1,5 +1,22 @@
 import { LaunchInput, LaunchCalcParameters } from '../../src/dataStore';
 
+type LaunchVehicleHistoryEntry = {
+    launch: string;
+    state: string;
+};
+
+type LaunchVehicleInfo = {
+    name: string;
+    description: string;
+    maxCrewWeight: number;
+    maxPayloadWeight: number;
+    launchVehicleWeight: number;
+    thrustCapacity: number;
+    startingManeuveringFuel: number;
+    retired: boolean;
+    launches: LaunchVehicleHistoryEntry[];
+};
+
 export const sampleUser1 = {
     nameFirst: 'fnameOne',
     nameLast: 'lnameOne',
@@ -69,7 +86,7 @@ export const sampleLaunch1: LaunchInput = {
     }
 };
 
-export const launchVehicleInfo = {
+export const launchVehicleInfo: LaunchVehicleInfo = {
     name: sampleLaunchVehicle1.name,
     description: sampleLaunchVehicle1.description,
     maxCrewWeight: sampleLaunchVehicle1.maxCrewWeight,
