@@ -586,4 +586,4 @@ describe.skip('Need to write a description', () => {
     expect(detail.body.state).toBe(missionLaunchState.REENTRY);
 });
   
-});
+})

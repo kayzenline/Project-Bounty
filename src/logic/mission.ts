@@ -1,6 +1,6 @@
 // This file should contain your functions relating to:
 // - adminMission*
-import { getData, setData } from './dataStore';
+import { getData, setData } from '../dataStore';
 import {
   controlUserIdCheck,
   missionIdCheck,
@@ -11,7 +11,7 @@ import {
   normalizeError,
   ServiceError
 } from './helper';
-import { errorCategories as EC } from './testSamples';
+import { errorCategories as EC } from '../testSamples';
 import HTTPError from 'http-errors';
 
 function buildError(message: string, code: string): never {

@@ -1,5 +1,5 @@
-import { getData, setData } from './dataStore';
-import { errorCategories } from './testSamples';
+import { getData, setData } from '../dataStore';
+import { errorCategories } from '../testSamples';
 
 /**
  * Transfers a space mission from one control User to another controlUser

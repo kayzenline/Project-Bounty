@@ -1,6 +1,10 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { adminControlUserDetails, adminControlUserDetailsUpdate, adminControlUserPasswordUpdate } from '../../../auth';
-import { findSessionFromSessionId } from '../../../helper';
+import {
+  adminControlUserDetails,
+  adminControlUserDetailsUpdate,
+  adminControlUserPasswordUpdate
+} from '../../../logic/auth';
+import { findSessionFromSessionId } from '../../../logic/helper';
 import HTTPError from 'http-errors';
 const router = Router();
 

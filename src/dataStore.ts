@@ -95,6 +95,26 @@ export interface LaunchVehicle {
   // launches?: LaunchSummary // this is computed value so it does not need to be stored
 }
 
+export interface LaunchVehicleHistoryEntry {
+  launch: string;
+  state: string;
+}
+
+export interface LaunchVehicleInfo {
+  launchVehicleId?: number;
+  name: string;
+  description: string;
+  maxCrewWeight: number;
+  maxPayloadWeight: number;
+  launchVehicleWeight: number;
+  thrustCapacity: number;
+  startingManeuveringFuel: number;
+  retired: boolean;
+  timeAdded?: number;
+  timeLastEdited?: number;
+  launches: LaunchVehicleHistoryEntry[];
+}
+
 export interface Payload {
   payloadId: number, // an id for this entity
   description: string, // a description for this payload

@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { adminAuthRegister, adminAuthLogin, adminAuthLogout } from '../../../auth';
+import { adminAuthRegister, adminAuthLogin, adminAuthLogout } from '../../../logic/auth';
 
 const router = Router();
 
