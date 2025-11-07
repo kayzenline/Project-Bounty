@@ -402,6 +402,11 @@ export function payloadDescriptionValidityCheck(description: string): boolean {
 export function payloadIdCheck(payloadId: number) : boolean {
   return true;
 }
+//waiting of status
+/*export function wait(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+*/
 
 export {
   controlUserIdGen,
