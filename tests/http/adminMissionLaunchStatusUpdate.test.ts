@@ -188,3 +188,81 @@ describe.skip('Need to write a description', () => {
   });
   
 });
+    //invalid action
+    test('A CORRECTION action been attempted with insufficient fuel available ', () => {
+      //insufficient fuel available
+      const createRes=adminMissionLaunchOrganiseRequest(
+        controlUserSessionId,
+        missionId,
+        {
+          description: 'insufficient fuel available',
+          weight: 400
+        },
+        {
+          "targetDistance": 12000,
+          "fuelBurnRate": 20,
+          "thrustFuel": 1,
+          "activeGravityForce": 9.8,
+          "maneuveringDelay": 2
+        }
+      )
+      const badlaunchId=createRes.body.launchId;
+      const liftoffRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,badlaunchId,'LIFTOFF')
+      expect(liftoffRes.statusCode).toBe(200);
+      const statusupdateRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,badlaunchId,'CORRECTION')
+      expect(statusupdateRes.statusCode).toBe(400);
+      expect(statusupdateRes.body.state).toBe(missionLaunchAction.FAULT);
+      expect(statusupdateRes.body.error).toEqual(expect.any(String));
+  });
+  test('A FIRE_THRUSTERS action been attempted with insufficient fuel available ', () => {
+    //insufficient fuel available
+    const createRes=adminMissionLaunchOrganiseRequest(
+      controlUserSessionId,
+      missionId,
+      {
+        description: 'insufficient fuel available',
+        weight: 400
+      },
+      {
+        "targetDistance": 12000,
+        "fuelBurnRate": 20,
+        "thrustFuel": 1,
+        "activeGravityForce": 9.8,
+        "maneuveringDelay": 2
+      }
+    )
+    const badlaunchId=createRes.body.launchId;
+    const liftoffRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,badlaunchId,'LIFTOFF')
+    expect(liftoffRes.statusCode).toBe(200);
+    const statusupdateRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,badlaunchId,'FIRE_THRUSTERS')
+    expect(statusupdateRes.statusCode).toBe(400);
+    expect(statusupdateRes.body.state).toBe(missionLaunchAction.FAULT);
+    expect(statusupdateRes.body.error).toEqual(expect.any(String));
+});
+  //check controlusersessionid
+  const invalidsessionid = [
+    { testcontrolUserSessionId: '' },
+    { testcontrolUserSessionId: '9999' },
+  ];
+  test.each(invalidsessionid)('ControlUserSessionId is empty or invalid', ({testcontrolUserSessionId}) => {
+    const detailRes=adminMissionLaunchDetailsRequest(testcontrolUserSessionId,missionId,launchId)
+    expect(detailRes.statusCode).toBe(401);
+    expect(detailRes.body).toStrictEqual({error:expect.any(String)});
+  });
+  //check missionId 
+  const invalidmissionid = [
+    { testmissionId: '' as any},
+    { testmissionId: 9999 },
+  ];
+  test.each(invalidmissionid)('MissionId is empty, invalid or not associated with the current controlUser', ({testmissionId}) => {
+    const detailRes=adminMissionLaunchDetailsRequest(controlUserSessionId,testmissionId,launchId)
+    expect(detailRes.statusCode).toBe(403);
+    expect(detailRes.body).toStrictEqual({ error: expect.any(String)});
+  });
+  test('MissionId is not associated with the current controlUser', () => {
+    const detailRes=adminMissionLaunchDetailsRequest(controlUserSessionId,missionId2,launchId)
+    expect(detailRes.statusCode).toBe(403);
+    expect(detailRes.body).toStrictEqual({ error: expect.any(String)});
+  });
+  
+});
