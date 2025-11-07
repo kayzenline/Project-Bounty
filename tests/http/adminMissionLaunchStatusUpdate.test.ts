@@ -109,7 +109,7 @@ describe.skip('Need to write a description', () => {
       expect(statusupdateRes.statusCode).toBe(400);
       expect(statusupdateRes.body.state).toBe(missionLaunchAction.FAULT);
       expect(statusupdateRes.body.error).toEqual(expect.any(String));
-});
+    });
     //invalid action
     test('A CORRECTION action been attempted with insufficient fuel available ', () => {
       //insufficient fuel available
@@ -187,4 +187,4 @@ describe.skip('Need to write a description', () => {
     expect(detailRes.body).toStrictEqual({ error: expect.any(String)});
   });
   
-});
+})

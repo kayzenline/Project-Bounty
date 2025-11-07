@@ -8,7 +8,7 @@ import {
   normalizeError,
   ServiceError,
   missionIdCheck
-} from '../helper';
+} from './helper';
 import { errorCategories as EC } from '../testSamples';
 import HTTPError from 'http-errors';
 

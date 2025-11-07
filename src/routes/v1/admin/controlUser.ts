@@ -4,7 +4,7 @@ import {
   adminControlUserDetailsUpdate,
   adminControlUserPasswordUpdate
 } from '../../../logic/auth';
-import { findSessionFromSessionId } from '../../../helper';
+import { findSessionFromSessionId } from '../../../logic/helper';
 import HTTPError from 'http-errors';
 const router = Router();
 

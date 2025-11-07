@@ -1,5 +1,5 @@
-import { getData } from './dataStore';
-import { errorCategories as EC } from './testSamples';
+import { getData } from '../dataStore';
+import { errorCategories as EC } from '../testSamples';
 import { v4 as uuidGen } from 'uuid';
 import bcrypt from 'bcrypt';
 import isEmail from 'validator/lib/isEmail';
@@ -294,7 +294,7 @@ function findSessionFromSessionId(controlUserSessionId: string) {
 // ITER 3 Launch Vehicle, Launch and Payload helper functions
 // Launch Vehicale helper functions
 
-export function launchVehicleNameValidityCheck(name:string) : boolean {
+export function launchVehicleNameValidityCheck(name: string): boolean {
   if (typeof name !== 'string') {
     return false;
   }
@@ -307,7 +307,7 @@ export function launchVehicleNameValidityCheck(name:string) : boolean {
   return /^[a-zA-Z\s\-']+$/.test(trimmedName);
 }
 
-export function launchVehicleDescriptionValidityCheck(description:string) : boolean {
+export function launchVehicleDescriptionValidityCheck(description: string): boolean {
   if (typeof description !== 'string') {
     return false;
   }
@@ -320,35 +320,35 @@ export function launchVehicleDescriptionValidityCheck(description:string) : bool
   return /^[a-zA-Z\s\-']+$/.test(trimmedDescription);
 }
 
-export function launchVehicleCrewWeightValidityCheck(maxCrewWeight: number) : boolean {
+export function launchVehicleCrewWeightValidityCheck(maxCrewWeight: number): boolean {
   if (maxCrewWeight < 100 || maxCrewWeight > 1000) {
     return false;
   }
   return true;
 }
 
-export function launchVehiclePayloadWeightValidityCheck(maxPayloadWeight: number) : boolean {
+export function launchVehiclePayloadWeightValidityCheck(maxPayloadWeight: number): boolean {
   if (maxPayloadWeight < 100 || maxPayloadWeight > 1000) {
     return false;
   }
   return true;
 }
 
-export function launchVehicleWeightValidityCheck(launchVehicleWeight: number) : boolean {
+export function launchVehicleWeightValidityCheck(launchVehicleWeight: number): boolean {
   if (launchVehicleWeight < 1000 || launchVehicleWeight > 100000) {
     return false;
   }
   return true;
 }
 
-export function launchVehicleThrustCapacityValidityCheck(thrustCapacity: number) : boolean {
+export function launchVehicleThrustCapacityValidityCheck(thrustCapacity: number): boolean {
   if (thrustCapacity < 100000 || thrustCapacity > 10000000) {
     return false;
   }
   return true;
 }
 
-export function launchVehicleManeuveringFuelValidityCheck(maneuveringFuel: number) : boolean {
+export function launchVehicleManeuveringFuelValidityCheck(maneuveringFuel: number): boolean {
   if (maneuveringFuel < 10 || maneuveringFuel > 100) {
     return false;
   }
@@ -361,7 +361,7 @@ interface LaunchVehicleLaunchSummary {
   assigned: boolean
 }
 
-export function launchVehicleLaunchSummary(launchVehicleId: number) : LaunchVehicleLaunchSummary {
+export function launchVehicleLaunchSummary(launchVehicleId: number): LaunchVehicleLaunchSummary {
   const launch = getData().launchVehicles.find(l => l.launchVehicleId === launchVehicleId);
   if (launch) {
     const summary: LaunchVehicleLaunchSummary = {
@@ -373,11 +373,11 @@ export function launchVehicleLaunchSummary(launchVehicleId: number) : LaunchVehi
   }
 }
 
-export function launchVehicleIdCheck(launchVehicleId: number) : boolean {
+export function launchVehicleIdCheck(launchVehicleId: number): boolean {
   return true;
 }
 // Launch helper functions
-export function launchIdCheck(launchId: number) : boolean {
+export function launchIdCheck(launchId: number): boolean {
   return true;
 }
 interface LaunchCalcParameters {
@@ -390,7 +390,7 @@ export function launchCalculationParameterCorrectnessCheck(launchParams: LaunchC
 export function canThisLaunchReachTargetDistanceCheck(): boolean {
   return true;
 }
-export function checkValidActionForCurrentState() : boolean {
+export function checkValidActionForCurrentState(): boolean {
   return true;
 }
 
@@ -399,7 +399,7 @@ export function payloadDescriptionValidityCheck(description: string): boolean {
   return true;
 }
 
-export function payloadIdCheck(payloadId: number) : boolean {
+export function payloadIdCheck(payloadId: number): boolean {
   return true;
 }
 

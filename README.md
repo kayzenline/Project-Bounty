@@ -1580,7 +1580,764 @@ Please see section 7.5 for information on **peer assessment**.
 
 ## 🛸 5. Iteration 3: Completing the Lifecycle
 
-Coming Soon
+Iteration 3 builds off all of the work you've completed in iteration 1 and 2. If you haven't completed the implementation of iteration 2, you must complete it as part of this iteration. Most of the work from iteration 1 and 2 can be recycled, but the following consideration(s) need to be made from previous work:
+
+* `DELETE /vw/admin/mission/{missionid}/assign/{astronautid}` has an extra error check for unassigning an astronaut
+
+Some of your logic and layer communication might change from Iteration 2 to Iteration 3. It is ok to assume that for Iteration 3 you will not have to worry about making old tests work, just that the API definition will work with the new routes.
+
+### 🛸 5.1. Task
+
+In this iteration, you are expected to:
+
+1. Make adjustments to your existing code and tests as per any feedback given by your tutor for iteration 2. In particular, you should take time to ensure that your code is well-styled and complies with good software writing practices and software and test design principles discussed in lectures. This includes focusing on:
+
+    1. Applying whatever designing for maintainability concepts were taught in lectures
+    2. Using exceptions to "throw errors" instead of returning errors in the functions you call from `server.ts`.
+    3. Ensuring that there is no references to `req`, `res`, or status codes, in functions outside of `server.ts` to properly maintain abstraction between the HTTP layer and the application logic layer(You may still throw HTTPErrors with appropriate status codes from your logic functions).
+
+2. Implement and test the HTTP Express server according to the [entire interface provided in the specification](swagger.yaml), including all new routes added in iteration 3.
+
+    * Part of this section will be automarked.
+
+    * It is required that your data is persistent, just like in iteration 2.
+
+    * `eslint` is assessed identically to iteration 2.
+
+    * Good coverage for all files that aren't tests will be assessed: see section 5.4 for details.
+
+    * You can structure your test files however you choose, as long as they are appended with `.test.ts`. You may place them inside a `/tests` folder, if you wish. For this iteration, we will only be testing your HTTP layer of tests. 
+    
+    * You must comply with instructions laid out in `5.3`
+
+3. Continue demonstrating effective project management and git usage.
+
+    * You will be heavily marked on your thoughtful approach to project management and effective use of git. The degree to which your team works effectively will also be assessed.
+
+    * As for iteration 1 and 2, all task tracking and management will need to be done via the GitLab Taskboard or other tutor-approved tracking mechanism.
+
+    * As for iteration 1 and 2, regular group meetings must be documented with meeting minutes which should be stored at a timestamped location in your repo (e.g. uploading a word doc/pdf or writing in the GitLab repo wiki after each meeting).
+
+    * As for iteration 1 and 2, you must be able to demonstrate evidence of regular standups.
+
+    * You are required to regularly and thoughtfully make merge requests for the smallest reasonable units, and merge them into the default branch (`master` or `main`).
+
+4. Continue the SDLC cycle with design related tasks
+
+    * Full detail of this can be found in `5.5`.
+
+5. Create a short 2-minute video of your experiences.
+
+    * You are required to create a small 2 minute video of your experiences as a group for this project. The funniest videos will be demonstrated in your Project Exhibition. 
+    
+    * The video should be an interview style consisting of your group members talking about the following:
+
+        - What challenges did you face during this project
+        - How did you overcome these challenges
+        - What is your impression of your work
+        - How would you approach this task differently if you had to do it again
+        - What can be improved both in your work and in the course?
+
+    * The video should be in 1080p resolution and no more than 200mb.
+
+    * Try to avoid personal items in your video if you can.
+
+    * Make it fun!
+
+6. Participate in the Project Exhibition at the end of term 
+
+### 🛸 5.2. Running the server
+
+To run the server, you can run the following command from the root directory of your project (e.g. `/project-backend`):
+
+```bash
+npm start
+```
+
+This will start the server on the port in the `src/server.ts` file, using `ts-node`.
+
+If you get an error stating that the address is already in use, you can change the port number in `config.json` to any number from 1024 to 49151. Is it likely that another student may be using your original port number.
+
+Please note: For routes involving the playing of a game and waiting for questions to end, you are not required to account for situations where the server process crashes or restarts while waiting. If the server ever restarts while these active "quiz sessions" are ongoing, you can assume they are no longer happening after restart.
+
+### 🛸 5.3. Implementing and testing features
+
+Continue working on this project by making distinct "features". Each feature should add some meaningful functionality to the project, but still be as small as possible. You should aim to size features as the smallest amount of functionality that adds value without making the project more unstable. For each feature you should:
+
+1. Create a new branch.
+2. Write tests for that feature and commit them to the branch. These will fail as you have not yet implemented the feature. You can set the tests to skip if you push merges with tests and incomplete features.
+3. Implement that feature.
+4. Make any changes to the tests such that they pass with the given implementation. You should not have to do a lot here. If you find that you are, you're not spending enough time on your tests.
+5. Create a merge request for the branch.
+6. Get someone in your team who **did not** work on the feature to review the merge request. When reviewing, **not only should you ensure the new feature has tests that pass, but you should also check that the coverage percentage has not been significantly reduced.**
+7. Fix any issues identified in the review.
+8. Merge the merge request into master.
+
+For this project, a feature is typically sized somewhere between a single function, and a whole file of functions (e.g. `auth.ts`). It is up to you and your team to decide what each feature is.
+
+There is no requirement that each feature be implemented by only one person. In fact, we encourage you to work together closely on features.
+
+    * You are required to edit the `gitlab-ci.yml` file, as per section 4.5 to add linting to the code on the default branch (`master` or `main`). **You must do this BEFORE merging anything from iteration 2 into the default branch (`master` or `main`)**, so that you ensure the default branch (`master` or `main`) is always stable.
+
+* We want to see **evidence that you wrote your tests before writing the implementation**. As noted above, the commits containing your initial tests should appear *before* your implementation for every feature branch. If we don't see this evidence, we will assume you did not write your tests first and your mark will be reduced.
+* You should have black-box tests for all tests required (i.e. testing each function/endpoint). However, you are also welcome to write white-box unit tests in this iteration if you see that as important.
+* Merging in merge requests with failing pipelines is **very bad practice**. Not only does this interfere with your team's ability to work on different features at the same time, and thus slow down development - it is something you will be penalised for in marking.
+* Similarly, merging in branches with untested features is also **very bad practice**. We will assume, and you should too, that any code without tests does not work.
+* Pushing directly to the default branch (`master` or `main`) is not possible for this repo. The only way to get code into the default branch (`master` or `main`) is via a merge request. If you discover you have a bug in the default branch (`master` or `main`) that got through testing, create a bugfix branch and merge that in via a merge request.
+
+### 🛸 5.4. Test coverage
+
+To get the coverage of your tests locally, you will need to have two terminals open. Run these commands from the root directory of your project (e.g. `/project-backend`).
+
+In the first terminal, run
+```bash
+npm run ts-node-coverage
+```
+
+In the second terminal, run jest as usual
+```bash
+npm run test
+```
+
+Back in the first terminal, stop the server with Ctrl+C or Command+C. There should now be a `/coverage` directory available. Open the `index.html` file in your web browser to see its output.
+
+### 🛸 5.5. Software Development Life cycle - Design
+
+In Iteration 2 you completed the **Requirements and Analysis** sections of the Software Development Lifecycle. Now it is time to complete the life cycle with **Design** related tasks.
+
+You may solve these tasks in wiki.
+
+#### 🛸 5.5.1 [Design] Interface Design
+
+Now that we've established our *problem* (described as requirements), it's time to think about our *solution* in terms of what capabilities would be necessary. You will specify these capabilities as HTTP endpoints, similar to what is described in the swagger docs. There is no minimum or maximum of what is needed - it will depend on what problem you're solving.
+
+**You are also encouraged to update your `swagger.yaml` file to include the routes associated with your new work.**
+
+To add a route to swagger.yaml, you must add a few items:
+1. Define the route at the bottom of the file under `paths`
+2. Add a summary of what the route intends
+3. Add a detailed description about the route
+4. Add a tag which indicates what the route might be?
+  - "Iteration 3 (New)"
+5. Add parameters (inputs)
+  - usually path inputs, header inputs, body inputs
+  - these are defined in the `components` section
+6. Add responses
+  - usually a 200 response for everything is fine
+    - description of that reponse
+    - a 'schema' which defines the response
+  - a 401 response if controlUserSessionId is invalid
+  - a 403 response if the resource is not available to the current controlUser (defined by their controlUserSessionId)
+
+Every section in the `swagger.yaml` file that starts with `#/components/{category}` can be found by searching for `category:`. In the provided `swagger.yaml` we have route definitions that are broken up into various parameters to allow for re-use. However, this may be too complicated to do for your example. Here is an example version of the `GET /v1/admin/launchvehicle/list` that is similar to your Tutorial 10.
+
+```yaml
+/v1/admin/launch/list:
+  get:
+    summary: List all launches
+    description: |
+      Show all launches that are currently active or inactive
+    tags:
+      - "Iteration 3 (New)"
+    parameters:
+      - in: header
+        name: controlUserSessionId
+        required: true
+        schema:
+          type: string
+          example: "session12345"
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                launchVehicles:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      launchVehicleId:
+                        type: number
+                        example: 1
+                      name:
+                        type: string
+                        example: Saturn V
+                      inLaunch:
+                        type: boolean
+                        example: false
+      401:
+        description: ControlUserSessionId is empty or invalid (does not refer to valid logged in user session)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+                  example: "Meaningful error message"
+
+  
+```
+
+#### 🛸 5.5.2 [Design] Conceptual Modelling - State Diagrams
+
+Now that you have a sense of the problem to solve, and what capabilities you will need to provide to solve it, add at least ONE state diagram to your wiki to show how the state of the application would change based on user actions. The aim of this diagram is to help a developer understand the different states of the application.
+
+#### 🛸 [Design] 5.5.3 Pitch Presentation
+
+Once you have identified and designed a new functionality, it is time to gather resources to build it.
+
+In software development, it is a common practice that sometimes you need to promote your ideas and visions to other stakeholders. This usually involves a short pitch meeting where you outline the gaps you see in the current product and how you intend to address them.
+
+A common example of this can be seen in shows such as Shark Tank or Dragon Den where would-be inventors seek funding from a group of would-be investors.
+
+Other times, it could be a idea that a single individual was working on that turned out to be hugely beneficial to the company – such as Google Maps.
+
+This assessment task will ask you to pitch the new design idea you for Iteration 03 to a prospective stakeholder – in this instance the company that commisioned the Xecaps system – NASA!
+
+Your target audience will comprise of seniour software engineers, non-technical project managers and a C-Suite member (Highest executive member with authority to approve your idea)
+
+##### 🛸 5.5.3.1 Task Outline
+
+In your project teams develop a **3 minute pitch presentation** with a **5 slide pitch deck**. Your objective is to explain and justify your new feature. Be sure to address the capabilities of your various different audience members.
+
+There will be a guest lecture in Week 10 Thursday 3pm lecture and TLB Exercise in Week 10 Friday. These activities will demonstrate the skills you need to complete this task. 
+
+Note:: **You can also earn lab marks by attending both the lecture (0.5) and completing the Week 10 in-class activity (0.5)**
+
+### 🛸 5.6. Context Information
+
+In this iteration we simulate a launch of a space mission to deploy a payload.
+
+This involves some new concepts that we will discuss in the next section.
+
+A launch is an instance of a space mission. You can think of it like this: A space mission is plan for an activity. A launch is several copies of that plan where that activity is attempted.
+
+In order to carry out a launch, we need some sort of vehicle like a rocket or a space shuttle that can be used to travel into space.
+
+This launch vehicle will carry a crew and a payload. A payload is some sort of object (like a satellite, or a component or vital supplies) that needs to be sent to space to complete this instance of your space mission.
+
+A launch will occur by the launch vehicle lifting off from earth and firing it's engines (or booster rockets) to reach the desired location in space. 
+
+Once it has reached the desired location, it can begin coasting (moving along using it's previous momentum) until it is ready to deploy the payload.
+
+Once the payload is deployed, the launch vehicle will attempt re-entry into earth and return to earth.
+
+Once it has returned to earth, all astronauts will disembark the space vehicle and the launch vehicle will be available to be used for another launch.
+
+### 🛸 5.7. New Concepts
+
+In order to simulate a launch, we will need some new concepts to handle the details of a launch.
+
+These are:
+1. a Launch Vehicle that can be used to travel to space
+2. A Payload that is carried by the Launch Vehicle as part of a Launch.
+3. A Space Launch that is an instance of a Space Mission that will carry the crew (Astronauts allocated to this Launch) and Payload into Space.
+
+#### 🛸 5.7.1. Launch Vehicle
+
+A Launch vehicle has the following properties:
+1. launchVehicleId
+2. name
+3. description
+4. maximumCrewWeight (kg)
+5. maximumPayloadWeight (kg)
+6. ThrustCapacity : number
+7. maneuveringFuel: number (L)
+8. retired: boolean
+
+If a launch is attempted that exceeds the maximum crew weight or maximum payload weight, it should fail.
+
+A launch vehicle can be assigned to a single launch at a time. It can not be unassigned until the launch state is `ON_EARTH`.
+
+#### 🛸 5.7.2. Payload
+
+A payload has the following properties:
+1. payloadId
+2. description
+3. weight (kg)
+4. deployed (boolean)
+
+A payload is unique to each launch. It does not exist outside of a launch.
+
+#### 🛸 5.7.3. Launch
+
+A Launch has the following properties:
+
+1. launchId
+2. missionCopy: Mission
+3. launchCreationTime
+4. launchState
+5. assignedLaunchVehicleId
+6. payload: Payload
+7. allocatedAstronauts: number[]
+8. launchCalculationParameters: LaunchParameters
+
+Each launch is a copy / instance of a particular mission, as such it holds an unchanging copy of a space mission.
+
+An astronaut can not be unassigned from a space mission if they allocated to a launch.
+
+Only astronauts that are **assigned** to a particular space mission can be **allocated** to a launch for that space mission.
+
+When a launch is completed (moves to the `ON_EARTH` state), all astronauts allocated to that launch should be de-allocated.
+
+### 🛸 5.8. Calculating a Launch
+
+A launch contains some launch parameters that can be used for calculating whether or not a launch is successful or not. Please be aware that the calculations used are a model and not wholly representative of all the calculations needed to plan a space vehicle launch.
+
+These launch parameters are:
+  1. targetDistance (metres)
+  2. fuelBurnRate (rate at which fuel is consumed in kg/s)
+  3. thrustFuel (the amount of fuel in kg that is loaded into the space vehicle)
+  4. activeGravityForce (the force of gravity that is in effect at and during launch in m/s)
+  5. Maneuvering jets firing delay (seconds).
+
+In order to have a successful launch, we can use the provided launch parameters together the combined weight and the trust capacity to see if our launch reaches the appropriate distance.
+
+A calculation for a successful launch should be carried out at two points:
+ - When a launch is created
+    - At this stage, no astronauts are allocated to the launch yet, so the total astronaut weight (W_a) would be 0. 
+    - If the calculation fails, then the launch is not created and the function / route throws an Error.
+ - When a launch `LIFT_OFF` action is initiated
+    - If the calculation fails, then the launch is faulted (a `FAULT` action is initiated) and enters the `ON_EARTH` state.
+
+An example calculation for a launch:
+- **Combined weight of the allocated astronauts crew (W_a)**: 500 kg
+- **Weight of the payload (W_p)**: 500 kg
+- **Weight of the space vehicle (W_s)**: 4000 kg
+- **Combined weight (W = W_a + W_p + W_s)**: 5000kg
+- **Space Vehicle Thrust Capacity (T)**: 1,000,000 N
+- **Fuel burn rate (F)**: 20 kg/s
+- **Initial thrust fuel mass (M)**: 1000 kg
+- **Active Gravity Force (g)**: 9.81 m/s²
+
+First, we calculate the maximum height (h) the  will reach if it consumes all its fuel. You can assume that the thrust remains constant and that the weight of the space vehicle decreases only due to fuel consumption.
+
+1. Calculate the time (t) it takes to consume all the fuel.
+2. Calculate the net force (F_net) acting on the space vehicle.
+3. Use the net force to find the acceleration (a) of the space vehicle.
+4. Use the kinematic equation to find the maximum height.
+
+**Formulas:**
+1. Fuel consumption time: $$ t = \frac{M}{F} $$
+2. Net force: $$ F_{\text{net}} = T - W $$
+3. Acceleration: $$ a = \frac{F_{\text{net}}}{W} $$
+4. Maximum height: $$ h = \frac{1}{2} a t^2 $$
+
+---
+
+**Solution:**
+
+Given:
+- Weight of the space vehicle, \( W = 5000 \) kg
+- Thrust, \( T = 1,000,000 \) N
+- Fuel consumption rate, \( F = 20 \) kg/s
+- Initial fuel mass, \( M = 1000 \) kg
+- Gravitational acceleration, \( g = 9.81 \) m/s²
+
+1. Calculate the time to consume all the fuel:
+   $$ t = \frac{1000 \text{ kg}}{20 \text{ kg/s}} = 50 \text{ seconds} $$
+
+2. Calculate the net force acting on the space vehicle:
+   $$ F_{\text{net}} = T - W \cdot g $$
+   $$ F_{\text{net}} = 1,000,000 \text{ N} - 5000 \text{ kg} \cdot 9.81 \text{ m/s}^2 $$
+   $$ F_{\text{net}} = 1,000,000 \text{ N} - 49,050 \text{ N} $$
+   $$ F_{\text{net}} = 950,950 \text{ N} $$
+
+3. Calculate the acceleration of the space vehicle:
+   $$ a = \frac{F_{\text{net}}}{W} $$
+   $$ a = \frac{950,950 \text{ N}}{5000 \text{ kg}} $$
+   $$ a = 190.19 \text{ m/s}^2 $$
+
+4. Calculate the maximum height using the kinematic equation:
+   $$ h = \frac{1}{2} a t^2 $$
+   $$ h = \frac{1}{2} \cdot 190.19 \text{ m/s}^2 \cdot (50 \text{ s})^2 $$
+   $$ h = \frac{1}{2} \cdot 190.19 \cdot 2500 $$
+   $$ h = 237,737.5 \text{ meters} $$
+
+So, the maximum height the space vehicle will reach is 237,737.5 meters.
+
+If the maximum height the space vehicle can reach is higher than the target distance for this launch, then you can consider the launch a success!
+ 
+### 🛸 5.9. States & Actions
+
+Iteration 3 sees the introduction of a launch vehicle and the execution of launch which is like an instance of your space mission occuring.
+
+A mission launch can be in one of 7 states:
+ * **READY_TO_LAUNCH**: A launch is ready to proceed with a launch vehicle, payload and crew assigned.
+ * **LAUNCHING**: Liftoff has occurred and the launch vehicle is currently moving towards space.
+ * **MANEUVERING**: The launch vehicle is getting into position 
+ * **COASTING**: The launch vehicle is in position and awaiting payload deployment
+ * **MISSION_COMPLETE**: The payload has been deployed and the space mission is complete 
+ * **RE_ENTRY**: The launch vehicle is returning to earth
+ * **ON_EARTH**: The launch vehicle is back on earth
+
+There are 8 key actions that an admin can send that moves us between these states:
+ * **LIFTOFF**: Initiate a launch sequence
+ * **SKIP-WAITING**: Skip waiting for launch procedure and immediately enter maneuvering phase.
+ * **CORRECTION**: Enact a course correction
+ * **FIRE_THRUSTERS**: Fire maneuvering thrusters until the launch vehicle is in a stable position
+ * **DEPLOY_PAYLOAD**: Deploy the payload into space
+ * **FAULT**: Something has gone wrong. Abort the space mission and attempt re-entry if in space or return the launch vehicle to a stable position if on earth.
+ * **GO_HOME**: The space mission is sucessful, attempt re-entry
+ * **RETURN**: Return the launch vehicle to a stable position on earth.
+
+The constraints on moving between these states can be found in the state diagram here: https://miro.com/app/board/uXjVIPRxtm8=/?share_link_id=145677038678.
+
+![Xecaps State Diagram](./assets/specification/StateDiagram.png "Xecaps State Diagram")
+
+Some extra constraints to know about:
+1. If **LIFTOFF** is attempted with invalid launch parameters, then a **FAULT** action is triggered.
+2. Each time a **CORRECTION** or **FIRE_THRUSTERS** action is taken, it costs *3* units of *maneuveringFuel* that a launch vehicle starts with for that launch. If there is less than this amount left, then the action fails and a **FAULT** action is triggered.
+
+### 🛸 5.10. Error raising
+
+It's important that as part of separating the concerns of the HTTP server and the application logic that:
+* Your server never passes in a request or response object to any subsequent functions that handle application logic
+* ~~Any errors you return or throw in your application logic should not make reference to HTTP status codes directly, as the application shouldn't be aware of the fact that is being used by an HTTP server~~
+
+In iteration 3, we require you to use *exceptions* to handle errors being returned up to your `server.ts` file. Your `server.ts` will still be using `res.status(400)`, `res.status(401)`, or `res.status(403)`.
+
+Another way to explain this is that all of the functions that your `server.ts` calls should only "return" a value if successful, or throw an exception if unsuccessful.
+
+How you use exceptions is up to you - this is a refactor, so tutors will manually mark this as the API behaviour will remain unchanged.
+
+A sample before and after snippet of code is used below to explain.
+
+**before**
+
+```javascript
+const otherFunction = (id) => {
+  if (id === 0) {
+    return {
+      errorCategory: 'BAD_INPUT',
+      error: 'Cannot be 0'
+    };
+  }
+  return {
+    result: id * 2
+  };
+};
+
+app.get((req, res) => {
+  const value = otherFunction(req.query.id);
+  if (value.error) {
+    if (value.errorCategory === 'BAD_INPUT') {
+      res.status(400);
+    } else if (value.errorCategory === 'INVALID_CREDENTIALS') {
+      res.status(401);
+    } else if (value.errorCategory === 'INACCESSIBLE_VALUE') {
+      res.status(403);
+    } else {
+      res.status(409); // represents an unknown error for our purposes
+    }
+    
+  }
+  res.json(value);
+});
+```
+
+**after**
+
+```javascript
+import HTTPError from 'http-errors';
+
+const otherFunction = (id) => {
+  if (id === 0) {
+    throw HTTPError(400,'Cannot be 0');
+  }
+  return {
+    result: id * 2
+  };
+};
+
+app.get((req, res) => {
+  try {
+    const value = otherFunction(req.query.id);
+    res.json(value);
+  } catch (e) {
+    res.status(e.status).json({ error: e.message });
+  }
+});
+```
+
+We recommend that you refactor **gradually** and not in one giant merge request.
+
+### 🛸 5.11. Safer User Sessions and Secure Password Storage
+
+#### 🛸 5.11.1. Secure Passwords
+
+For iteration 3, we require that passwords must be stored in a **hashed** form.
+
+##### Background
+
+Hashes are one-way encryption where you can convert raw text (e.g. a password like `password123`) to a hash (e.g. a sha256 hash `ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f`).
+
+If we store passwords as the hash of the plain text password, as opposed to the plain text password itself, it means that if our data store is compromised that attackers would not know the plain text passwords of our users.
+
+#### 🛸 5.11.2. More random user session IDs
+
+We require that you protect your sessions by using obfuscation. You can do this one of two ways:
+ 1. Using a randomly generated session ID (rather than incremental session IDs, such as 3492, 485845, 49030); or
+ 2. Returning a hash of a sequentially generated session ID (e.g. session IDs are 1, 2, 3, 4, but then you return the hash of it)
+
+You may already be doing (1) depending on your implementation from the previous iteration.
+
+##### Background
+
+If we don't have some kind of randomness in our session IDs, then it's possible for users to potentially just change the session ID and trivially use someone elses session.
+
+
+### 🛸 5.12. Iteration 3 Project Exhibition
+
+As part of Iteration 3, you are required to attempt a Project Exhibition. This will be a celebration of your hard work this semester.
+
+Attendance for this will be during your afternoon Thursday Lecture slot in week 12: Thursday 3pm-4pm.
+
+We will hold the Project Exhibition in the LG exam rooms (LG12-20, LG23-31) in L5.
+
+Snacks and drinks will be provided!
+
+### 🛸 5.13. Sprint Planning and Organisation
+
+Similar to Iteration 2, you will be asked to do some Sprint Planning and Organisation for Iteration 3. As you will only have 3 weeks, we will expect you to complete your Sprint Planning and Iteration 2 to Iteration 3 transition by your Wednesday Tut/labs in Week 10. Your Sprint plans will be assessed during that tut/lab
+
+An expectation for your sprint plan should be
+**Required**:
+1. Identify data model updates by doing a Data Model Walkthrough for the HTTP Routes for Iteration 3 (check Section 5.7 and swagger.yaml "Model" sections for each route return)
+2. Identify Blocker and Helper/Common functions by doing an Organisation Walkthrough for Iteration 3
+3. Build a dependancy graph for all your functions
+4. Split all your tasks into Tiers to complete the least dependant items in earlier sprints and most dependant items in later sprints
+5. Split those tasks amongst 3 sprints: one organisation and transition sprint followed by two coding sprints - Use the Sprint Template in your Wiki to document what happens in each Sprint. We should see 3 seperate Sprint Organisation entries for Iteration 3
+6. Merge Iteration 3 release into your master
+7. Create Milestones and Issues for Iteration 3 with clear internal deadlines - You will lose marks for each deadline you miss.
+8. Map out a progression to tackle the SDLC tasks
+  1. Design an API route for your new functionality
+  2. Add a route to YAML
+  3. Create a State Model to show the state transitions in your new functionality
+  4. Create a Pitch Presentation for your new functionality
+
+*Recommended Coding tasks*:
+1. Carry out any updates recommended by your tutors/lab demonstrators to your iteration 2 functions
+2. Transition the error logic to throw HTTPErrors
+4. Update password storage to store a password not in a plaintext manner
+5. Write HTTP Layer Endpoint stubs into server.ts
+6. Write Logic Layer stubs into src/*.ts where * is the appropriate file
+
+### 🛸 5.14. Bonus Tasks
+
+For this iteration there are 2 bonus tasks available. Each bonus task is worth an extra 5% marks. You can begin bonus tasks once you have achieved 90%+ automarking pass rates.
+
+The two tasks are:
+1. An LLM based chatbot which allows the astronauts on a launch to overcome potential loneliness. The chatbot should be restricted to topics relating to space missions.
+2. A payload tracking system that keeps track of where every payload was deployed and where it might be based on a trajectory calculation.
+
+#### 🛸 5.14.1 LLM Chatbot
+
+Astronauts spend a great deal of time in isolation during their space missions. In an attempt to alleviate this, the designers for Xecaps wish to trial an experimental chatbot system that can be for communication during this their space missions.
+
+Access to this chatbot will be managed via an API call to Google's Gemma 3 Model hosted on a free service. The example we will use is from OpenRouter <a href="https://openrouter.ai/google/gemma-3n-e2b-it:free/api">here</a>.
+
+
+You will need to create a free account to generate an <b>Access Token</b> to utilise this API within your implementation. You may use one account per group and share this Access Token, but be mindful of the rate limits.
+
+You may hard-code this Access Token within your server file, or implement the more secure method of environment variable secrets and <a href="https://docs.gitlab.com/ee/ci/variables/index.html">Gitlab CI/CD variables</a>. The course does not expect you to implement the secure method. 
+
+A simple API request to the Open Router Completions API using Google's Gemma 3 model:
+```typescript
+import request from 'sync-request';
+
+function llmchatRequestFormer(messageContent: string) : string {
+
+    // TODO You must decide on an appopriate pre-prompt to set the stage for your astronaut assistant so that it will only talk about space missions and related topics.
+
+    let prePrompt = ""
+    const res = request(
+        'POST',
+        'https://openrouter.ai/api/v1/chat/completions',
+        {
+            headers: {
+                "Authorization": "Bearer <replace this with your API Key>",
+                "Content-Type": "application/json"
+            },
+            json: {
+                "model": "google/gemma-3n-e2b-it:free",
+                "messages": [
+                {
+                    "role": "assistant",
+                    "content": prePrompt+messageContent
+                }
+                ]
+            }
+        },
+    );
+
+    let output = JSON.parse(res.getBody() as string)
+    console.log(output)
+
+    // TODO :: You must understand the structure output and retrieve the response
+    return "Not implemented";
+}
+
+llmchatRequestFormer("How far from the earth to the moon");
+```
+
+You will receive an output that looks like this:
+```json
+{
+  id: 'gen-1753371530-9NoVIRbJdxV6oubCmHGm',
+  provider: 'Google AI Studio',
+  model: 'google/gemma-3n-e2b-it:free',
+  object: 'chat.completion',
+  created: 1753371530,
+  choices: [
+    {
+      logprobs: null,
+      finish_reason: 'stop',
+      native_finish_reason: 'STOP',
+      index: 0,
+      message: [Object]
+    }
+  ],
+  usage: { prompt_tokens: 9, completion_tokens: 254, total_tokens: 263 }
+}
+```
+
+You must decode the output and retrieve the message component.
+
+A few items to note:
+ - We recommend using the **GitHub** account you created for lab10_deploy for accessing OpenRouter.
+ - Responses are slow - they can take up to a minute. Take this into account when testing.
+ - Be aware of your request limits. Take this into account when testing.
+
+#### 🛸 5.14.2 Payload Tracking
+
+Once a payload is deployed, our current Xecaps system considers the mission has been completed. It would be interesting to keep track of where the payload was deployed and whether or not it was still in motion.
+
+There are a few items to consider when keeping track of a payload:
+1. Where was the payload deployed (target distance of the launch)
+2. Speed of the space vehicle when the deployment occured (by re-arranging the launch parameter calculations, you can identify how long it took to reach the target distance and what was the speed at that time)
+3. Time when the payload was deployed (when the launch went from `COASTING` to `MISSION_COMPLETE`)
+4. Distance traveled along the orbital path from the initial starting point (using speed at deployment and time since deployment)
+5. Relative position using orbital distance and angle of deviation from origin position expressed in radians (using distance traveled along the arc of a circular orbit divided by $r$ where $r$ is the orbital distance as shown below)
+
+![Orbit Path explanation](./assets/specification/Orbit.png "Orbit Example")
+
+Given the above criteria, a payload tracker lists all deployed payloads by distance from Earth and current angle from origin. Keep in mind that when an angle exceeds $2*$&#960; radians, it should reset to 0. Angles are also expressed in radians. 1 radian = distance traveled / radius. This would mean that a complete orbit would have an angle of  $2*$&#960; radians.
+
+
+
+### 🛸 5.15. Marking Criteria
+
+<table>
+  <tr>
+    <th>Section</th>
+    <th>Weighting</th>
+    <th>Criteria</th>
+  </tr>
+  <tr>
+    <td>Automarking (Testing & Implementation)</td>
+    <td>45%</td>
+    <td>
+    <ul>
+      <li>Correct implementation of specified functions.</li>
+      <li>Correctly written tests based on the specification requirements.</li>
+      <li>Code coverage.</li>
+      <li>Correctly linted code.</li>
+    </ul>
+     Whilst we look at your group's work as a whole, if we feel that materially unequal contributions occurred between group members we will assess your individual contribution against this criteria.
+     Note: <b>Up to 10% of the automarking will be done on iteration 2 routes that we still expect to be functional / backwards compatible.</b>
+  </td>
+  </tr>
+  <tr>
+    <td>Sprint Planning</td>
+    <td>10%</td>
+    <td>
+      <ul>
+        <li>Proper breakdown of Iteration 3 into <b>three week-long sprints</b> for organisation</li>
+        <li>Proper Allocation of tasks into sprints with <b>strict</b> deadlines inside each sprint</li>
+        <li>Create milestones and issues in Gitlab that show each <b>strict</b> deadline inside each sprint</li>
+      </ul>
+      <b>Note :: This part is due Fri 9am, Week 10 (7th November)</b>
+    </td>
+  </tr>
+  <tr>
+    <td>Design for future work</td>
+    <td>25%</td>
+    <td>
+      <ul>
+        <li>Interface proposed as a potential solution to provide capabilities. (5%) </li>
+        <li>State diagram(s) drawn to demonstrate how application responds to actions. (5%)</li> 
+        <li>Pitch presentation completed and presented to class. (15%)</li> 
+      </ul>
+       Whilst we look at your group's work as a whole, if we feel that materially unequal contributions occurred between group members we will assess your individual contribution against this criteria.
+    </td>
+  </tr>
+  <tr>
+    <td>Secure Storage and Transmission</td>
+    <td>5%</td>
+    <td>
+      <ul>
+        <li>Passwords are stored as not plaintext</li>
+        <li>controlUserSessionID is decoupled from controlUserId</li>
+      </ul>
+       Whilst we look at your group's work as a whole, if we feel that materially unequal contributions occurred between group members we will assess your individual contribution against this criteria.
+    </td>
+  </tr>
+  <tr>
+    <td>General Code Quality</td>
+    <td>5%</td>
+    <td>
+      <ul>
+        <li>Appropriate use of Javascript data structures (arrays, objects, etc.).</li>
+        <li>Appropriate style as described in section 7.4.</li>
+        <li>Appropriate application of good software design practices.</li>
+        <li>Implementation of persistent state.</li>
+      </ul>
+       Whilst we look at your group's work as a whole, if we feel that materially unequal contributions occurred between group members we will assess your individual contribution against this criteria.
+    </td>
+  </tr>
+  <tr>
+    <td>Git Practices, Project Management, Teamwork</td>
+    <td>10%</td>
+    <td>
+      As an individual, in terms of git:
+      <ul>
+        <li>For particular features, committing the bulk of your tests prior to your implementation.</li>
+        <li>Your git commit messages are meaningful, clear, informative and follow the conventional commits guideline outlined in Section 4.14</li>
+        <li>You contribute at least 2 meaningful merge requests per week (approved by a team member) that merge your branch code to master.</li>
+      </ul>
+      As an individual, in terms of project management and teamwork:
+      <ul>
+        <li>Attendance to group check ins every week.</li>
+        <li>Effective use of course-provided MS Teams for effective communication with your group.</li>
+        <li>Use of issue board on Gitlab to effectively track your tasks.</li>
+        <li>Attendance and contributions at your teams standups, including at least one scenario where you were the sprint leader in either Iteration 2 or 3</li>
+      </ul>
+    </td>
+  </tr>
+</table>
+
+The formula used for automarking in this iteration is:
+
+`Mark = 95*(t * i * min(c + 1, 100)^3) + 5*e`
+(Mark equals 95% of `t` multiplied by `i` multiplied by the lower of `c + 1` or `100`, to the power of three, plus 5% of `e`).
+
+Where:
+ * `t` is the mark you receive for your tests running against your code (100% = your implementation passes all of your tests).
+ * `i` is the mark you receive for our course tests (hidden) running against your code (100% = your implementation passes all of our tests).
+ * `c` is the statement coverage score achieved by running coverage on your entire codebase. A single mark is added to this to account for anything impossible to test in a blackbox manner, and is capped at 100.
+ * `e` is the score between 0-1 achieved by running <code>eslint</code> against your code and the provided configuration. You may find a mark of 0 if you have used eslint disable comments in your code.
+
+
+### 🛸 5.16. Submission & Peer Assessment
+
+Please see section 6 for information on **due date**. There will be no demonstration for iteration 3.
+
+Please see section 7.5 for information on **peer assessment**.
 
 ## 🌸 6. Due Dates and Weightings
 
@@ -1589,7 +2346,7 @@ Coming Soon
 | 0         | 9am Mon 15th September (**week  3**)  | No demonstration               |  2% overall  |
 | 1         | 9am Friday 26th September (**week  4**)  | In YOUR **week  5** early tut-lab | 10% overall  |
 | 2         | 9am Friday 24th October (**week  8**)  | In YOUR **week  9** early tut-lab | 18% overall  |
-| 3         | 9am Tuesday 18th November (**week 12**)  | In YOUR **week 12** early tut-lab | 15% overall  |
+| 3         | 9am Monday 17th November (**week 12**)  | In YOUR **week 12** early tut-lab | 15% overall  |
 
 ### 🌸 6.1. Submission & Late Penalties
 
@@ -1670,7 +2427,7 @@ The following serves as a baseline for expected progress during project check-in
 | 3 | **Week 9** | Iteration 3 specification has been discussed in a meeting, Sprint planning is complete, Iteration 2 fixes are done |
 | 3         | **Week 10**    | Exceptions & tokens in HTTP headers added across the project, all HTTP Tests and HTTP function stubs are in master. All helper and blocking function logic is completed.
 | 3         | **Week 11**    | All tests and logic for remaining functions complete |
-| 3         | **Week 12** | Project Exhibition in Friday Lecture time, Pitch Presentation on Tuesda and Wednesday, Demos on Wednesday and Thursday |
+| 3         | **Week 12** | Project Exhibition in Friday Lecture time, Pitch Presentation on Tuesday and Wednesday, Demos on Wednesday and Thursday |
 
 ### 👌 7.2. Tut-Lab contributions
 
@@ -1798,4 +2555,3 @@ Relevant scholarship authorities will be informed if students holding scholarshi
 Do not provide or show your project work to any other person, except for your group and the teaching staff of DPST1093. If you knowingly provide or show your assignment work to another person for any reason, and work derived from it is submitted, you may be penalized, even if the work was submitted without your knowledge or consent. This may apply even if your work is submitted by a third party unknown to you.
 
 Note: you will not be penalized if your work has the potential to be taken without your consent or knowledge.
-
