@@ -20,6 +20,7 @@ import {  sampleUser1,
           sampleLaunchVehicle1,
 } from './sampleTestData';
 import{missionLaunchAction,missionLaunchState}from '../../src/dataStore'
+import{updateLaunchState} from'../../src/updateSessionState'
 describe.skip('Need to write a description', () => {
   // some helpful functions you may use!
   let controlUserSessionId: string;
@@ -145,9 +146,7 @@ describe.skip('Need to write a description', () => {
       ]; 
       for (const step of actionChain) {
         if (step.action.startsWith('WAIT')) {
-          for (let i = 0; i < 3; i++) {
-            adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'SKIP_WAITING');
-          }
+          updateLaunchState(missionLaunchAction.SKIP_WAITING, launchId);
         } else {
           const res = adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, step.action);
           expect(res.statusCode).toBe(200);
@@ -161,14 +160,12 @@ describe.skip('Need to write a description', () => {
     test('wait 3, CORRECTION; expect LAUNCHING',() => {
       const actionChain = [
         { action: 'LIFTOFF', expectedState: 'LAUNCHING' },
-        { action: 'WAIT_3', expectedState: 'LAUNCHING' },
+        { action: 'WAIT_3', expectedState: 'MANEUVERING' },
         { action: 'CORRECTION', expectedState: 'LAUNCHING' },
       ]; 
       for (const step of actionChain) {
         if (step.action.startsWith('WAIT')) {
-          for (let i = 0; i < 3; i++) {
-            adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'SKIP_WAITING');
-          }
+          updateLaunchState(missionLaunchAction.SKIP_WAITING, launchId);
         } else {
           const res = adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, step.action);
           expect(res.statusCode).toBe(200);
@@ -182,15 +179,13 @@ describe.skip('Need to write a description', () => {
     test('wait 3, CORRECTION, wait 3; expect MANEUVERING', () => {
       const actionChain = [
         { action: 'LIFTOFF', expectedState: 'LAUNCHING' },
-        { action: 'WAIT_3', expectedState: 'LAUNCHING' },
+        { action: 'WAIT_3', expectedState: 'MANEUVERING' },
         { action: 'CORRECTION', expectedState: 'LAUNCHING' },
         { action: 'WAIT_3', expectedState: 'MANEUVERING' },
       ]; 
       for (const step of actionChain) {
         if (step.action.startsWith('WAIT')) {
-          for (let i = 0; i < 3; i++) {
-            adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'SKIP_WAITING');
-          }
+          updateLaunchState(missionLaunchAction.SKIP_WAITING, launchId);
         } else {
           const res = adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, step.action);
           expect(res.statusCode).toBe(200);
@@ -203,18 +198,14 @@ describe.skip('Need to write a description', () => {
     test('wait 3, wait delay 2; expect COASTING', () => {
       const actionChain = [
         { action: 'LIFTOFF', expectedState: 'LAUNCHING' },
-        { action: 'WAIT_3', expectedState: 'LAUNCHING' },
+        { action: 'WAIT_3', expectedState: 'MANEUVERING' },
         { action: 'Delay_2', expectedState: 'COASTING' },
       ]; 
       for (const step of actionChain) {
         if (step.action.startsWith('WAIT')) {
-          for (let i = 0; i < 3; i++) {
-            adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'SKIP_WAITING');
-          }
+          updateLaunchState(missionLaunchAction.SKIP_WAITING, launchId);
         }else if(step.action.startsWith('Delay')){
-          for (let i = 0; i < 2; i++) {
-            adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'SKIP_WAITING');
-          }
+          updateLaunchState(missionLaunchAction.FIRE_THRUSTERS, launchId);
         }
           else {
           const res = adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, step.action);
@@ -228,14 +219,12 @@ describe.skip('Need to write a description', () => {
     test('wait 3, FIRE_THRUSTERS; expect COASTING', () => {
       const actionChain = [
         { action: 'LIFTOFF', expectedState: 'LAUNCHING' },
-        { action: 'WAIT_3', expectedState: 'LAUNCHING' },
+        { action: 'WAIT_3', expectedState: 'MANEUVERING' },
         { action: 'FIRE_THRUSTERS', expectedState: 'COASTING' },
       ]; 
       for (const step of actionChain) {
         if (step.action.startsWith('WAIT')) {
-          for (let i = 0; i < 3; i++) {
-            adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'SKIP_WAITING');
-          }
+          updateLaunchState(missionLaunchAction.SKIP_WAITING, launchId);
         } else {
           const res = adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, step.action);
           expect(res.statusCode).toBe(200);
@@ -248,15 +237,13 @@ describe.skip('Need to write a description', () => {
     test('wait 3, FIRE_THRUSTERS, DEPLOY_PAYLOAD; expect MISSION_COMPLETE', () => {
       const actionChain = [
         { action: 'LIFTOFF', expectedState: 'LAUNCHING' },
-        { action: 'WAIT_3', expectedState: 'LAUNCHING' },
+        { action: 'WAIT_3', expectedState: 'MANEUVERING' },
         { action: 'FIRE_THRUSTERS', expectedState: 'COASTING' },
         { action: 'DEPLOY_PAYLOAD', expectedState: 'MISSION_COMPLETE' }
       ]; 
       for (const step of actionChain) {
         if (step.action.startsWith('WAIT')) {
-          for (let i = 0; i < 3; i++) {
-            adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'SKIP_WAITING');
-          }
+          updateLaunchState(missionLaunchAction.SKIP_WAITING, launchId);
         } else {
           const res = adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, step.action);
           expect(res.statusCode).toBe(200);
@@ -269,16 +256,14 @@ describe.skip('Need to write a description', () => {
     test('wait 3, FIRE_THRUSTERS, DEPLOY_PAYLOAD, GO_HOME; expect RE_ENTRY', () => {
       const actionChain = [
         { action: 'LIFTOFF', expectedState: 'LAUNCHING' },
-        { action: 'WAIT_3', expectedState: 'LAUNCHING' },
+        { action: 'WAIT_3', expectedState: 'MANEUVERING' },
         { action: 'FIRE_THRUSTERS', expectedState: 'COASTING' },
         { action: 'DEPLOY_PAYLOAD', expectedState: 'MISSION_COMPLETE' },
         { action: 'GO_HOME', expectedState: 'REENTRY' }
       ]; 
       for (const step of actionChain) {
         if (step.action.startsWith('WAIT')) {
-          for (let i = 0; i < 3; i++) {
-            adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'SKIP_WAITING');
-          }
+          updateLaunchState(missionLaunchAction.SKIP_WAITING, launchId);
         } else {
           const res = adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, step.action);
           expect(res.statusCode).toBe(200);
@@ -291,7 +276,7 @@ describe.skip('Need to write a description', () => {
     test('wait 3, FIRE_THRUSTERS, DEPLOY_PAYLOAD, GO_HOME, RETURN; expect ON_EARTH', () => {
       const actionChain = [
         { action: 'LIFTOFF', expectedState: 'LAUNCHING' },
-        { action: 'WAIT_3', expectedState: 'LAUNCHING' },
+        { action: 'WAIT_3', expectedState: 'MANEUVERING' },
         { action: 'FIRE_THRUSTERS', expectedState: 'COASTING' },
         { action: 'DEPLOY_PAYLOAD', expectedState: 'MISSION_COMPLETE' },
         { action: 'GO_HOME', expectedState: 'REENTRY' },
@@ -299,9 +284,7 @@ describe.skip('Need to write a description', () => {
       ]; 
       for (const step of actionChain) {
         if (step.action.startsWith('WAIT')) {
-          for (let i = 0; i < 3; i++) {
-            adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'SKIP_WAITING');
-          }
+          updateLaunchState(missionLaunchAction.SKIP_WAITING, launchId);
         } else {
           const res = adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, step.action);
           expect(res.statusCode).toBe(200);
@@ -338,15 +321,13 @@ describe.skip('Need to write a description', () => {
   test('Launch READY_TO_LAUNCH with action chain LIFTOFF, wait 3, FAULT, RETURN; expect ON_EARTH', () => {
     const actionChain = [
       { action: 'LIFTOFF', expectedState: 'LAUNCHING' },
-      { action: 'WAIT_3', expectedState: 'LAUNCHING' },
+      { action: 'WAIT_3', expectedState: 'MANEUVERING' },
       { action: 'FAULT', expectedState: 'REENTRY' },//problem
       { action: 'RETURN', expectedState: 'ON_EARTH' }
     ]; 
     for (const step of actionChain) {
       if (step.action.startsWith('WAIT')) {
-        for (let i = 0; i < 3; i++) {
-          adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'SKIP_WAITING');
-        }
+        updateLaunchState(missionLaunchAction.SKIP_WAITING, launchId);
       } else {
         const res = adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, step.action);
         expect(res.statusCode).toBe(200);
@@ -359,16 +340,14 @@ describe.skip('Need to write a description', () => {
   test('Launch READY_TO_LAUNCH with action chain LIFTOFF, wait 3, FIRE_THRUSTERS, FAULT, RETURN; expect ON_EARTH', () => {
     const actionChain = [
       { action: 'LIFTOFF', expectedState: 'LAUNCHING' },
-      { action: 'WAIT_3', expectedState: 'LAUNCHING' },
+      { action: 'WAIT_3', expectedState: 'MANEUVERING' },
       { action: 'FIRE_THRUSTERS', expectedState: 'COASTING' },
       { action: 'FAULT', expectedState: 'REENTRY' },//problem
       { action: 'RETURN', expectedState: 'ON_EARTH' }
     ]; 
     for (const step of actionChain) {
       if (step.action.startsWith('WAIT')) {
-        for (let i = 0; i < 3; i++) {
-          adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'SKIP_WAITING');
-        }
+        updateLaunchState(missionLaunchAction.SKIP_WAITING, launchId);
       } else {
         const res = adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, step.action);
         expect(res.statusCode).toBe(200);
@@ -408,7 +387,7 @@ describe.skip('Need to write a description', () => {
     { testlaunchId: '' as any},
     { testlaunchId: 9999 },
   ];
-  test.each(invalidlaunchid)('MissionId is empty, invalid or not associated with the current controlUser', ({testlaunchId}) => {
+  test.each(invalidlaunchid)('LaunchId is empty, invalid or not associated with the current controlUser', ({testlaunchId}) => {
     const detailRes=adminMissionLaunchDetailsRequest(controlUserSessionId,missionId,testlaunchId)
     expect(detailRes.statusCode).toBe(403);
     expect(detailRes.body).toStrictEqual({ error: expect.any(String)});
@@ -454,9 +433,7 @@ describe.skip('Need to write a description', () => {
   ]
   test.each(invalidactions3)('Launch MANEUVERING with invalid actions', (testaction) => {
     adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'LIFTOFF');
-    for (let i = 0; i < 3; i++) {
-      adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'SKIP_WAITING');
-    }
+    updateLaunchState(missionLaunchAction.SKIP_WAITING, launchId);
     const launchDetails = adminMissionLaunchDetailsRequest(controlUserSessionId, missionId, launchId);
     expect(launchDetails.body.state).toBe(missionLaunchState.MANEUVERING);
     const statusupdateRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,launchId,testaction.testaction)
@@ -474,13 +451,9 @@ describe.skip('Need to write a description', () => {
   test.each(invalidactions4)('Launch COASTING with invalid actions', (testaction) => {
     adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'LIFTOFF');
     //wait3s
-    for (let i = 0; i < 3; i++) {
-      adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'SKIP_WAITING');
-    }
+    updateLaunchState(missionLaunchAction.SKIP_WAITING, launchId);
     //delay 2s
-    for (let i = 0; i < 2; i++) {
-      adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'SKIP_WAITING');
-    }
+    updateLaunchState(missionLaunchAction.FIRE_THRUSTERS, launchId);
     const launchDetails = adminMissionLaunchDetailsRequest(controlUserSessionId, missionId, launchId);
     expect(launchDetails.body.state).toBe(missionLaunchState.COASTING);
     const statusupdateRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,launchId,testaction.testaction)
@@ -499,13 +472,9 @@ describe.skip('Need to write a description', () => {
   test.each(invalidactions5)('Launch MISSION_COMPLETE with invalid actions', (testaction) => {
     adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'LIFTOFF');
     //wait3s
-    for (let i = 0; i < 3; i++) {
-      adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'SKIP_WAITING');
-    }
+    updateLaunchState(missionLaunchAction.SKIP_WAITING, launchId);
     //delay 2s
-    for (let i = 0; i < 2; i++) {
-      adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'SKIP_WAITING');
-    }
+    updateLaunchState(missionLaunchAction.FIRE_THRUSTERS, launchId);
     adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'FIRE_THRUSTERS');
     adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'DEPLOY_PAYLOAD');
     const launchDetails = adminMissionLaunchDetailsRequest(controlUserSessionId, missionId, launchId);
@@ -526,13 +495,9 @@ describe.skip('Need to write a description', () => {
   test.each(invalidactions6)('Launch RE_ENTRY with invalid actions', (testaction) => {
     adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'LIFTOFF');
     //wait3s
-    for (let i = 0; i < 3; i++) {
-      adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'SKIP_WAITING');
-    }
+    updateLaunchState(missionLaunchAction.SKIP_WAITING, launchId);
     //delay 2s
-    for (let i = 0; i < 2; i++) {
-      adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'SKIP_WAITING');
-    }
+    updateLaunchState(missionLaunchAction.FIRE_THRUSTERS, launchId);
     adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'FIRE_THRUSTERS');
     adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'DEPLOY_PAYLOAD');
     adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'GO_HOME');
@@ -563,8 +528,9 @@ describe.skip('Need to write a description', () => {
       const badlaunchId=createRes.body.launchId;
       const statusupdateRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,badlaunchId,'LIFTOFF');
       expect(statusupdateRes.statusCode).toBe(400);
-      expect(statusupdateRes.body.state).toBe(missionLaunchAction.FAULT);
       expect(statusupdateRes.body.error).toEqual(expect.any(String));
+      const detail = adminMissionLaunchDetailsRequest(controlUserSessionId, missionId, badlaunchId);
+      expect(detail.body.state).toBe(missionLaunchState.ON_EARTH);
 });
     //invalid action
     test('A CORRECTION action been attempted with insufficient fuel available ', () => {
@@ -589,8 +555,9 @@ describe.skip('Need to write a description', () => {
       expect(liftoffRes.statusCode).toBe(200);
       const statusupdateRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,badlaunchId,'CORRECTION')
       expect(statusupdateRes.statusCode).toBe(400);
-      expect(statusupdateRes.body.state).toBe(missionLaunchAction.FAULT);
       expect(statusupdateRes.body.error).toEqual(expect.any(String));
+      const detail = adminMissionLaunchDetailsRequest(controlUserSessionId, missionId, badlaunchId);
+      expect(detail.body.state).toBe(missionLaunchState.REENTRY);
   });
   test('A FIRE_THRUSTERS action been attempted with insufficient fuel available ', () => {
     //insufficient fuel available
@@ -614,8 +581,9 @@ describe.skip('Need to write a description', () => {
     expect(liftoffRes.statusCode).toBe(200);
     const statusupdateRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,badlaunchId,'FIRE_THRUSTERS')
     expect(statusupdateRes.statusCode).toBe(400);
-    expect(statusupdateRes.body.state).toBe(missionLaunchAction.FAULT);
     expect(statusupdateRes.body.error).toEqual(expect.any(String));
+    const detail = adminMissionLaunchDetailsRequest(controlUserSessionId, missionId, badlaunchId);
+    expect(detail.body.state).toBe(missionLaunchState.REENTRY);
 });
   
 });
