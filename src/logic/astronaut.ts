@@ -27,6 +27,10 @@ function throwErrorForFunction(code: string, message: string) {
   }
 }
 
+function notImplemented(): never {
+  throw HTTPError(501, 'Not implemented');
+}
+
 export function adminAstronautPool(controlUserSessionId: string) {
   try {
     if (!controlUserSessionId || typeof controlUserSessionId !== 'string') {
@@ -358,4 +362,25 @@ export function adminMissionAstronautUnassign(
     const ne = normalizeError(e);
     throwErrorForFunction(ne.errorCategory, ne.error);
   }
+}
+
+export function adminMissionAstronautUnassignV2(
+  controlUserSessionId: string,
+  astronautId: number,
+  missionId: number
+) {
+  return notImplemented();
+}
+
+export function adminAstronautLlmChatSend(
+  astronautId: number,
+  messageContent: string
+) {
+  return notImplemented();
+}
+
+export function adminAstronautLlmChatHistory(
+  astronautId: number
+) {
+  return notImplemented();
 }
