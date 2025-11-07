@@ -47,9 +47,9 @@ export function adminLaunchVehicleCreateRequest(
 
 export function adminLaunchVehicleInfoRequest(
   controlUserSessionId: string,
-  launchvehicleid: number
+  launchVehicleid: number
 ) {
-  const response = request('GET', `/v1/admin/launchvehicle/${launchvehicleid}`, {
+  const response = request('GET', `/v1/admin/launchvehicle/${launchVehicleid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
   return {
