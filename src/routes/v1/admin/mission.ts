@@ -11,7 +11,7 @@ import {
   adminMissionInfo
 } from '../../../logic/mission';
 import { adminMissionTransfer } from '../../../logic/missionTransferExample';
-import { findSessionFromSessionId } from '../../../helper';
+import { findSessionFromSessionId } from '../../../logic/helper';
 import HTTPError from 'http-errors';
 
 const router = Router();
