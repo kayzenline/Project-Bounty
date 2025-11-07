@@ -1,10 +1,10 @@
 import HTTPError from 'http-errors';
 import { getData, setData, missionLaunchState, missionLaunchAction, Launch } from './dataStore';
-import { launchIdCheck } from './helper';
+import { launchIdCheck } from './logic/helper';
 
 let timerId: number;
 
-function checkManeuveringFuel(launchId: number) : boolean {
+function checkManeuveringFuel(launchId: number): boolean {
   // a helper function that checks if there is at least 3 units of fuel left
   // TODO - you must complete this helper function
   const data = getData();
@@ -17,7 +17,7 @@ function checkManeuveringFuel(launchId: number) : boolean {
   return true;
 }
 
-function canThisLaunchReachTargetDistanceCheck(launchId: number) : boolean {
+function canThisLaunchReachTargetDistanceCheck(launchId: number): boolean {
   // a helper function that does calculations using the launchParameters to see if this launch can go ahead.
   // TODO - you must complete this helper function
   const launch = getData().launches.find(singleLaunch => singleLaunch.launchId === launchId);
@@ -31,7 +31,7 @@ function canThisLaunchReachTargetDistanceCheck(launchId: number) : boolean {
 }
 
 // error constant defined becuase it is used frequently
-const badActionForStateError = (action:missionLaunchAction, state: missionLaunchState) => {
+const badActionForStateError = (action: missionLaunchAction, state: missionLaunchState) => {
   throw HTTPError(400, `invalid action: Cannot do action ${action} in state ${state}`);
 };
 

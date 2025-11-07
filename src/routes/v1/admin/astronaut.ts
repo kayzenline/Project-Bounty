@@ -1,7 +1,12 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { adminAstronautCreate, adminAstronautInfo, adminAstronautDelete, adminAstronautEdit, adminAstronautPool } from '../../../astronaut';
+import {
+  adminAstronautCreate,
+  adminAstronautInfo,
+  adminAstronautDelete,
+  adminAstronautEdit,
+  adminAstronautPool
+} from '../../../logic/astronaut';
 import HTTPError from 'http-errors';
-import { error } from 'console';
 
 const router = Router();
 

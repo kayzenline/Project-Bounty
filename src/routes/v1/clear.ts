@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { clear } from '../../other';
+import { clear } from '../../logic/other';
 
 const router = Router();
 
