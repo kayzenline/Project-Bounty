@@ -3,7 +3,6 @@ import HTTPError from 'http-errors';
 import { getData } from '../../../dataStore';
 import { adminLaunchVehicleDetails } from '../../../logic/launchVehicle';
 
-
 const router = Router();
 
 router.get('/list', (req: Request, res: Response, next: NextFunction) => {
@@ -22,8 +21,6 @@ router.get('/list', (req: Request, res: Response, next: NextFunction) => {
   } catch (e) {
     next();
   }
-})
-
-
+});
 
 export default router;
