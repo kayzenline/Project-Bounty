@@ -13,8 +13,7 @@ import {
 import { adminMissionTransfer } from '../../../logic/missionTransferExample';
 import { findSessionFromSessionId } from '../../../logic/helper';
 import HTTPError from 'http-errors';
-import{adminMissionLaunchDetails,adminMissionLaunchStatusUpdate} from '../../../../src/logic/launch'
-import { missionLaunchAction } from '../../../../src/dataStore'
+import { adminMissionLaunchDetails, adminMissionLaunchStatusUpdate } from '../../../../src/logic/launch';
 const router = Router();
 
 router.get('/list', (req: Request, res: Response, next: NextFunction) => {
@@ -194,7 +193,7 @@ router.delete('/:missionid/assign/:astronautid', (req: Request, res: Response, n
     return res.status(e.status).json({ error: e.message });
   }
 });
-//launch details
+
 router.get('/:missionid/launch/:launchid', (req: Request, res: Response, next: NextFunction) => {
   try {
     const controlUserSessionId = req.header('controlUserSessionId');
@@ -204,26 +203,26 @@ router.get('/:missionid/launch/:launchid', (req: Request, res: Response, next: N
     if (!controlUserSessionId) {
       throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
     }
-    const result = adminMissionLaunchDetails(controlUserSessionId,  missionId, launchId);
+    const result = adminMissionLaunchDetails(controlUserSessionId, missionId, launchId);
     return res.status(200).json(result);
   } catch (e) {
     return res.status(e.status).json({ error: e.message });
   }
 });
-//status Update
+
 router.put('/:missionid/launch/:launchid/status', (req: Request, res: Response, next: NextFunction) => {
   try {
     const controlUserSessionId = req.header('controlUserSessionId');
     const missionId = Number(req.params.missionid);
     const launchId = Number(req.params.launchid);
-    const { action } = req.body; 
+    const { action } = req.body;
     if (!controlUserSessionId) {
       throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
     }
     if (!action) {
       throw HTTPError(400, 'Missing action in request body');
     }
-    const result = adminMissionLaunchStatusUpdate(controlUserSessionId,  missionId, launchId,action);
+    const result = adminMissionLaunchStatusUpdate(controlUserSessionId, missionId, launchId, action);
     return res.status(200).json(result);
   } catch (e) {
     return res.status(e.status).json({ error: e.message });
