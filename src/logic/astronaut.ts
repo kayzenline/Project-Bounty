@@ -7,27 +7,14 @@ import {
   astronautPhyCharCheck,
   normalizeError,
   ServiceError,
-  missionIdCheck
+  missionIdCheck,
+  throwErrorForFunction,
+  buildError
 } from './helper';
 import { errorCategories as EC } from '../testSamples';
 import HTTPError from 'http-errors';
 
-function buildError(message: string, code: string): never {
-  throw new ServiceError(message, code);
-}
-
-function throwErrorForFunction(code: string, message: string) {
-  switch (code) {
-    case 'INVALID_CREDENTIALS':
-      throw HTTPError(401, message);
-    case 'INACCESSIBLE_VALUE':
-      throw HTTPError(403, message);
-    default:
-      throw HTTPError(400, message);
-  }
-}
-
-function notImplemented(): never {
+export function notImplemented(): never {
   throw HTTPError(501, 'Not implemented');
 }
 

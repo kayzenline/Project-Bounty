@@ -19,7 +19,7 @@ router.get('/list', (req: Request, res: Response, next: NextFunction) => {
     const result = adminLaunchVehicleDetails(controlUserSessionId);
     return res.status(200).json(result);
   } catch (e) {
-    next();
+    return res.status(e.status).json({ error: e.message });
   }
 });
 
@@ -41,7 +41,7 @@ router.get('/:launchvehicleid', (req: Request, res: Response, next: NextFunction
     const result = adminLaunchVehicleInfo(controlUserSessionId, launchVehicleId);
     return res.status(200).json(result);
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 
