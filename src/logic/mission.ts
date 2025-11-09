@@ -10,13 +10,11 @@ import {
   missionIdGen,
   normalizeError,
   ServiceError,
-  throwErrorForFunction
+  throwErrorForFunction,
+  buildError
 } from './helper';
 import { errorCategories as EC } from '../testSamples';
 
-export function buildError(message: string, code: string): never {
-  throw new ServiceError(message, code);
-}
 
 export function adminMissionList(controlUserId: number) {
   try {
