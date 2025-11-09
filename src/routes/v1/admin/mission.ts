@@ -129,18 +129,22 @@ router.put('/:missionId/description', (req: Request, res: Response, next: NextFu
 });
 
 router.put('/:missionId/target', (req: Request, res: Response, next: NextFunction) => {
-  const controlUserSessionId = req.header('controlUserSessionId');
-  const missionId = Number(req.params.missionId);
-  const target = req.body || {};
+  try {
+    const controlUserSessionId = req.header('controlUserSessionId');
+    const missionId = Number(req.params.missionId);
+    const target = req.body || {};
 
-  const session = findSessionFromSessionId(controlUserSessionId);
-  if (!session) {
-    throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
+    const session = findSessionFromSessionId(controlUserSessionId);
+    if (!session) {
+      throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
+    }
+
+    const controlUserId = session.controlUserId;
+    const result = adminMissionTargetUpdate(controlUserId, missionId, target.target);
+    return res.status(200).json(result);
+  } catch (e) {
+    return res.status(e.status).json({ error: e.message });
   }
-
-  const controlUserId = session.controlUserId;
-  const result = adminMissionTargetUpdate(controlUserId, missionId, target.target);
-  return res.status(200).json(result);
 });
 
 router.post('/:missionId/transfer', (req: Request, res: Response, next: NextFunction) => {
