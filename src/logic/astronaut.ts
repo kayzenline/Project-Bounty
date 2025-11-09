@@ -351,6 +351,15 @@ export function adminMissionAstronautUnassign(
   }
 }
 
+export function adminLaunchAstronautUnallocate(
+  controlUserSessionId: string,
+  astronautId: number,
+  missionId: number,
+  launchId: number
+) {
+  return notImplemented();
+}
+
 export function adminMissionAstronautUnassignV2(
   controlUserSessionId: string,
   astronautId: number,

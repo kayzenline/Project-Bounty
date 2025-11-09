@@ -73,7 +73,7 @@ export function adminMissionLaunchOrganiseRequest(
     maneuveringDelay: number
   }
 ) {
-  const response = request('POST', `/v1/admin/mission/${missionid}/launch`, {
+  const response = request('POST', `${SERVER_URL}/v1/admin/mission/${missionid}/launch`, {
     headers: { controlUserSessionId: controlUserSessionId },
     json: {
       payload,
@@ -91,7 +91,7 @@ export function adminMissionLaunchDetailsRequest(
   missionid: number,
   launchid: number
 ) {
-  const response = request('GET', `/v1/admin/mission/${missionid}/launch/${launchid}`, {
+    const response = request('GET', `/v1/admin/mission/${missionid}/launch/${launchid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
   return {
