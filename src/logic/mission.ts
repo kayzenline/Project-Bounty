@@ -14,11 +14,11 @@ import {
 } from './helper';
 import { errorCategories as EC } from '../testSamples';
 
-function buildError(message: string, code: string): never {
+export function buildError(message: string, code: string): never {
   throw new ServiceError(message, code);
 }
 
-function adminMissionList(controlUserId: number) {
+export function adminMissionList(controlUserId: number) {
   try {
     controlUserIdCheck(controlUserId);
 
@@ -35,7 +35,7 @@ function adminMissionList(controlUserId: number) {
 }
 
 // remove mission
-function adminMissionRemove(controlUserId: number, missionId: number) {
+export function adminMissionRemove(controlUserId: number, missionId: number) {
   try {
     const user = controlUserIdCheck(controlUserId);
     const mission = missionIdCheck(missionId);
@@ -57,7 +57,7 @@ function adminMissionRemove(controlUserId: number, missionId: number) {
 }
 
 // create a new mission
-function adminMissionCreate(controlUserId: number, name: string, description: string, target: string) {
+export function adminMissionCreate(controlUserId: number, name: string, description: string, target: string) {
   try {
     // check the information
     const user = controlUserIdCheck(controlUserId);
@@ -101,7 +101,7 @@ function adminMissionCreate(controlUserId: number, name: string, description: st
   }
 }
 
-function adminMissionInfo(controlUserId: number, missionId: number) {
+export function adminMissionInfo(controlUserId: number, missionId: number) {
   try {
     const user = controlUserIdCheck(controlUserId);
     const mission = missionIdCheck(missionId);
@@ -125,7 +125,7 @@ function adminMissionInfo(controlUserId: number, missionId: number) {
 }
 
 // Update mission name
-function adminMissionNameUpdate(controlUserId: number, missionId: number, name: string) {
+export function adminMissionNameUpdate(controlUserId: number, missionId: number, name: string) {
   try {
     controlUserIdCheck(controlUserId);
     const mission = missionIdCheck(missionId);
@@ -155,7 +155,7 @@ function adminMissionNameUpdate(controlUserId: number, missionId: number, name: 
 }
 
 // Update mission target
-function adminMissionTargetUpdate(controlUserId: number, missionId: number, target: string) {
+export function adminMissionTargetUpdate(controlUserId: number, missionId: number, target: string) {
   try {
     controlUserIdCheck(controlUserId);
     const mission = missionIdCheck(missionId);
@@ -178,7 +178,7 @@ function adminMissionTargetUpdate(controlUserId: number, missionId: number, targ
 }
 
 // Update mission description
-function adminMissionDescriptionUpdate(controlUserId: number, missionId: number, description: string) {
+export function adminMissionDescriptionUpdate(controlUserId: number, missionId: number, description: string) {
   try {
     // create check condition
     controlUserIdCheck(controlUserId);
@@ -200,13 +200,3 @@ function adminMissionDescriptionUpdate(controlUserId: number, missionId: number,
     throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
-
-export {
-  adminMissionList,
-  adminMissionCreate,
-  adminMissionInfo,
-  adminMissionRemove,
-  adminMissionNameUpdate,
-  adminMissionTargetUpdate,
-  adminMissionDescriptionUpdate
-};
