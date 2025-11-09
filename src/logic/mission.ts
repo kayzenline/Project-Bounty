@@ -14,12 +14,9 @@ import {
 } from './helper';
 import { errorCategories as EC } from '../testSamples';
 
-
 function buildError(message: string, code: string): never {
   throw new ServiceError(message, code);
 }
-
-
 
 function adminMissionList(controlUserId: number) {
   try {
