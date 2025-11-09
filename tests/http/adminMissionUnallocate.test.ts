@@ -115,7 +115,9 @@ describe.skip('DELETE /v1/admin/mission/:missionid/launch/:launchid/allocate/:as
     expect(detailsRes.statusCode).toBe(200);
     if (detailsRes.body && Array.isArray(detailsRes.body.allocatedAstronauts)) {
       type AllocatedAstronaut = { astronautId: number; designation?: string };
-      const list: AllocatedAstronaut[] = detailsRes.body.allocatedAstronauts as AllocatedAstronaut[];
+      const { allocatedAstronauts: list } = detailsRes.body as {
+        allocatedAstronauts: AllocatedAstronaut[];
+      };
       const exists = list.some(a => a.astronautId === astronautId);
       expect(exists).toBe(false);
     }
