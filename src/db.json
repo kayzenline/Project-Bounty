@@ -24,5 +24,6 @@
     }
   ],
   "astronauts": [],
-  "nextAstronautId": 1
+  "nextAstronautId": 1,
+  "launchVehicles": []
 }
