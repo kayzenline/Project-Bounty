@@ -1,10 +1,10 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { getData } from '../../../dataStore';
-import { 
+import {
   adminMissionAstronautAssign,
   adminMissionAstronautUnassign,
   adminLaunchAstronautUnallocate,
- } from '../../../logic/astronaut';
+} from '../../../logic/astronaut';
 import {
   adminMissionNameUpdate,
   adminMissionTargetUpdate,
@@ -257,8 +257,10 @@ router.delete('/:missionid/launch/:launchid/allocate/:astronautid',
       );
 
       return res.status(200).json(result ?? {});
-    } catch (e: any) {
-      return res.status(e.status ?? 500).json({ error: e.message });
+    } catch (e) {
+      type ErrorWithStatus = { status?: number; message: string };
+      const err = e as ErrorWithStatus;
+      return res.status(err.status ?? 500).json({ error: err.message });
     }
   }
 );
