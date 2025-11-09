@@ -9,12 +9,10 @@ import {
   missionTargetValidity,
   missionIdGen,
   normalizeError,
-  ServiceError,
   throwErrorForFunction,
   buildError
 } from './helper';
 import { errorCategories as EC } from '../testSamples';
-
 
 export function adminMissionList(controlUserId: number) {
   try {

@@ -14,9 +14,6 @@ import {
 import { errorCategories as EC } from '../testSamples';
 import HTTPError from 'http-errors';
 
-
-
-
 export function notImplemented(): never {
   throw HTTPError(501, 'Not implemented');
 }

@@ -13,14 +13,11 @@ import {
   isValidPassword,
   verifyPasswordSync,
   findUserById,
-  ServiceError,
   buildError
 } from './helper';
 import { getData, setData, Session } from '../dataStore';
 import { errorCategories as EC } from '../testSamples';
 import HTTPError from 'http-errors';
-
-
 
 export function throwErrorForFunction(code: string, message: string) {
   switch (code) {
