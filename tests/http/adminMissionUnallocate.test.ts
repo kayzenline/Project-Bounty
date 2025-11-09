@@ -3,7 +3,7 @@ import {
   adminAuthUserRegisterRequest,
   adminMissionCreateRequest,
   adminAstronautCreateRequest,
-} from './requestHelpers'; 
+} from './requestHelpers';
 
 import {
   adminMissionLaunchOrganiseRequest,
@@ -114,9 +114,9 @@ describe.skip('DELETE /v1/admin/mission/:missionid/launch/:launchid/allocate/:as
     );
     expect(detailsRes.statusCode).toBe(200);
     if (detailsRes.body && Array.isArray(detailsRes.body.allocatedAstronauts)) {
-      const exists = detailsRes.body.allocatedAstronauts.some(
-        (a: any) => a.astronautId === astronautId
-      );
+      type AllocatedAstronaut = { astronautId: number; designation?: string };
+      const list: AllocatedAstronaut[] = detailsRes.body.allocatedAstronauts as AllocatedAstronaut[];
+      const exists = list.some(a => a.astronautId === astronautId);
       expect(exists).toBe(false);
     }
   });
