@@ -4,7 +4,7 @@ import {
   adminAstronautInfo,
   adminAstronautDelete,
   adminAstronautEdit,
-  adminAstronautPool
+  adminAstronautPool,
 } from '../../../logic/astronaut';
 import HTTPError from 'http-errors';
 
