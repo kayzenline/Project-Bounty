@@ -5,6 +5,10 @@ import bcrypt from 'bcrypt';
 import isEmail from 'validator/lib/isEmail';
 import HTTPError from 'http-errors';
 
+export function buildError(message: string, code: string): never {
+  throw new ServiceError(message, code);
+}
+
 // hash function
 export function hashPasswordSync(plainPassword: string): string {
   const salt = bcrypt.genSaltSync(10);
