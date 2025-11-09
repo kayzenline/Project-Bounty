@@ -87,6 +87,7 @@ export interface LaunchVehicle {
   description: string, // a description for this launch vehicle
   maxCrewWeight: number, // maximum weight (kg) of astronauts this launch vehicle can carry
   maxPayloadWeight: number, // maximum weight (kg) of payload this launch vehicle can carry
+  launchVehicleWeight: number, // base weight of the launch vehicle
   thrustCapacity: number, // amount of force this launch vehicle generates when it burns thrustFuel
   maneauveringFuel: number, // amount of maneuvering fuel (units) this launch vehicle has to start each launch
   timeAdded: number, // created time in seconds
