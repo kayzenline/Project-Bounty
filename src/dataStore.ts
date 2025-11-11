@@ -133,7 +133,9 @@ export interface Payload {
   payloadId: number, // an id for this entity
   description: string, // a description for this payload
   weight: number, // a weight (kg) for this payload
-  deployed: boolean // has this payload been deployed or not?
+  deployed: boolean, // has this payload been deployed or not?
+  timeOfDeployment: number,
+  deployedLaunchId: number
   // extra properties can be added to this payload to help with the bonus tasks
 }
 
