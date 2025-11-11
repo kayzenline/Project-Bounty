@@ -3,28 +3,27 @@ import request from 'sync-request';
 import { getData, setData, missionLaunchState, DataStore, MessageLog } from '../dataStore';
 
 export function llmchatRequestFormer(messageContent: string): string {
-
   // TODO You must decide on an appopriate pre-prompt to set the stage for your astronaut assistant so that it will only talk about space missions and related topics.
 
-  let prePrompt = "This chat is use for a space mission, you have to only answer the questions which releated to space mission"
+  const prePrompt = 'This chat is use for a space mission, you have to only answer the questions which releated to space mission';
   const res = request(
     'POST',
     'https://openrouter.ai/api/v1/chat/completions',
     {
       headers: {
-        "Authorization": "Bearer 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",
-        "Content-Type": "application/json"
+        Authorization: 'Bearer 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',
+        'Content-Type': 'application/json'
       },
       json: {
-        "model": "google/gemma-3n-e2b-it:free",
-        "messages": [
+        model: 'google/gemma-3n-e2b-it:free',
+        messages: [
           {
-            "role": "assistant",
-            "content": prePrompt + messageContent
+            role: 'assistant',
+            content: prePrompt + messageContent
           }
         ]
       }
-    },
+    }
   );
 
   const output = JSON.parse(res.getBody() as string);

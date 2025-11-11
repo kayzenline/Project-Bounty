@@ -101,7 +101,7 @@ router.post('/:astronautid/llmchat', (req: Request, res: Response, next: NextFun
 
     const result = getMessage(astronautId, messageReq);
     return res.status(200).json(result);
-  } catch(e) {
+  } catch (e) {
     return res.status(e.status).json({ error: e.message });
   }
 });
