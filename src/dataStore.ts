@@ -40,7 +40,8 @@ interface DataStore {
 }
 interface ChatHistory {
   launchId: number
-  messageLog: MessageLog
+  astronautId: number
+  messageLog: MessageLog[]
 }
 
 interface MessageLog {
@@ -202,6 +203,7 @@ export function setData(newData: DataStore) {
 export function loadData() {
   createIfNotExist();
   const newData = JSON.parse(fs.readFileSync(DB_PATH, 'utf-8'));
+
   data = newData;
 }
 export function saveData() {
@@ -212,5 +214,7 @@ export {
   Mission,
   MissionControlUser,
   DataStore,
-  Session
+  Session,
+  MessageLog,
+  ChatHistory
 };
