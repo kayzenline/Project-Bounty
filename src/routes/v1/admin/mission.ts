@@ -133,7 +133,7 @@ router.put('/:missionId/description', (req: Request, res: Response) => {
 });
 
 router.put('/:missionId/target', (req: Request, res: Response) => {
-try {
+  try {
     const controlUserSessionId = req.header('controlUserSessionId');
     const missionId = Number(req.params.missionId);
     const target = req.body || {};

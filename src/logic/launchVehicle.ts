@@ -11,12 +11,12 @@ import {
   LaunchVehicleLaunchSummary,
   launchVehicleLaunchInfoHelper,
   launchVehicleIdCheck
- } from './newHelperfunctions';
- import {
+} from './newHelperfunctions';
+import {
   getData,
   setData,
   LaunchVehicle
- } from '../dataStore';
+} from '../dataStore';
 
 export function adminLaunchVehicleCreate(
   controlUserSessionId: string,
@@ -80,7 +80,7 @@ export function adminLaunchVehicleCreate(
     timeLastEdited: currentTime,
     retired: false,
     assigned: false
-  }
+  };
   data.nextLaunchVehicleId++;
   data.launchVehicles.push(launchVehicle);
   setData(data);
@@ -98,12 +98,12 @@ export function adminLaunchVehicleDetails(controlUserSessionId: string) {
   // success
   const data = getData();
   const result: LaunchVehicleLaunchSummary[] = [];
-  let vehicleDetail: LaunchVehicleLaunchSummary = {
+  const vehicleDetail: LaunchVehicleLaunchSummary = {
     launchVehicleId: null,
     name: null,
     assigned: false
   };
-  for (let launchVehicle of data.launchVehicles) {
+  for (const launchVehicle of data.launchVehicles) {
     vehicleDetail.launchVehicleId = launchVehicle.launchVehicleId;
     vehicleDetail.name = launchVehicle.name;
     vehicleDetail.assigned = launchVehicle.assigned;
@@ -130,7 +130,7 @@ export function adminLaunchVehicleInfo(
   // launchvehicleid
   if (!launchVehicleIdCheck(launchVehicleId)) {
     throw HTTPError(401, 'controlUserSessionId is empty or invalid');
-  } 
+  }
   // success
   const result = launchVehicleLaunchInfoHelper(launchVehicleId);
   if (result !== null) {

@@ -89,10 +89,10 @@ export interface LaunchVehicleLaunchSummary {
 export function launchVehicleLaunchInfoHelper(launchVehicleId: number): LaunchVehicleInfo {
   const Launches = getData().launches.filter(l => l.assignedLaunchVehicleId === launchVehicleId);
   const launcHistore: LaunchVehicleHistoryEntry[] = [];
-  let temp: LaunchVehicleHistoryEntry = {
+  const temp: LaunchVehicleHistoryEntry = {
     launch: '',
     state: ''
-  }
+  };
   for (const launch of Launches) {
     temp.launch = `[${launch.missionCopy.target}] ${launch.missionCopy.name} - ${launch.missionCopy.timeCreated}`;
     temp.state = launch.state;

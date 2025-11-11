@@ -1,5 +1,5 @@
 import HTTPError from 'http-errors';
-import{
+import {
   controlUserSessionIdCheck,
   missionIdCheck,
   launchIdCheck,
@@ -30,8 +30,8 @@ export function adminLaunchList(controlUserSessionId: string) {
     } else {
       activeLaunches.push(launch.launchId);
     }
-  } 
-  return { activeLaunches: activeLaunches , completedLaunches: completedLaunches };
+  }
+  return { activeLaunches: activeLaunches, completedLaunches: completedLaunches };
 }
 
 export function adminMissionLaunchOrganise(
@@ -100,7 +100,7 @@ export function adminMissionLaunchOrganise(
     payloadId: data.payload.find(p => p.description === payload.description).payloadId,
     allocatedAstronauts: [],
     launchCalculationParameters: launchParameters
-  }
+  };
   data.launches.push(launch);
   data.newtLaunchId++;
   setData(data);
@@ -152,15 +152,15 @@ export function adminMissionLaunchDetails(
 
   const data = getData();
   const launch = data.launches.find(l => l.launchId === launchId);
-  const launchVehicle = data.launchVehicles.find(l => l.launchVehicleId === launch.assignedLaunchVehicleId);
+  const Vehicle = data.launchVehicles.find(l => l.launchVehicleId === launch.assignedLaunchVehicleId);
   const assignedVehicle: launchVehicle = {
-    launchVehicleId: launchVehicle.launchVehicleId,
-    name: launchVehicle.name,
-    maneuveringFuelRemaining: launchVehicle.maneuveringFuel
-  }
+    launchVehicleId: Vehicle.launchVehicleId,
+    name: Vehicle.name,
+    maneuveringFuelRemaining: Vehicle.maneuveringFuel
+  };
   const payload = data.payload.find(p => p.payloadId === launch.payloadId);
   const Astronauts: allocatedAstronaut[] = [];
-  let Astronaut: allocatedAstronaut = {
+  const Astronaut: allocatedAstronaut = {
     astronautId: null,
     designation: ''
   };
@@ -181,7 +181,7 @@ export function adminMissionLaunchDetails(
     payload: payload,
     allocatedAstronauts: Astronauts,
     launchCalculationParameters: launch.launchCalculationParameters
-  }
+  };
 
   return result;
 }
@@ -226,11 +226,13 @@ export function adminMissionLaunchAllocate(
   for (const assignedAstronautId of getData().launches.find(l => l.launchId === launchId).allocatedAstronauts) {
     totleWeight += getData().astronauts.find(a => a.astronautId === assignedAstronautId).weight;
   }
-  if (totleWeight + getData().astronauts.find(a => a.astronautId === astronautId).weight > launchVehicle.maxCrewWeight){
+  if (totleWeight + getData().astronauts.find(a => a.astronautId === astronautId).weight > launchVehicle.maxCrewWeight) {
     throw HTTPError(400, 'The total weight including this astronaut would exceed the maxCrewWeight of the launchVehicle');
   }
 
   const data = getData();
+  data.launches.find(l => l.launchId === launchId).allocatedAstronauts.push(astronautId);
+  setData(data);
 
   return {};
 }

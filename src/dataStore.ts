@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import { chatHistory } from './logic/llm';
 
 // Global data store
 interface MissionControlUser {
