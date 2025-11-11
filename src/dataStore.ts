@@ -214,7 +214,6 @@ export function loadData() {
   const newData = JSON.parse(fs.readFileSync(DB_PATH, 'utf-8'));
 
   data = newData;
-
 }
 export function saveData() {
   fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
