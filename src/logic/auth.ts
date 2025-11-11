@@ -13,17 +13,13 @@ import {
   isValidPassword,
   verifyPasswordSync,
   findUserById,
-  ServiceError
+  buildError
 } from './helper';
 import { getData, setData, Session } from '../dataStore';
 import { errorCategories as EC } from '../testSamples';
 import HTTPError from 'http-errors';
 
-function buildError(message: string, code: string): never {
-  throw new ServiceError(message, code);
-}
-
-function throwErrorForFunction(code: string, message: string) {
+export function throwErrorForFunction(code: string, message: string) {
   switch (code) {
     case 'INVALID_CREDENTIALS':
       throw HTTPError(401, message);
@@ -35,7 +31,7 @@ function throwErrorForFunction(code: string, message: string) {
 }
 
 // Register a mission control user
-function adminAuthRegister(email: string, password: string, nameFirst: string, nameLast: string) {
+export function adminAuthRegister(email: string, password: string, nameFirst: string, nameLast: string) {
   try {
     if (!isValidEmail(email)) {
       buildError('Invalid email format', EC.BAD_INPUT);
@@ -90,7 +86,7 @@ function adminAuthRegister(email: string, password: string, nameFirst: string, n
 }
 
 // Login a mission control user
-function adminAuthLogin(email: string, password: string) {
+export function adminAuthLogin(email: string, password: string) {
   try {
     // Validate password is provided
     const data = getData();
@@ -136,7 +132,7 @@ function adminAuthLogin(email: string, password: string) {
 }
 
 // Logout a mission control user session
-function adminAuthLogout(controlUserSessionId: string) {
+export function adminAuthLogout(controlUserSessionId: string) {
   try {
     const data = getData();
     if (!controlUserSessionId) {
@@ -160,7 +156,7 @@ function adminAuthLogout(controlUserSessionId: string) {
   }
 }
 
-function adminControlUserDetails(controlUserId: number) {
+export function adminControlUserDetails(controlUserId: number) {
   try {
     const data = getData();
     const user = data.controlUsers.find(a => a.controlUserId === controlUserId);
@@ -182,7 +178,7 @@ function adminControlUserDetails(controlUserId: number) {
   }
 }
 
-function adminControlUserDetailsUpdate(controlUserId: number, email: string, nameFirst: string, nameLast: string) {
+export function adminControlUserDetailsUpdate(controlUserId: number, email: string, nameFirst: string, nameLast: string) {
   try {
     controlUserIdCheck(controlUserId);
     if (!isValidEmail(email)) {
@@ -214,7 +210,7 @@ function adminControlUserDetailsUpdate(controlUserId: number, email: string, nam
   }
 }
 
-function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: string, newPassword: string) {
+export function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: string, newPassword: string) {
   try {
     const user = findUserById(controlUserId);
     if (!user) {
@@ -252,12 +248,3 @@ function adminControlUserPasswordUpdate(controlUserId: number, oldPassword: stri
     throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
-
-export {
-  adminAuthRegister,
-  adminAuthLogin,
-  adminAuthLogout,
-  adminControlUserDetails,
-  adminControlUserDetailsUpdate,
-  adminControlUserPasswordUpdate
-};

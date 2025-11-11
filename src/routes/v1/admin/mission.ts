@@ -1,6 +1,10 @@
 import { Router, Request, Response } from 'express';
 import { getData } from '../../../dataStore';
-import { adminMissionAstronautAssign, adminMissionAstronautUnassign } from '../../../logic/astronaut';
+import {
+  adminMissionAstronautAssign,
+  adminMissionAstronautUnassign,
+  adminLaunchAstronautUnallocate,
+} from '../../../logic/astronaut';
 import {
   adminMissionNameUpdate,
   adminMissionTargetUpdate,
@@ -129,18 +133,22 @@ router.put('/:missionId/description', (req: Request, res: Response) => {
 });
 
 router.put('/:missionId/target', (req: Request, res: Response) => {
-  const controlUserSessionId = req.header('controlUserSessionId');
-  const missionId = Number(req.params.missionId);
-  const target = req.body || {};
+try {
+    const controlUserSessionId = req.header('controlUserSessionId');
+    const missionId = Number(req.params.missionId);
+    const target = req.body || {};
 
-  const session = findSessionFromSessionId(controlUserSessionId);
-  if (!session) {
-    throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
+    const session = findSessionFromSessionId(controlUserSessionId);
+    if (!session) {
+      throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
+    }
+
+    const controlUserId = session.controlUserId;
+    const result = adminMissionTargetUpdate(controlUserId, missionId, target.target);
+    return res.status(200).json(result);
+  } catch (e) {
+    return res.status(e.status).json({ error: e.message });
   }
-
-  const controlUserId = session.controlUserId;
-  const result = adminMissionTargetUpdate(controlUserId, missionId, target.target);
-  return res.status(200).json(result);
 });
 
 router.post('/:missionId/transfer', (req: Request, res: Response) => {
@@ -228,5 +236,33 @@ router.put('/:missionid/launch/:launchid/status', (req: Request, res: Response) 
     return res.status(e.status).json({ error: e.message });
   }
 });
+
+router.delete('/:missionid/launch/:launchid/allocate/:astronautid',
+  async (req: Request, res: Response) => {
+    try {
+      const controlUserSessionId = req.header('controlUserSessionId');
+      const missionId = Number(req.params.missionid);
+      const launchId = Number(req.params.launchid);
+      const astronautId = Number(req.params.astronautid);
+
+      if (!controlUserSessionId) {
+        throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
+      }
+
+      const result = await adminLaunchAstronautUnallocate(
+        controlUserSessionId,
+        astronautId,
+        missionId,
+        launchId
+      );
+
+      return res.status(200).json(result ?? {});
+    } catch (e) {
+      type ErrorWithStatus = { status?: number; message: string };
+      const err = e as ErrorWithStatus;
+      return res.status(err.status ?? 500).json({ error: err.message });
+    }
+  }
+);
 
 export default router;

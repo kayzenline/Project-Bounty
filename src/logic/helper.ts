@@ -3,6 +3,11 @@ import { errorCategories as EC } from '../testSamples';
 import { v4 as uuidGen } from 'uuid';
 import bcrypt from 'bcrypt';
 import isEmail from 'validator/lib/isEmail';
+import HTTPError from 'http-errors';
+
+export function buildError(message: string, code: string): never {
+  throw new ServiceError(message, code);
+}
 
 // hash function
 export function hashPasswordSync(plainPassword: string): string {
@@ -15,13 +20,13 @@ export function verifyPasswordSync(plainPassword: string, hashedPassword: string
 }
 
 // Helper function to generate unique control user ID
-function controlUserIdGen() {
+export function controlUserIdGen() {
   const data = getData();
   return data.nextControlUserId++;
 }
 
 // Helper function to validate password
-function isValidPassword(password: string) {
+export function isValidPassword(password: string) {
   // Password must be at least 8 characters long
   if (typeof password !== 'string' || password.length < 8) {
     return 0;
@@ -34,7 +39,7 @@ function isValidPassword(password: string) {
 }
 
 // Helper function to validate name
-function isValidName(name: string) {
+export function isValidName(name: string) {
   // Name must be a non-empty string with only letters, spaces, hyphens, or apostrophes
   if (typeof name !== 'string') {
     return false;
@@ -50,25 +55,25 @@ function isValidName(name: string) {
 
 // Helper function to validate email
 
-function isValidEmail(email: string) {
+export function isValidEmail(email: string) {
   // Basic email validation
   const isValid = isEmail(email);
   return isValid;
 }
 
 // Helper function to find user by email
-function findUserByEmail(email: string) {
+export function findUserByEmail(email: string) {
   const data = getData();
   return data.controlUsers.find(user => user.email === email);
 }
 
 // Helper function to find user by controlUserId
-function findUserById(controlUserId: number) {
+export function findUserById(controlUserId: number) {
   const data = getData();
   return data.controlUsers.find(user => user.controlUserId === controlUserId);
 }
 
-class ServiceError extends Error {
+export class ServiceError extends Error {
   errorCategory: string;
   constructor(error: string, errorCategory: string) {
     super(error);
@@ -77,7 +82,7 @@ class ServiceError extends Error {
 }
 
 // Helper function to check if control user's ID is valid or invalid
-function controlUserIdCheck(controlUserId: number) {
+export function controlUserIdCheck(controlUserId: number) {
   // user id must be integer
   if (!Number.isInteger(controlUserId) || controlUserId <= 0) {
     throw new ServiceError('controlUserId must be integer', EC.BAD_INPUT);
@@ -95,7 +100,7 @@ function controlUserIdCheck(controlUserId: number) {
 }
 
 // Validate mission name and return the trimmed value
-function missionNameValidity(name: string, { minLen = 3, maxLen = 30 } = {}) {
+export function missionNameValidity(name: string, { minLen = 3, maxLen = 30 } = {}) {
   if (typeof name !== 'string') {
     throw new ServiceError('mission name must be a string', EC.BAD_INPUT);
   }
@@ -120,7 +125,7 @@ function missionNameValidity(name: string, { minLen = 3, maxLen = 30 } = {}) {
   return trimmed;
 }
 // Helper function to generate unique mission ID.
-function missionIdGen() {
+export function missionIdGen() {
   const data = getData();
   return data.nextMissionId++;
 }
@@ -131,7 +136,7 @@ interface CustomError extends Error {
 }
 
 // Helper function for mission description validity
-function missionDescriptionValidity(description: string, maxlen = 400) {
+export function missionDescriptionValidity(description: string, maxlen = 400) {
   // check type of description
   if (typeof description !== 'string') {
     const e = new Error('description must be a string') as CustomError;
@@ -148,7 +153,7 @@ function missionDescriptionValidity(description: string, maxlen = 400) {
 }
 
 // Helper function for mission target validity
-function missionTargetValidity(target: string, maxlen = 100) {
+export function missionTargetValidity(target: string, maxlen = 100) {
   // check type of target
   if (typeof target !== 'string') {
     throw new ServiceError('target must be a string', EC.BAD_INPUT);
@@ -164,7 +169,7 @@ function missionTargetValidity(target: string, maxlen = 100) {
 
 // Helper function for checking if missionId is valid or invalid
 
-function missionIdCheck(missionId: number) {
+export function missionIdCheck(missionId: number) {
   // missionId must be integer
 
   if (!Number.isInteger(missionId) || missionId < 0) {
@@ -191,7 +196,7 @@ function isNormalizedErrorSource(value: unknown): value is NormalizedErrorSource
   return typeof value === 'object' && value !== null;
 }
 
-function normalizeError(err: unknown) {
+export function normalizeError(err: unknown) {
   if (isNormalizedErrorSource(err)) {
     if (err.error !== undefined || err.errorCategory !== undefined) {
       const message = err.error ?? err.message ?? 'Unknown error';
@@ -213,11 +218,11 @@ function normalizeError(err: unknown) {
   return { error: String(err), errorCategory: 'BAD_INPUT' };
 }
 
-function generateSessionId() {
+export function generateSessionId() {
   return uuidGen();
 }
 
-function astronautIdCheck(astronautId: number) {
+export function astronautIdCheck(astronautId: number) {
   // missionId must be integer
 
   if (!Number.isInteger(astronautId) || astronautId < 0) {
@@ -247,7 +252,7 @@ function isValidRank(rank: string) {
   return /^[a-zA-Z\s\-']+$/.test(trimmedRank);
 }
 
-function astronautNameCheck(newNameFirst: string, newNamelast: string) {
+export function astronautNameCheck(newNameFirst: string, newNamelast: string) {
   if (!(isValidName(newNameFirst) && isValidName(newNamelast))) {
     throw new ServiceError('get an invalid name', EC.BAD_INPUT);
   }
@@ -261,7 +266,7 @@ function astronautNameCheck(newNameFirst: string, newNamelast: string) {
   return { newNameFirst: newNameFirst, newNamelast: newNamelast };
 }
 
-function astronautRankCheck(newRank: string) {
+export function astronautRankCheck(newRank: string) {
   if (!isValidRank(newRank)) {
     throw new ServiceError('get an invalid rank', EC.BAD_INPUT);
   }
@@ -269,7 +274,7 @@ function astronautRankCheck(newRank: string) {
   return newRank;
 }
 
-function astronautPhyCharCheck(age: number, weight: number, height: number) {
+export function astronautPhyCharCheck(age: number, weight: number, height: number) {
   // Check if age is an integer
   if (!Number.isInteger(age)) {
     throw new ServiceError('astronaut age is not meet the requirements', EC.BAD_INPUT);
@@ -287,10 +292,11 @@ function astronautPhyCharCheck(age: number, weight: number, height: number) {
   return { age: age, weight: weight, height: height };
 }
 
-function findSessionFromSessionId(controlUserSessionId: string) {
+export function findSessionFromSessionId(controlUserSessionId: string) {
   return getData().sessions.find(s => s.controlUserSessionId === controlUserSessionId);
 }
 
+<<<<<<< HEAD
 export {
   controlUserIdGen,
   isValidPassword,
@@ -313,3 +319,147 @@ export {
   astronautRankCheck,
   astronautPhyCharCheck
 };
+=======
+export function throwErrorForFunction(code: string, message: string) {
+  switch (code) {
+    case 'INVALID_CREDENTIALS':
+      throw HTTPError(401, message);
+    case 'INACCESSIBLE_VALUE':
+      throw HTTPError(403, message);
+    default:
+      throw HTTPError(400, message);
+  }
+}
+
+// ITER 3 Launch Vehicle, Launch and Payload helper functions
+// Launch Vehicale helper functions
+
+export function launchVehicleNameValidityCheck(name: string): boolean {
+  if (typeof name !== 'string') {
+    return false;
+  }
+  const trimmedName = name.trim();
+  // Name must be between 2 and 20 characters (inclusive)
+  if (trimmedName.length < 2 || trimmedName.length > 20) {
+    return false;
+  }
+  // Name can only contain letters, spaces, hyphens, or apostrophes
+  return /^[a-zA-Z\s\-']+$/.test(trimmedName);
+}
+
+export function launchVehicleDescriptionValidityCheck(description: string): boolean {
+  if (typeof description !== 'string') {
+    return false;
+  }
+  const trimmedDescription = description.trim();
+  // Description must be between 2 and 50 characters (inclusive)
+  if (trimmedDescription.length < 2 || trimmedDescription.length > 50) {
+    return false;
+  }
+  // Description can only contain letters, spaces, hyphens, or apostrophes
+  return /^[a-zA-Z\s\-']+$/.test(trimmedDescription);
+}
+
+export function launchVehicleCrewWeightValidityCheck(maxCrewWeight: number): boolean {
+  if (maxCrewWeight < 100 || maxCrewWeight > 1000) {
+    return false;
+  }
+  return true;
+}
+
+export function launchVehiclePayloadWeightValidityCheck(maxPayloadWeight: number): boolean {
+  if (maxPayloadWeight < 100 || maxPayloadWeight > 1000) {
+    return false;
+  }
+  return true;
+}
+
+export function launchVehicleWeightValidityCheck(launchVehicleWeight: number): boolean {
+  if (launchVehicleWeight < 1000 || launchVehicleWeight > 100000) {
+    return false;
+  }
+  return true;
+}
+
+export function launchVehicleThrustCapacityValidityCheck(thrustCapacity: number): boolean {
+  if (thrustCapacity < 100000 || thrustCapacity > 10000000) {
+    return false;
+  }
+  return true;
+}
+
+export function launchVehicleManeuveringFuelValidityCheck(maneuveringFuel: number): boolean {
+  if (maneuveringFuel < 10 || maneuveringFuel > 100) {
+    return false;
+  }
+  return true;
+}
+
+interface LaunchVehicleLaunchSummary {
+  launchVehicleId: number,
+  name: string,
+  assigned: boolean
+}
+
+export function launchVehicleLaunchSummary(launchVehicleId: number): LaunchVehicleLaunchSummary | null {
+  const launch = getData().launchVehicles.find(l => l.launchVehicleId === launchVehicleId);
+  if (!launch) {
+    return null;
+  }
+  return {
+    launchVehicleId: launch.launchVehicleId,
+    name: launch.name,
+    assigned: launch.retired
+  };
+}
+
+export function launchVehicleIdCheck(launchVehicleId: number) {
+  if (!Number.isInteger(launchVehicleId) || launchVehicleId <= 0) {
+    throw new ServiceError('launchvehicleid is invalid', EC.BAD_INPUT);
+  }
+
+  const data = getData();
+  const vehicle = data.launchVehicles.find(v => v.launchVehicleId === launchVehicleId);
+  if (!vehicle) {
+    throw new ServiceError('launchvehicleid is invalid', EC.BAD_INPUT);
+  }
+
+  return vehicle;
+}
+
+export function controlUserSessionIdCheck(controlUserSessionId: string): boolean {
+  if (typeof controlUserSessionId !== 'string' || controlUserSessionId.trim().length === 0) {
+    return false;
+  }
+
+  const data = getData();
+  return data.sessions.some(session => session.controlUserSessionId === controlUserSessionId);
+}
+
+// Launch helper functions
+export function launchIdCheck(launchId: number): boolean {
+  return true;
+}
+interface LaunchCalcParameters {
+
+}
+export function launchCalculationParameterCorrectnessCheck(launchParams: LaunchCalcParameters): boolean {
+  return true;
+}
+
+export function canThisLaunchReachTargetDistanceCheck(): boolean {
+  return true;
+}
+export function checkValidActionForCurrentState(): boolean {
+  return true;
+}
+
+// Payload helper functions
+export function payloadDescriptionValidityCheck(description: string): boolean {
+  return true;
+}
+
+export function payloadIdCheck(payloadId: number): boolean {
+  return true;
+}
+>>>>>>> e40a3a016f4b58c48f4a5926c3a023dd76ed1ef4
