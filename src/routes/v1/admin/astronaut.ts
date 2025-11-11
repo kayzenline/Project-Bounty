@@ -11,7 +11,7 @@ import HTTPError from 'http-errors';
 const router = Router();
 
 // POST /v1/admin/astronaut - Create new astronaut
-router.post('/', (req: Request, res: Response, next: NextFunction) => {
+router.post('/', (req: Request, res: Response) => {
   try {
     const controlUserSessionId = req.header('controlUserSessionId');
     const { nameFirst, nameLast, rank, age, weight, height } = req.body;
@@ -19,11 +19,11 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
     const result = adminAstronautCreate(controlUserSessionId, nameFirst, nameLast, rank, age, weight, height);
     return res.status(200).json(result);
   } catch (e) {
-    next(e);
+    return res.status(e.status).json({ error: e.message });
   }
 });
 
-router.get('/pool', (req: Request, res: Response, next: NextFunction) => {
+router.get('/pool', (req: Request, res: Response) => {
   try {
     const controlUserSessionId = req.header('controlUserSessionId');
 
@@ -36,7 +36,7 @@ router.get('/pool', (req: Request, res: Response, next: NextFunction) => {
 });
 
 // GET /v1/admin/astronaut/:astronautid - Get astronaut info
-router.get('/:astronautid', (req: Request, res: Response, next: NextFunction) => {
+router.get('/:astronautid', (req: Request, res: Response) => {
   try {
     const controlUserSessionId = req.header('controlUserSessionId');
 
@@ -52,7 +52,7 @@ router.get('/:astronautid', (req: Request, res: Response, next: NextFunction) =>
   }
 });
 
-router.put('/:astronautid', (req: Request, res: Response, next: NextFunction) => {
+router.put('/:astronautid', (req: Request, res: Response) => {
   try {
     const controlUserSessionId = req.header('controlUserSessionId');
     const astronautId = parseInt(req.params.astronautid);
@@ -74,7 +74,7 @@ router.put('/:astronautid', (req: Request, res: Response, next: NextFunction) =>
   }
 });
 
-router.delete('/:astronautid', (req: Request, res: Response, next: NextFunction) => {
+router.delete('/:astronautid', (req: Request, res: Response) => {
   try {
     const controlUserSessionId = req.header('controlUserSessionId');
     const astronautId = parseInt(req.params.astronautid);
