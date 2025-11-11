@@ -41,4 +41,4 @@ export function getMessage(mc: string) {
   return { messageResponse: message };
 }
 
-llmchatRequestFormer("How far from the earth to the moon");
+
