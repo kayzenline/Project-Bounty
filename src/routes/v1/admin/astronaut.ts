@@ -106,12 +106,12 @@ router.post('/:astronautid/llmchat', (req: Request, res: Response, next: NextFun
   }
 })
 
-router.get('/:astronautid/llmchat', (req: Request, res: Response, next: NextFunction) => {
+/* router.get('/:astronautid/llmchat', (req: Request, res: Response, next: NextFunction) => {
   try {
     const astronautId = 
   } catch (e) {
     
   }
-})
+}) */
 
 export default router;
