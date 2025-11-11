@@ -2,14 +2,14 @@ import {
   clearRequest,
   adminAuthUserRegisterRequest,
   adminMissionCreateRequest,
-  adminAstronautCreateRequest,
+  adminAstronautCreateRequest
 } from './requestHelpers';
 
 import {
   adminMissionLaunchOrganiseRequest,
   adminMissionLaunchDetailsRequest,
-  adminMissionLaunchAllocateRequest,
   adminMissionLaunchRemoveRequest,
+  adminLaunchVehicleCreateRequest
 } from './newRequestHelpers';
 
 import {
@@ -17,6 +17,7 @@ import {
   sampleUser2,
   sampleMission1,
   sampleAstronaut,
+  sampleLaunchVehicle1
 } from './sampleTestData';
 
 describe.skip('DELETE /v1/admin/mission/:missionid/launch/:launchid/allocate/:astronautid', () => {
@@ -24,7 +25,7 @@ describe.skip('DELETE /v1/admin/mission/:missionid/launch/:launchid/allocate/:as
   let missionId: number;
   let launchId: number;
   let astronautId: number;
-
+  let launchVehicleId:number;
   beforeEach(() => {
     const clearRes = clearRequest();
     expect(clearRes.statusCode).toBe(200);
@@ -50,6 +51,20 @@ describe.skip('DELETE /v1/admin/mission/:missionid/launch/:launchid/allocate/:as
     missionId = missionRes.body.missionId;
     expect(missionId).toStrictEqual(expect.any(Number));
 
+    // create LaunchVehicle
+    const launchvehicle=adminLaunchVehicleCreateRequest(
+      controlUserSessionId,
+      sampleLaunchVehicle1.name,
+      sampleLaunchVehicle1.description,
+      sampleLaunchVehicle1.maxCrewWeight,
+      sampleLaunchVehicle1.maxPayloadWeight,
+      sampleLaunchVehicle1.launchVehicleWeight,
+      sampleLaunchVehicle1.thrustCapacity,
+      sampleLaunchVehicle1.maneuveringFuel
+    )
+    expect(launchvehicle.statusCode).toBe(200);
+    launchVehicleId = launchvehicle.body.launchVehicleId;
+
     // Create an astronaut
     const astroRes = adminAstronautCreateRequest(
       controlUserSessionId,
@@ -68,6 +83,7 @@ describe.skip('DELETE /v1/admin/mission/:missionid/launch/:launchid/allocate/:as
     const organiseRes = adminMissionLaunchOrganiseRequest(
       controlUserSessionId,
       missionId,
+      launchVehicleId,
       { description: 'Test payload', weight: 10 },
       {
         targetDistance: 1000,
@@ -82,7 +98,7 @@ describe.skip('DELETE /v1/admin/mission/:missionid/launch/:launchid/allocate/:as
     expect(launchId).toStrictEqual(expect.any(Number));
 
     // Assign astronaut to this launch
-    const allocateRes = adminMissionLaunchAllocateRequest(
+    const allocateRes = adminMissionLaunchRemoveRequest(
       controlUserSessionId,
       astronautId,
       missionId,

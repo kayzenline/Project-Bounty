@@ -1,26 +1,29 @@
-import { adminLaunchVehicleInfoRequest,
-         adminLaunchVehicleCreateRequest,
-         adminMissionLaunchStatusUpdateRequest,
-         adminMissionLaunchDetailsRequest,
-         adminMissionLaunchOrganiseRequest,
-         adminMissionLaunchAllocateRequest
+import {
+  adminLaunchVehicleCreateRequest,
+  adminMissionLaunchStatusUpdateRequest,
+  adminMissionLaunchDetailsRequest,
+  adminMissionLaunchOrganiseRequest,
+  adminMissionAstronautLaunchAllocateRequest
 } from './newRequestHelpers';
-import {  adminAuthUserRegisterRequest,
-          adminMissionCreateRequest,
-          adminAstronautCreateRequest,
-          adminAstronautAssignRequest ,
+import { 
+  adminAuthUserRegisterRequest,
+  adminMissionCreateRequest,
+  adminAstronautCreateRequest,
+  adminAstronautAssignRequest ,
 } from './requestHelpers';
 import { clearRequest } from './requestHelpers';
-import {  sampleUser1,
-          sampleUser2,
-          sampleMission1, 
-          sampleMission2,
-          sampleLaunch1,
-          sampleAstronaut,
-          sampleLaunchVehicle1,
+import { 
+  sampleUser1,
+  sampleUser2,
+  sampleMission1, 
+  sampleMission2,
+  samplePayload1,
+  sampleLaunchParameters1,
+  sampleAstronaut,
+  sampleLaunchVehicle1,
 } from './sampleTestData';
-import{missionLaunchAction,missionLaunchState}from '../../src/dataStore'
-import{updateLaunchState} from'../../src/updateSessionState'
+import{ missionLaunchAction,missionLaunchState }from '../../src/dataStore'
+import{ updateLaunchState } from'../../src/logic/updateSessionState'
 describe.skip('Need to write a description', () => {
   // some helpful functions you may use!
   let controlUserSessionId: string;
@@ -106,13 +109,14 @@ describe.skip('Need to write a description', () => {
     const launchcreateRes=adminMissionLaunchOrganiseRequest(
       controlUserSessionId,
       missionId,
-      sampleLaunch1.payload,
-      sampleLaunch1.launchParameters
+      launchVehicleId,
+      samplePayload1,
+      sampleLaunchParameters1
     );
     expect(launchcreateRes.statusCode).toBe(200);
     launchId = launchcreateRes.body.launchId;
     //AstronautAllocate
-    const astronautallocateRes=adminMissionLaunchAllocateRequest(
+    const astronautallocateRes=adminMissionAstronautLaunchAllocateRequest(
       controlUserSessionId,
       astronautId,
       missionId,
@@ -513,6 +517,7 @@ describe.skip('Need to write a description', () => {
       const createRes=adminMissionLaunchOrganiseRequest(
         controlUserSessionId,
         missionId,
+        launchVehicleId,
         {
           description: 'bad parameters',
           weight: 400
@@ -538,6 +543,7 @@ describe.skip('Need to write a description', () => {
       const createRes=adminMissionLaunchOrganiseRequest(
         controlUserSessionId,
         missionId,
+        launchVehicleId,
         {
           description: 'insufficient fuel available',
           weight: 400
@@ -564,6 +570,7 @@ describe.skip('Need to write a description', () => {
     const createRes=adminMissionLaunchOrganiseRequest(
       controlUserSessionId,
       missionId,
+      launchVehicleId,
       {
         description: 'insufficient fuel available',
         weight: 400
