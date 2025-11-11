@@ -23,7 +23,6 @@ describe.skip('POST /v1/admin/mission/{missionid}/launch', () => {
   let missionId: number;
   let missionId2: number;
 
-
   const registerRes2 = adminAuthUserRegisterRequest(
     sampleUser2.email,
     sampleUser2.password,

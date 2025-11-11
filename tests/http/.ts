@@ -17,7 +17,6 @@ import {
   sampleLaunchParameters1,
 } from './sampleTestData';
 import { generateSessionId } from '../../src/logic/helper';
-import { error } from 'console';
 
 describe.skip('POST /v1/admin/mission/{missionid}/launch', () => {
   let controlUserSessionId: string;
