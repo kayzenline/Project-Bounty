@@ -23,24 +23,6 @@ describe.skip('POST /v1/admin/mission/{missionid}/launch', () => {
   let missionId: number;
   let missionId2: number;
 
-  const registerRes2 = adminAuthUserRegisterRequest(
-    sampleUser2.email,
-    sampleUser2.password,
-    sampleUser2.nameFirst,
-    sampleUser2.nameLast
-  );
-  expect(registerRes2.statusCode).toBe(200);
-  controlUserSessionId2 = registerRes2.body.controlUserSessionId;
-
-  const missionCreateRes2 = adminMissionCreateRequest(
-    controlUserSessionId2,
-    sampleMission2.name,
-    sampleMission2.description,
-    sampleMission2.target
-  );
-  expect(missionCreateRes2.statusCode).toBe(200);
-  missionId2 = missionCreateRes2.body.missionId;
-
   beforeEach(() => {
     // clear all the data
     const clearRes = clearRequest();
@@ -76,6 +58,24 @@ describe.skip('POST /v1/admin/mission/{missionid}/launch', () => {
     );
     expect(vehicleCreateRes.statusCode).toBe(200);
     launchVehicleId = vehicleCreateRes.body.launchVehicleId;
+
+    const registerRes2 = adminAuthUserRegisterRequest(
+      sampleUser2.email,
+      sampleUser2.password,
+      sampleUser2.nameFirst,
+      sampleUser2.nameLast
+    );
+    expect(registerRes2.statusCode).toBe(200);
+    controlUserSessionId2 = registerRes2.body.controlUserSessionId;
+
+    const missionCreateRes2 = adminMissionCreateRequest(
+      controlUserSessionId2,
+      sampleMission2.name,
+      sampleMission2.description,
+      sampleMission2.target
+    );
+    expect(missionCreateRes2.statusCode).toBe(200);
+    missionId2 = missionCreateRes2.body.missionId;
   });
 
   afterAll(() => {
