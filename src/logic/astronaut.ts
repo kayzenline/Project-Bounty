@@ -8,9 +8,9 @@ import {
   normalizeError,
   ServiceError,
   missionIdCheck,
-  throwErrorForFunction,
   buildError
 } from './helper';
+import { throwErrorForFunction } from './auth';
 import { errorCategories as EC } from '../testSamples';
 import HTTPError from 'http-errors';
 
