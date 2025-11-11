@@ -124,7 +124,12 @@ function deployPayload(launchId: number) {
   const data = getData();
   const launch: Launch = data.launches.find((singleLaunch) => singleLaunch.launchId === launchId);
   const payload = data.payload.find(singlePayload => singlePayload.payloadId === launch.payloadId);
+  if (!payload) {
+    throw HTTPError(400, 'Payload for launch not found');
+  }
   payload.deployed = true;
+  payload.timeOfDeployment = Math.floor(Date.now() / 1000);
+  payload.deployedLaunchId = launchId;
 
   setData(data);
 }
