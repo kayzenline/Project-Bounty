@@ -1,5 +1,4 @@
 import HTTPError from 'http-errors';
-<<<<<<< HEAD
 import {
   controlUserSessionIdCheck,
   launchVehicleNameValidityCheck,
@@ -18,14 +17,6 @@ import {
   setData,
   LaunchVehicle
  } from '../dataStore';
-=======
-import { launchVehicleIdCheck, controlUserSessionIdCheck, normalizeError, throwErrorForFunction, findSessionFromSessionId } from './helper';
-import { getData, LaunchVehicleInfo, missionLaunchState } from '../dataStore';
-
-function notImplemented(): never {
-  throw HTTPError(501, 'Not implemented');
-}
->>>>>>> e40a3a016f4b58c48f4a5926c3a023dd76ed1ef4
 
 export function adminLaunchVehicleCreate(
   controlUserSessionId: string,
@@ -98,7 +89,6 @@ export function adminLaunchVehicleCreate(
 }
 
 export function adminLaunchVehicleDetails(controlUserSessionId: string) {
-<<<<<<< HEAD
   // Throw Errors
   // controlUserSessionId
   const controlUserId = controlUserSessionIdCheck(controlUserSessionId);
@@ -124,41 +114,12 @@ export function adminLaunchVehicleDetails(controlUserSessionId: string) {
     return { launchVehicles: result };
   } else {
     return {};
-=======
-  try {
-    controlUserSessionIdCheck(controlUserSessionId);
-    const session = findSessionFromSessionId(controlUserSessionId);
-    if (!session) {
-      throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
-    }
-
-    const data = getData();
-    const launchVehicles = data.launchVehicles
-      .filter(vehicle => !vehicle.retired)
-      .map(vehicle => {
-        const assigned = data.launches.some(launch =>
-          launch.assignedLaunchVehicleId === vehicle.launchVehicleId &&
-          launch.state !== missionLaunchState.ON_EARTH
-        );
-        return {
-          launchVehicleId: vehicle.launchVehicleId,
-          name: vehicle.name,
-          assigned
-        };
-      });
-
-    return { launchVehicles };
-  } catch (e) {
-    const ne = normalizeError(e);
-    throwErrorForFunction(ne.errorCategory, ne.error);
->>>>>>> e40a3a016f4b58c48f4a5926c3a023dd76ed1ef4
   }
 }
 
 export function adminLaunchVehicleInfo(
   controlUserSessionId: string,
   launchVehicleId: number
-<<<<<<< HEAD
 ) {
   // Throw Errors
   // controlUserSessionId
@@ -176,37 +137,6 @@ export function adminLaunchVehicleInfo(
     return result;
   } else {
     return {};
-=======
-): LaunchVehicleInfo {
-  try {
-    controlUserSessionIdCheck(controlUserSessionId);
-    const vehicle = launchVehicleIdCheck(launchVehicleId);
-
-    const launches = getData().launches
-      .filter(l => l.assignedLaunchVehicleId === launchVehicleId)
-      .map(l => ({
-        launch: `[${l.missionCopy.target}] ${l.missionCopy.name} - ${l.createdAt}`,
-        state: l.state
-      }));
-
-    return {
-      launchVehicleId: vehicle.launchVehicleId,
-      name: vehicle.name,
-      description: vehicle.description,
-      maxCrewWeight: vehicle.maxCrewWeight,
-      maxPayloadWeight: vehicle.maxPayloadWeight,
-      launchVehicleWeight: vehicle.launchVehicleWeight,
-      thrustCapacity: vehicle.thrustCapacity,
-      startingManeuveringFuel: vehicle.maneauveringFuel,
-      retired: vehicle.retired,
-      timeAdded: vehicle.timeAdded,
-      timeLastEdited: vehicle.timeLastEdited,
-      launches
-    };
-  } catch (e) {
-    const ne = normalizeError(e);
-    throwErrorForFunction(ne.errorCategory, ne.error);
->>>>>>> e40a3a016f4b58c48f4a5926c3a023dd76ed1ef4
   }
 }
 

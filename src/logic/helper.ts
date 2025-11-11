@@ -3,7 +3,6 @@ import { errorCategories as EC } from '../testSamples';
 import { v4 as uuidGen } from 'uuid';
 import bcrypt from 'bcrypt';
 import isEmail from 'validator/lib/isEmail';
-import HTTPError from 'http-errors';
 
 export function buildError(message: string, code: string): never {
   throw new ServiceError(message, code);
@@ -295,26 +294,3 @@ export function astronautPhyCharCheck(age: number, weight: number, height: numbe
 export function findSessionFromSessionId(controlUserSessionId: string) {
   return getData().sessions.find(s => s.controlUserSessionId === controlUserSessionId);
 }
-
-export {
-  controlUserIdGen,
-  isValidPassword,
-  isValidName,
-  isValidEmail,
-  findUserByEmail,
-  findUserById,
-  controlUserIdCheck,
-  missionNameValidity,
-  missionIdGen,
-  missionDescriptionValidity,
-  missionTargetValidity,
-  missionIdCheck,
-  normalizeError,
-  generateSessionId,
-  ServiceError,
-  findSessionFromSessionId,
-  astronautIdCheck,
-  astronautNameCheck,
-  astronautRankCheck,
-  astronautPhyCharCheck
-};
