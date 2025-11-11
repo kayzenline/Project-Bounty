@@ -167,6 +167,7 @@ interface DataStore {
   nextAstronautId: number,
   nextLaunchVehicleId: number,
   newtLaunchId: number,
+  nextPayloadId: number,
   sessions: Session[],
   astronauts: Astronaut[],
   launchVehicles: LaunchVehicle[],
@@ -183,6 +184,7 @@ let data: DataStore = {
   nextAstronautId: 1,
   nextLaunchVehicleId: 1,
   newtLaunchId: 1,
+  nextPayloadId: 1,
   sessions: [],
   astronauts: [],
   launchVehicles: [],
@@ -212,6 +214,7 @@ export function loadData() {
   const newData = JSON.parse(fs.readFileSync(DB_PATH, 'utf-8'));
 
   data = newData;
+
 }
 export function saveData() {
   fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
