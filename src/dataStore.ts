@@ -40,7 +40,7 @@ interface DataStore {
 }
 interface ChatHistory {
   launchId: number
-  messageLog: MessageLog
+  messageLog: MessageLog[]
 }
 
 interface MessageLog {
@@ -212,5 +212,7 @@ export {
   Mission,
   MissionControlUser,
   DataStore,
-  Session
+  Session,
+  ChatHistory,
+  MessageLog
 };
