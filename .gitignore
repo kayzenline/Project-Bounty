@@ -1,35 +1,12 @@
 db.json
+
 package-lock.json
 node_modules
-node_modules/
-bower_components
-
 build
-dist/**/*
-public/css/main.css
-
-.DS_Store
-Thumbs.db
 .DS_store
-
 coverage/
 .nyc_output
-coverage.xml
 results/
-logs
-pids
-tmp
-give.log
-
-lib-cov
-*.seed
-*.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
-*.swp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -41,6 +18,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+build/
 develop-eggs/
 dist/
 downloads/
@@ -60,6 +38,8 @@ share/python-wheels/
 MANIFEST
 
 # PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
 
@@ -75,6 +55,7 @@ htmlcov/
 .coverage.*
 .cache
 nosetests.xml
+coverage.xml
 *.cover
 .hypothesis/
 .pytest_cache/
@@ -147,3 +128,47 @@ dmypy.json
 
 # Other
 *.py~
+=======
+# Coverage
+.nyc_output
+give.log
+
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+*.swp
+
+pids
+logs
+results/
+tmp
+
+# Build
+public/css/main.css
+
+# Coverage reports
+coverage/
+.pytest_cache
+
+# API keys and secrets
+.env
+
+# Dependency directory
+node_modules/
+bower_components
+
+# Editors
+.idea
+*.iml
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Ignore built ts files
+dist/**/*
