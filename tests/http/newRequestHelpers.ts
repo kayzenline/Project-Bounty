@@ -60,7 +60,8 @@ export function adminLaunchVehicleInfoRequest(
 
 export function adminMissionLaunchOrganiseRequest(
   controlUserSessionId: string,
-  missionid: number,
+  missionid: number | null,
+  launchVehicleId: number,
   payload: {
     description: string,
     weight: number
@@ -76,6 +77,7 @@ export function adminMissionLaunchOrganiseRequest(
   const response = request('POST', `/v1/admin/mission/${missionid}/launch`, {
     headers: { controlUserSessionId: controlUserSessionId },
     json: {
+      launchVehicleId,
       payload,
       launchParameters
     }
@@ -184,7 +186,7 @@ export function adminLaunchDetailsRequest(
   };
 }
 
-export function adminMissionLaunchAllocateRequest(
+export function adminMissionAstronautLaunchAllocateRequest(
   controlUserSessionId: string,
   astronautid: number,
   missionid: number,

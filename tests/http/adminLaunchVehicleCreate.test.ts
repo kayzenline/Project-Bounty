@@ -4,7 +4,7 @@ import { clearRequest } from './requestHelpers';
 import { sampleUser1, sampleLaunchVehicle1, sampleLaunchVehicle2 } from './sampleTestData';
 import { generateSessionId } from '../../src/logic/helper';
 
-describe.skip('Need to write a description', () => {
+describe.skip('POST /v1/admin/launchvehicle', () => {
   let controlUserSessionId: string;
   let launchVehicleId: number;
   beforeEach(() => {
@@ -20,6 +20,11 @@ describe.skip('Need to write a description', () => {
     );
     expect(registerRes.statusCode).toBe(200);
     controlUserSessionId = registerRes.body.controlUserSessionId;
+  });
+
+  afterAll(() => {
+    const clearRes = clearRequest();
+    expect(clearRes.statusCode).toBe(200);
   });
 
   test('Create a Launch Vehicle successfully', () => {
@@ -108,7 +113,7 @@ describe.skip('Need to write a description', () => {
     { name: '' },
     { name: 'N'.repeat(21) }
   ];
-  test.each(invalidLaunchVehicleName)('Get a invalid name', ({name}) => {
+  test.each(invalidLaunchVehicleName)('Get a invalid name', ({ name }) => {
     const createRes = adminLaunchVehicleCreateRequest(
       controlUserSessionId,
       name,
@@ -131,7 +136,7 @@ describe.skip('Need to write a description', () => {
     { description: '' },
     { description: 'D'.repeat(51) }
   ];
-  test.each(invalidLaunchVehicleDescription)('Get a invalid name', ({description}) => {
+  test.each(invalidLaunchVehicleDescription)('Get a invalid name', ({ description }) => {
     const createRes = adminLaunchVehicleCreateRequest(
       controlUserSessionId,
       sampleLaunchVehicle1.name,
@@ -152,7 +157,7 @@ describe.skip('Need to write a description', () => {
     { maxCrewWeight: 99 },
     { maxCrewWeight: 1001 }
   ];
-  test.each(invalidLaunchVehicleMaxCrewWeight)('Get a invalid maximumCrewWeight', ({maxCrewWeight}) => {
+  test.each(invalidLaunchVehicleMaxCrewWeight)('Get a invalid maximumCrewWeight', ({ maxCrewWeight }) => {
     const createRes = adminLaunchVehicleCreateRequest(
       controlUserSessionId,
       sampleLaunchVehicle1.name,
@@ -173,7 +178,7 @@ describe.skip('Need to write a description', () => {
     { maxPayloadWeight: 99 },
     { maxPayloadWeight: 1001 }
   ];
-  test.each(invalidLaunchVehicleMaximumPayloadWeight)('Get a invalid maximumPayloadWeight', ({maxPayloadWeight}) => {
+  test.each(invalidLaunchVehicleMaximumPayloadWeight)('Get a invalid maximumPayloadWeight', ({ maxPayloadWeight }) => {
     const createRes = adminLaunchVehicleCreateRequest(
       controlUserSessionId,
       sampleLaunchVehicle1.name,
@@ -194,7 +199,7 @@ describe.skip('Need to write a description', () => {
     { launchVehicleWeight: 999 },
     { launchVehicleWeight: 100001 }
   ];
-  test.each(invalidLaunchVehicleWeight)('Get a invalid launchVehicleWeight', ({launchVehicleWeight}) => {
+  test.each(invalidLaunchVehicleWeight)('Get a invalid launchVehicleWeight', ({ launchVehicleWeight }) => {
     const createRes = adminLaunchVehicleCreateRequest(
       controlUserSessionId,
       sampleLaunchVehicle1.name,
@@ -215,7 +220,7 @@ describe.skip('Need to write a description', () => {
     { thrustCapacity: 99999 },
     { thrustCapacity: 10000001 }
   ];
-  test.each(invalidLaunchVehicleThrustCapacity)('Get a invalid thrustCapacity', ({thrustCapacity}) => {
+  test.each(invalidLaunchVehicleThrustCapacity)('Get a invalid thrustCapacity', ({ thrustCapacity }) => {
     const createRes = adminLaunchVehicleCreateRequest(
       controlUserSessionId,
       sampleLaunchVehicle1.name,
@@ -236,7 +241,7 @@ describe.skip('Need to write a description', () => {
     { maneuveringFuel: 9 },
     { maneuveringFuel: 101 }
   ];
-  test.each(invalidLaunchavaehicleManeuveringFuel)('Get a invalid maneuveringFuel', ({maneuveringFuel}) => {
+  test.each(invalidLaunchavaehicleManeuveringFuel)('Get a invalid maneuveringFuel', ({ maneuveringFuel }) => {
     const createRes = adminLaunchVehicleCreateRequest(
       controlUserSessionId,
       sampleLaunchVehicle1.name,
@@ -257,7 +262,7 @@ describe.skip('Need to write a description', () => {
     { sessionId: '' },
     { sessionId: generateSessionId() }
   ];
-  test.each(invalidLaunchavaehicleControlUserSessionId)('Get a invalid maneuveringFuel', ({sessionId}) => {
+  test.each(invalidLaunchavaehicleControlUserSessionId)('Get a invalid maneuveringFuel', ({ sessionId }) => {
     const createRes = adminLaunchVehicleCreateRequest(
       sessionId,
       sampleLaunchVehicle1.name,
