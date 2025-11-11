@@ -4,7 +4,7 @@ export function llmchatRequestFormer(messageContent: string) : string {
 
     // TODO You must decide on an appopriate pre-prompt to set the stage for your astronaut assistant so that it will only talk about space missions and related topics.
 
-    let prePrompt = ""
+    let prePrompt = "This chat is use for a space mission, you have to only answer the questions which releated to space mission"
     const res = request(
         'POST',
         'https://openrouter.ai/api/v1/chat/completions',
@@ -25,16 +25,20 @@ export function llmchatRequestFormer(messageContent: string) : string {
         },
     );
 
-    let output = JSON.parse(res.getBody() as string)
-    console.log(output)
+    const output = JSON.parse(res.getBody() as string);
+    const content: unknown = output.choices?.[0]?.message?.content;
 
-    // TODO :: You must understand the structure output and retrieve the response
-    return "Not implemented";
+    if (typeof content === 'string' && content.trim().length > 0) {
+      return content;
+    }
+
+    // Fallback in case API returns an unexpected structure
+    throw new Error('LLM response malformed or empty');
 }
 
 export function getMessage(mc: string) {
-  const message = llmchatRequestFormer(mc)
-
+  const message = llmchatRequestFormer(mc);
+  return { messageResponse: message };
 }
 
 llmchatRequestFormer("How far from the earth to the moon");
