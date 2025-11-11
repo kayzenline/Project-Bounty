@@ -35,9 +35,21 @@ interface DataStore {
   astronauts: Astronaut[],
   launchVehicles: LaunchVehicle[],
   launches: Launch[],
-  payload: Payload[]
+  payload: Payload[],
+  chatHistory: ChatHistory[]
+}
+interface ChatHistory {
+  launchId: number
+  messageLog: MessageLog
 }
 
+interface MessageLog {
+  astronautId: number
+  messageId: number
+  chatbotResponse: boolean
+  messageContent: string
+  timeSent: number
+}
 interface Session {
   controlUserSessionId: string,
   controlUserId: number
@@ -167,7 +179,8 @@ let data: DataStore = {
   astronauts: [],
   launchVehicles: [],
   launches: [],
-  payload: []
+  payload: [],
+  chatHistory: []
 };
 
 function createIfNotExist() {
