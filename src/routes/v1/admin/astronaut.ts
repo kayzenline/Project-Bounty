@@ -7,6 +7,7 @@ import {
   adminAstronautPool,
 } from '../../../logic/astronaut';
 import HTTPError from 'http-errors';
+import { getMessage, chatHistory } from '../../../logic/llm';
 
 const router = Router();
 
@@ -80,6 +81,39 @@ router.delete('/:astronautid', (req: Request, res: Response, next: NextFunction)
     const astronautId = parseInt(req.params.astronautid);
 
     const result = adminAstronautDelete(controlUserSessionId, astronautId);
+    return res.status(200).json(result);
+  } catch (e) {
+    return res.status(e.status).json({ error: e.message });
+  }
+});
+
+router.post('/:astronautid/llmchat', (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const astronautId = parseInt(req.params.astronautid);
+    if (isNaN(astronautId)) {
+      throw HTTPError(400, 'astronautid is invalid');
+    }
+
+    const messageReq = req.body.messageRequest;
+    if (typeof messageReq !== 'string' || messageReq.trim().length === 0) {
+      throw HTTPError(400, 'messageRequest must be a non-empty string');
+    }
+
+    const result = getMessage(astronautId, messageReq);
+    return res.status(200).json(result);
+  } catch (e) {
+    return res.status(e.status).json({ error: e.message });
+  }
+});
+
+router.get('/:astronautid/llmchat', (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const astronautId = parseInt(req.params.astronautid);
+    if (isNaN(astronautId)) {
+      throw HTTPError(400, 'astronautid is invalid');
+    }
+
+    const result = chatHistory(astronautId);
     return res.status(200).json(result);
   } catch (e) {
     return res.status(e.status).json({ error: e.message });

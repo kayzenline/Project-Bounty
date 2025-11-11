@@ -35,9 +35,22 @@ interface DataStore {
   astronauts: Astronaut[],
   launchVehicles: LaunchVehicle[],
   launches: Launch[],
-  payload: Payload[]
+  payload: Payload[],
+  chatHistory: ChatHistory[]
+}
+interface ChatHistory {
+  launchId: number
+  astronautId: number
+  messageLog: MessageLog[]
 }
 
+interface MessageLog {
+  astronautId: number
+  messageId: number
+  chatbotResponse: boolean
+  messageContent: string
+  timeSent: number
+}
 interface Session {
   controlUserSessionId: string,
   controlUserId: number
@@ -120,7 +133,9 @@ export interface Payload {
   payloadId: number, // an id for this entity
   description: string, // a description for this payload
   weight: number, // a weight (kg) for this payload
-  deployed: boolean // has this payload been deployed or not?
+  deployed: boolean, // has this payload been deployed or not?
+  timeOfDeployment: number,
+  deployedLaunchId: number
   // extra properties can be added to this payload to help with the bonus tasks
 }
 
@@ -167,7 +182,8 @@ let data: DataStore = {
   astronauts: [],
   launchVehicles: [],
   launches: [],
-  payload: []
+  payload: [],
+  chatHistory: []
 };
 
 function createIfNotExist() {
@@ -189,6 +205,7 @@ export function setData(newData: DataStore) {
 export function loadData() {
   createIfNotExist();
   const newData = JSON.parse(fs.readFileSync(DB_PATH, 'utf-8'));
+
   data = newData;
 }
 export function saveData() {
@@ -199,5 +216,7 @@ export {
   Mission,
   MissionControlUser,
   DataStore,
-  Session
+  Session,
+  MessageLog,
+  ChatHistory
 };
