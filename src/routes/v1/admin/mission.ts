@@ -17,7 +17,12 @@ import {
 import { adminMissionTransfer } from '../../../logic/missionTransferExample';
 import { findSessionFromSessionId } from '../../../logic/helper';
 import HTTPError from 'http-errors';
-import { adminMissionLaunchDetails, adminMissionLaunchStatusUpdate } from '../../../../src/logic/launch';
+import {
+  adminMissionLaunchDetails,
+  adminMissionLaunchStatusUpdate,
+  adminMissionLaunchOrganise,
+  adminMissionLaunchAllocate
+} from '../../../../src/logic/launch';
 const router = Router();
 
 router.get('/list', (req: Request, res: Response) => {
@@ -185,6 +190,29 @@ router.post('/:missionid/assign/:astronautid', (req: Request, res: Response) => 
   }
 });
 
+router.post('/:missionid/launch', (req: Request, res: Response) => {
+  try {
+    const controlUserSessionId = req.header('controlUserSessionId');
+    const missionId = Number(req.params.missionid);
+    const { launchVehicleId, payload, launchParameters } = req.body;
+
+    if (!controlUserSessionId) {
+      throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
+    }
+
+    const result = adminMissionLaunchOrganise(
+      controlUserSessionId,
+      missionId,
+      launchVehicleId,
+      payload,
+      launchParameters
+    );
+    return res.status(200).json(result);
+  } catch (e) {
+    return res.status(e.status).json({ error: e.message });
+  }
+});
+
 router.delete('/:missionid/assign/:astronautid', (req: Request, res: Response) => {
   try {
     const controlUserSessionId = req.header('controlUserSessionId');
@@ -231,6 +259,29 @@ router.put('/:missionid/launch/:launchid/status', (req: Request, res: Response) 
       throw HTTPError(400, 'Missing action in request body');
     }
     const result = adminMissionLaunchStatusUpdate(controlUserSessionId, missionId, launchId, action);
+    return res.status(200).json(result);
+  } catch (e) {
+    return res.status(e.status).json({ error: e.message });
+  }
+});
+
+router.post('/:missionid/launch/:launchid/allocate/:astronautid', (req: Request, res: Response) => {
+  try {
+    const controlUserSessionId = req.header('controlUserSessionId');
+    const missionId = Number(req.params.missionid);
+    const launchId = Number(req.params.launchid);
+    const astronautId = Number(req.params.astronautid);
+
+    if (!controlUserSessionId) {
+      throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
+    }
+
+    const result = adminMissionLaunchAllocate(
+      controlUserSessionId,
+      missionId,
+      launchId,
+      astronautId
+    );
     return res.status(200).json(result);
   } catch (e) {
     return res.status(e.status).json({ error: e.message });

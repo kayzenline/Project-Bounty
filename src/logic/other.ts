@@ -14,6 +14,7 @@ export function clear() {
   data.nextAstronautId = 1;
   data.nextLaunchVehicleId = 1;
   data.newtLaunchId = 1;
+  data.nextPayloadId = 1;
   data.sessions = [];
   data.astronauts = [];
   data.launchVehicles = [];

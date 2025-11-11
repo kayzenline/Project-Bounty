@@ -291,7 +291,8 @@ export function adminMissionAstronautAssign(
     };
     astronaut.timeLastEdited = Math.floor(Date.now() / 1000);
     setData(data);
-    return {};
+    const launch = data.launches.find(l => l.missionCopy.missionId === missionId);
+    return { launchId: launch ? launch.launchId : null };
   } catch (e) {
     const ne = normalizeError(e);
     throwErrorForFunction(ne.errorCategory, ne.error);

@@ -1,10 +1,46 @@
 {
-  "controlUsers": [],
-  "spaceMissions": [],
-  "nextControlUserId": 1,
-  "nextMissionId": 1,
-  "sessions": [],
+  "controlUsers": [
+    {
+      "controlUserId": 1,
+      "email": "user2@test.com",
+      "password": "$2b$10$N8s628lyL5vAYJADbEwVYeCHmUUKfo66lxnUL8ji4VnLuSDO0qGHm",
+      "nameFirst": "fnameTwo",
+      "nameLast": "lnameTwo",
+      "flagLastLogin": true,
+      "numSuccessfulLogins": 1,
+      "numFailedPasswordsSinceLastLogin": 0,
+      "passwordHistory": [
+        "user2password"
+      ]
+    }
+  ],
+  "spaceMissions": [
+    {
+      "missionId": 1,
+      "controlUserId": 1,
+      "name": "Mission2Name",
+      "description": "Mission2Desc",
+      "target": "Mission2Target",
+      "timeCreated": 1762901415,
+      "timeLastEdited": 1762901415,
+      "assignedAstronauts": []
+    }
+  ],
+  "nextControlUserId": 2,
+  "nextMissionId": 2,
+  "sessions": [
+    {
+      "controlUserSessionId": "d7890025-456e-4748-9b68-6fffa59f363a",
+      "controlUserId": 1
+    }
+  ],
   "astronauts": [],
   "nextAstronautId": 1,
-  "launchVehicles": []
+  "launchVehicles": [],
+  "nextLaunchVehicleId": 1,
+  "newtLaunchId": 1,
+  "launches": [],
+  "payload": [],
+  "chatHistory": [],
+  "nextPayloadId": 1
 }
