@@ -10,10 +10,6 @@ import {
 import { LaunchCalcParameters, missionLaunchState, PayloadInput, Mission, Launch, getData, missionLaunchAction, Payload, setData } from '../dataStore';
 import { updateLaunchState } from './updateSessionState';
 
-function notImplemented(): never {
-  throw HTTPError(501, 'Not implemented');
-}
-
 export function adminLaunchList(controlUserSessionId: string) {
   // Throw Errors
   // controlUserSessionId

@@ -2,7 +2,7 @@ import HTTPError from 'http-errors';
 import { getData, setData, missionLaunchState, missionLaunchAction, Launch } from '../dataStore';
 import { launchIdCheck, launchCalculationParameterCorrectnessCheck } from './newHelperfunctions';
 
-let timerId: NodeJS.Timeout | null = null;
+let timerId: ReturnType<typeof setTimeout> | null = null;
 
 function clearLaunchTimer() {
   if (timerId) {
