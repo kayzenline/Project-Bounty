@@ -8,6 +8,7 @@ import {
   launchCalculationParameterCorrectnessCheck
 } from './newHelperfunctions';
 import { LaunchCalcParameters, missionLaunchState, PayloadInput, Mission, Launch, getData, missionLaunchAction, Payload, setData } from '../dataStore';
+import { updateLaunchState } from './updateSessionState';
 
 function notImplemented(): never {
   throw HTTPError(501, 'Not implemented');
@@ -217,7 +218,37 @@ export function adminMissionLaunchStatusUpdate(
   launchId: number,
   action: missionLaunchAction
 ) {
-  return notImplemented();
+  const controlUser = controlUserSessionIdCheck(controlUserSessionId);
+  if (!controlUser) {
+    throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
+  }
+
+  if (!missionIdCheck(controlUserSessionId, missionId)) {
+    throw HTTPError(403, 'MissionId is empty, invalid or not associated with the current controlUser');
+  }
+
+  if (!launchIdCheck(launchId)) {
+    throw HTTPError(400, 'launchid is invalid');
+  }
+
+  const data = getData();
+  const launch = data.launches.find(l => l.launchId === launchId);
+  if (!launch) {
+    throw HTTPError(400, 'launchid is invalid');
+  }
+
+  if (!launch.missionCopy || launch.missionCopy.missionId !== missionId) {
+    throw HTTPError(403, 'MissionId is empty, invalid or not associated with the current controlUser');
+  }
+
+  const normalizedAction = (typeof action === 'string' ? action.toUpperCase().trim() : action) as missionLaunchAction;
+  if (!Object.values(missionLaunchAction).includes(normalizedAction)) {
+    throw HTTPError(400, 'action is invalid');
+  }
+
+  updateLaunchState(normalizedAction, launchId);
+
+  return {};
 }
 
 export function adminMissionLaunchAllocate(

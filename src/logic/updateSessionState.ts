@@ -2,18 +2,31 @@ import HTTPError from 'http-errors';
 import { getData, setData, missionLaunchState, missionLaunchAction, Launch } from '../dataStore';
 import { launchIdCheck, launchCalculationParameterCorrectnessCheck } from './newHelperfunctions';
 
-let timerId: number;
+let timerId: NodeJS.Timeout | null = null;
+
+function clearLaunchTimer() {
+  if (timerId) {
+    clearTimeout(timerId);
+    timerId = null;
+  }
+}
+
+function setLaunchTimer(callback: (launchId: number) => void, launchId: number, delayMs: number) {
+  clearLaunchTimer();
+  timerId = setTimeout(() => callback(launchId), delayMs);
+}
 
 function checkManeuveringFuel(launchId: number): boolean {
-  // a helper function that checks if there is at least 3 units of fuel left
-  // TODO - you must complete this helper function
   const data = getData();
   const launch: Launch = data.launches.find(singleLaunch => singleLaunch.launchId === launchId);
-  // fuel left less than 3 units
+  if (!launch) {
+    throw HTTPError(400, 'invalid launchId');
+  }
   if (launch.remainingLaunchVehicleManeuveringFuel < 3) {
     return false;
   }
-
+  launch.remainingLaunchVehicleManeuveringFuel -= 3;
+  setData(data);
   return true;
 }
 
@@ -29,8 +42,7 @@ function initializeLaunching(launchId: number) {
   const data = getData();
   const launch: Launch = data.launches.find(singleLaunch => singleLaunch.launchId === launchId);
   launch.state = missionLaunchState.LAUNCHING;
-  clearTimeout(timerId);
-  timerId = setTimeout(initializeManeuvering, 3 * 1000);
+  setLaunchTimer(initializeManeuvering, launchId, 3 * 1000);
 
   setData(data);
 }
@@ -40,9 +52,8 @@ function initializeManeuvering(launchId: number) {
   // assumes launch is part the datastore as a property called "launches" which is an array of the Launch type and that it has a property called 'state'
   const data = getData();
   const launch: Launch = data.launches.find(singleLaunch => singleLaunch.launchId === launchId);
-  launch.state = missionLaunchState.ON_EARTH;
-  clearTimeout(timerId);
-  timerId = setTimeout(initializeCoasting, launch.launchCalculationParameters.maneuveringDelay * 1000);
+  launch.state = missionLaunchState.MANEUVERING;
+  setLaunchTimer(initializeCoasting, launchId, launch.launchCalculationParameters.maneuveringDelay * 1000);
 
   setData(data);
 }
@@ -53,7 +64,7 @@ function initializeCoasting(launchId: number) {
   const data = getData();
   const launch: Launch = data.launches.find(singleLaunch => singleLaunch.launchId === launchId);
   launch.state = missionLaunchState.COASTING;
-  clearTimeout(timerId);
+  clearLaunchTimer();
 
   setData(data);
 }
@@ -64,7 +75,7 @@ function initializeMissionComplete(launchId: number) {
   const data = getData();
   const launch: Launch = data.launches.find(singleLaunch => singleLaunch.launchId === launchId);
   launch.state = missionLaunchState.MISSION_COMPLETE;
-  clearTimeout(timerId);
+  clearLaunchTimer();
 
   setData(data);
 }
@@ -75,7 +86,7 @@ function initializeRentry(launchId: number) {
   const data = getData();
   const launch: Launch = data.launches.find(singleLaunch => singleLaunch.launchId === launchId);
   launch.state = missionLaunchState.REENTRY;
-  clearTimeout(timerId);
+  clearLaunchTimer();
 
   setData(data);
 }
@@ -86,8 +97,7 @@ function initializeOnEarth(launchId: number) {
   const data = getData();
   const launch: Launch = data.launches.find(singleLaunch => singleLaunch.launchId === launchId);
   launch.state = missionLaunchState.ON_EARTH;
-  clearTimeout(timerId);
-  //  3. De-allocate astronauts (and launch vehicle)
+  clearLaunchTimer();
   setData(data);
 }
 
@@ -142,12 +152,11 @@ export function updateLaunchState(newAction: missionLaunchAction, launchId: numb
           totleWeight,
           data.launches.find(l => l.launchId === launchId).launchCalculationParameters
         )) {
-          // bad launch, abort!
           updateLaunchState(missionLaunchAction.FAULT, launchId);
-        } else {
-          // good launch move to LAUNCHING
-          initializeLaunching(launchId);
+          throw HTTPError(400, 'A LIFTOFF action has been attempted with bad launch parameters');
         }
+        // good launch move to LAUNCHING
+        initializeLaunching(launchId);
       } else {
         badActionForStateError(newAction, launch.state);
       }
@@ -164,12 +173,11 @@ export function updateLaunchState(newAction: missionLaunchAction, launchId: numb
       if (launch.state === missionLaunchState.MANEUVERING) {
         // this is ok, lets proceed with the actions
         if (!checkManeuveringFuel(launchId)) {
-          // not enough fuel, abort!
           updateLaunchState(missionLaunchAction.FAULT, launchId);
-        } else {
-          // enough fuel, move back to launching
-          initializeLaunching(launchId);
+          throw HTTPError(400, 'A CORRECTION action been attempted with insufficient fuel available');
         }
+        // enough fuel, move back to launching
+        initializeLaunching(launchId);
       } else {
         badActionForStateError(newAction, launch.state);
       }
@@ -178,12 +186,11 @@ export function updateLaunchState(newAction: missionLaunchAction, launchId: numb
       if (launch.state === missionLaunchState.MANEUVERING) {
         // this is ok, lets proceed with the actions
         if (!checkManeuveringFuel(launchId)) {
-          // not enough fuel, abort!
           updateLaunchState(missionLaunchAction.FAULT, launchId);
-        } else {
-          // enough fuel, moving to COASTING
-          initializeCoasting(launchId);
+          throw HTTPError(400, 'A FIRE_THRUSTERS action been attempted with insufficient fuel available');
         }
+        // enough fuel, moving to COASTING
+        initializeCoasting(launchId);
       } else {
         badActionForStateError(newAction, launch.state);
       }

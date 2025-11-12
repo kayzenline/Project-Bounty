@@ -24,7 +24,7 @@ import {
 } from './sampleTestData';
 import{ missionLaunchAction,missionLaunchState }from '../../src/dataStore'
 import{ updateLaunchState } from'../../src/logic/updateSessionState'
-describe.skip('Need to write a description', () => {
+describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
   // some helpful functions you may use!
   let controlUserSessionId: string;
   let controlUserSessionId2: string;
