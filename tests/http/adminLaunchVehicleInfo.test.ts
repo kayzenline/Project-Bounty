@@ -3,7 +3,7 @@ import { adminLaunchVehicleCreateRequest, adminLaunchVehicleInfoRequest } from '
 import { clearRequest } from './requestHelpers';
 import { sampleLaunchVehicle1, sampleUser1 } from './sampleTestData';
 
-describe.skip('/v1/admin/launchvehicle/{launchvehicleid}', () => {
+describe('/v1/admin/launchvehicle/{launchvehicleid}', () => {
   let controlUserSessionId: string;
   let launchVehicleId: number;
   beforeEach(() => {

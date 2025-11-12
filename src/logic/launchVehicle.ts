@@ -121,7 +121,7 @@ export function adminLaunchVehicleInfo(
   }
   // launchvehicleid
   if (!launchVehicleIdCheck(launchVehicleId)) {
-    throw HTTPError(401, 'controlUserSessionId is empty or invalid');
+    throw HTTPError(400, 'launchvehicleid is invalid');
   }
   // success
   const result = launchVehicleLaunchInfoHelper(launchVehicleId);
