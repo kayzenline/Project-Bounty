@@ -4,7 +4,7 @@ import { adminAuthUserRegisterRequest, adminMissionCreateRequest } from './reque
 import { clearRequest } from './requestHelpers';
 import { sampleUser1, sampleUser2, sampleMission1, sampleMission2, sampleLaunchVehicle1, sampleLaunch1 } from './sampleTestData';
 
-describe.skip('Need to write a description', () => {
+describe('/v1/admin/mission/{missionid}/launch/{launchid}', () => {
   // some helpful functions you may use!
   let controlUserSessionId: string;
   let controlUserSessionId2: string;
@@ -107,10 +107,10 @@ describe.skip('Need to write a description', () => {
   });
   //check missionId 
   const invalidmissionid = [
-    { testmissionId: '' as any },
-    { testmissionId: 9999 },
+    { label: 'MissionId is empty', testmissionId: 'invalid-mission' as any },
+    { label: 'MissionId is invalid', testmissionId: 9999 },
   ];
-  test.each(invalidmissionid)('MissionId is empty, invalid or not associated with the current controlUser', ({ testmissionId }) => {
+  test.each(invalidmissionid)('$label', ({ testmissionId }) => {
     const detailRes = adminMissionLaunchDetailsRequest(controlUserSessionId, testmissionId, launchId);
     expect(detailRes.statusCode).toBe(403);
     expect(detailRes.body).toStrictEqual({ error: expect.any(String)});
