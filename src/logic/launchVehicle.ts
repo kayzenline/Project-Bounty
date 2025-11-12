@@ -224,5 +224,6 @@ export function adminLaunchVehicleRetire(
   const launchVehicle = data.launchVehicles.find(l => l.launchVehicleId === launchVehicleId);
   launchVehicle.retired = true;
   launchVehicle.timeLastEdited = Math.floor(Date.now() / 1000);
+  setData(data);
   return {};
 }
