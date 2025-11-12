@@ -27,7 +27,7 @@ let astronautNameFirst: string;
 let astronautNameLast: string;
 let rank: string;
 
-describe.skip('DELETE /v1/admin/mission/{missionid}/assign/{astronautid}', () => {
+describe('DELETE /v1/admin/mission/{missionid}/assign/{astronautid}', () => {
   beforeEach(() => {
     const clearRes = clearRequest();
     expect(clearRes.statusCode).toBe(200);

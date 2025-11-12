@@ -334,6 +334,11 @@ export function adminMissionAstronautUnassign(
       buildError('astronautId not found', EC.BAD_INPUT);
     }
 
+    const allocatedLaunch = data.launches.find(l => l.allocatedAstronauts.includes(astronautId));
+    if (allocatedLaunch) {
+      buildError('Astronaut is allocated to an active launch', EC.BAD_INPUT);
+    }
+
     mission.assignedAstronauts = mission.assignedAstronauts.filter(a => a.astronautId !== astronautId);
     // Remove mission linkage from astronaut record if it matches this mission
     astronaut.assignedMission = {
