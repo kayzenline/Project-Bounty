@@ -252,6 +252,10 @@ router.put('/:missionid/launch/:launchid/status', (req: Request, res: Response) 
     const missionId = Number(req.params.missionid);
     const launchId = Number(req.params.launchid);
     const { action } = req.body;
+    console.log(missionId, launchId);
+    if (!Number.isInteger(missionId)) {
+      throw HTTPError(403, 'MissionId is empty or invalid');
+    }
     if (!controlUserSessionId) {
       throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
     }
