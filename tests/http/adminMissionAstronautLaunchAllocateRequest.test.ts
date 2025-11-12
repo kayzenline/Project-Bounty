@@ -93,7 +93,7 @@ describe('POST /v1/admin/mission/{missionid}/launch', () => {
       missionId
     );
     expect(assignRes.statusCode).toBe(200);
-    launchId = assignRes.body.launchId;
+    launchId = organiseRes.body.launchId;
   });
 
   afterAll(() => {
