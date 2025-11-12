@@ -1,4 +1,4 @@
-import { getData, setData, Astronaut } from '../dataStore';
+import { getData, setData, Astronaut, AstronautDetail, AstronautResponse } from '../dataStore';
 import {
   findSessionFromSessionId,
   astronautIdCheck,
@@ -29,11 +29,7 @@ export function adminAstronautPool(controlUserSessionId: string) {
     }
 
     const data = getData();
-    interface AstronautDetail {
-      astronautId: number,
-      designation: string,
-      assigned: boolean
-    }
+
     const astronauts: AstronautDetail[] = [];
 
     for (const astronaut of data.astronauts) {
@@ -124,20 +120,8 @@ export function adminAstronautCreate(
     throwErrorForFunction(ne.errorCategory, ne.error);
   }
 }
-export interface AstronautResponse {
-  astronautId: number;
-  designation: string;
-  timeAdded: number;
-  timeLastEdited: number;
-  age: number;
-  weight: number;
-  height: number;
-  assignedMission?: AssignedMission;
-}
-export interface AssignedMission {
-  missionId: number;
-  objective: string;
-}
+
+
 
 export function adminAstronautInfo(controlUserSessionId: string, astronautId: number) {
   try {

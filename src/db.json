@@ -1,153 +1,16 @@
 {
-  "controlUsers": [
-    {
-      "controlUserId": 1,
-      "email": "user1@test.com",
-      "password": "$2b$10$I9pX6ywretTNgJcOZ8JIkukaqATYJqt26DtUcmjoo44A5ERoK3SGu",
-      "nameFirst": "fnameOne",
-      "nameLast": "lnameOne",
-      "flagLastLogin": true,
-      "numSuccessfulLogins": 1,
-      "numFailedPasswordsSinceLastLogin": 0,
-      "passwordHistory": [
-        "user1password"
-      ]
-    },
-    {
-      "controlUserId": 2,
-      "email": "user2@test.com",
-      "password": "$2b$10$xGpjhVZ5iBF5PjcaaKPUuO/W5tMS0RUbXqgfIDW7MBm/dp3mERyQ6",
-      "nameFirst": "fnameTwo",
-      "nameLast": "lnameTwo",
-      "flagLastLogin": true,
-      "numSuccessfulLogins": 1,
-      "numFailedPasswordsSinceLastLogin": 0,
-      "passwordHistory": [
-        "user2password"
-      ]
-    }
-  ],
-  "spaceMissions": [
-    {
-      "missionId": 1,
-      "controlUserId": 1,
-      "name": "Mission1Name",
-      "description": "Mission1Desc",
-      "target": "Mission1Target",
-      "timeCreated": 1762917378,
-      "timeLastEdited": 1762917378,
-      "assignedAstronauts": [
-        {
-          "astronautId": 1,
-          "designation": "Captain James Kirk"
-        }
-      ]
-    },
-    {
-      "missionId": 2,
-      "controlUserId": 2,
-      "name": "Mission2Name",
-      "description": "Mission2Desc",
-      "target": "Mission2Target",
-      "timeCreated": 1762917378,
-      "timeLastEdited": 1762917378,
-      "assignedAstronauts": []
-    }
-  ],
-  "nextControlUserId": 3,
-  "nextMissionId": 3,
-  "sessions": [
-    {
-      "controlUserSessionId": "e9449997-e1c2-45fb-b38d-fb1b75405278",
-      "controlUserId": 1
-    },
-    {
-      "controlUserSessionId": "e8630c7a-0f8e-46d2-a5ee-a309bcf23951",
-      "controlUserId": 2
-    }
-  ],
-  "astronauts": [
-    {
-      "astronautId": 1,
-      "designation": "Captain James Kirk",
-      "timeAdded": 1762917378,
-      "timeLastEdited": 1762917378,
-      "nameFirst": "James",
-      "nameLast": "Kirk",
-      "rank": "Captain",
-      "age": 35,
-      "weight": 70,
-      "height": 178,
-      "assignedMission": {
-        "missionId": 1,
-        "objective": "[Mission1Target] Mission1Name"
-      }
-    }
-  ],
-  "nextAstronautId": 2,
-  "launchVehicles": [
-    {
-      "launchVehicleId": 1,
-      "name": "Saturn V",
-      "description": "Multi-stage Booster Rocket",
-      "maxCrewWeight": 500,
-      "maxPayloadWeight": 1000,
-      "thrustCapacity": 1000000,
-      "launchVehicleWeight": 4000,
-      "maneuveringFuel": 10,
-      "timeAdded": 1762917378,
-      "timeLastEdited": 1762917378,
-      "retired": false,
-      "assigned": false
-    }
-  ],
-  "nextLaunchVehicleId": 2,
-  "newtLaunchId": 2,
-  "launches": [
-    {
-      "launchId": 1,
-      "missionCopy": {
-        "missionId": 1,
-        "controlUserId": 1,
-        "name": "Mission1Name",
-        "description": "Mission1Desc",
-        "target": "Mission1Target",
-        "timeCreated": 1762917378,
-        "timeLastEdited": 1762917378,
-        "assignedAstronauts": [
-          {
-            "astronautId": 1,
-            "designation": "Captain James Kirk"
-          }
-        ]
-      },
-      "createdAt": 1762917378,
-      "state": "READY_TO_LAUNCH",
-      "assignedLaunchVehicleId": 1,
-      "remainingLaunchVehicleManeuveringFuel": 1000,
-      "payloadId": 1,
-      "allocatedAstronauts": [
-        1
-      ],
-      "launchCalculationParameters": {
-        "targetDistance": 12000,
-        "fuelBurnRate": 20,
-        "thrustFuel": 1000,
-        "activeGravityForce": 9.8,
-        "maneuveringDelay": 2
-      }
-    }
-  ],
-  "payload": [
-    {
-      "payloadId": 1,
-      "description": "UNSW Cubesat",
-      "weight": 400,
-      "deployed": false,
-      "timeOfDeployment": 0,
-      "deployedLaunchId": -1
-    }
-  ],
+  "controlUsers": [],
+  "spaceMissions": [],
+  "nextControlUserId": 1,
+  "nextMissionId": 1,
+  "sessions": [],
+  "astronauts": [],
+  "nextAstronautId": 1,
+  "launchVehicles": [],
+  "nextLaunchVehicleId": 1,
+  "newtLaunchId": 1,
+  "launches": [],
+  "payload": [],
   "chatHistory": [],
-  "nextPayloadId": 2
+  "nextPayloadId": 1
 }

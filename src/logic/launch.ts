@@ -7,7 +7,20 @@ import {
   launchVehicleIdCheck,
   launchCalculationParameterCorrectnessCheck
 } from './newHelperfunctions';
-import { LaunchCalcParameters, missionLaunchState, PayloadInput, Mission, Launch, getData, missionLaunchAction, Payload, setData } from '../dataStore';
+import {
+  LaunchCalcParameters,
+  missionLaunchState,
+  PayloadInput,
+  Mission,
+  Launch,
+  getData,
+  missionLaunchAction,
+  Payload,
+  setData,
+  LaunchDetails,
+  LaunchDetailsVehicleSummary,
+  LaunchDetailsAstronautSummary
+} from '../dataStore';
 import { updateLaunchState } from './updateSessionState';
 
 export function adminLaunchList(controlUserSessionId: string) {
@@ -135,7 +148,7 @@ export function adminMissionLaunchDetails(
   controlUserSessionId: string,
   missionId: number,
   launchId: number
-) {
+): LaunchDetails {
   // Throw Errors
   // controlUserSessionId
   const controlUserId = controlUserSessionIdCheck(controlUserSessionId);
@@ -151,62 +164,34 @@ export function adminMissionLaunchDetails(
     throw HTTPError(400, 'launchid is invalid');
   }
 
-  interface launchVehicle {
-    launchVehicleId: number,
-    name: string,
-    maneuveringFuelRemaining: number
-  }
-
-  interface allocatedAstronaut {
-    astronautId: number,
-    designation: string
-  }
-
-  interface launchDetails {
-    launchId: number,
-    missionCopy: Mission,
-    timeCreated: number,
-    state: missionLaunchState,
-    launchVehicle: launchVehicle,
-    payload: Payload,
-    allocatedAstronauts: allocatedAstronaut[],
-    launchCalculationParameters: LaunchCalcParameters
-  }
 
   const data = getData();
   const launch = data.launches.find(l => l.launchId === launchId);
   const Vehicle = data.launchVehicles.find(l => l.launchVehicleId === launch.assignedLaunchVehicleId);
-  const assignedVehicle: launchVehicle = {
+  const assignedVehicle: LaunchDetailsVehicleSummary = {
     launchVehicleId: Vehicle.launchVehicleId,
     name: Vehicle.name,
     maneuveringFuelRemaining: Vehicle.maneuveringFuel
   };
   const payload = data.payload.find(p => p.payloadId === launch.payloadId);
-  const Astronauts: allocatedAstronaut[] = [];
-  const Astronaut: allocatedAstronaut = {
-    astronautId: null,
-    designation: ''
-  };
-
-  for (const astronautId of launch.allocatedAstronauts) {
+  const allocatedAstronauts: LaunchDetailsAstronautSummary[] = launch.allocatedAstronauts.map(astronautId => {
     const astronaut = data.astronauts.find(a => a.astronautId === astronautId);
-    Astronaut.astronautId = astronautId;
-    Astronaut.designation = `${astronaut.rank} ${astronaut.nameFirst} ${astronaut.nameLast}`;
-    Astronauts.push(Astronaut);
-  }
+    return {
+      astronautId,
+      designation: `${astronaut.rank} ${astronaut.nameFirst} ${astronaut.nameLast}`
+    };
+  });
 
-  const result: launchDetails = {
-    launchId: launchId,
+  return {
+    launchId,
     missionCopy: data.spaceMissions.find(m => m.missionId === missionId),
     timeCreated: launch.createdAt,
     state: launch.state,
     launchVehicle: assignedVehicle,
-    payload: payload,
-    allocatedAstronauts: Astronauts,
+    payload,
+    allocatedAstronauts,
     launchCalculationParameters: launch.launchCalculationParameters
   };
-
-  return result;
 }
 
 export function adminMissionLaunchStatusUpdate(

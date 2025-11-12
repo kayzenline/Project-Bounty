@@ -403,10 +403,9 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
       {testaction:'FIRE_THRUSTERS'},
       {testaction:'DEPLOY_PAYLOAD'},
       {testaction:'GO_HOME'},
-      {testaction:'FAULT'},
       {testaction:'RETURN'},
    ]
-    test.skip.each(invalidactions1)('Launch READY_TO_LAUNCH with invalid actions', (testaction) => {
+    test.each(invalidactions1)('Launch READY_TO_LAUNCH with invalid actions', (testaction) => {
       const launchDetails = adminMissionLaunchDetailsRequest(controlUserSessionId, missionId, launchId);
       expect(launchDetails.body.state).toBe(missionLaunchState.READY_TO_LAUNCH);
       const statusupdateRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,launchId,testaction.testaction)
@@ -430,12 +429,12 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
 });
   const invalidactions3=[
     {testaction: 'LIFTOFF'},
-    {testaction:'FIRE_THRUSTERS'},
     {testaction:'GO_HOME'},
     {testaction:'RETURN'},
     {testaction:'SKIP_WAITING'},
+    {testaction:'DEPLOY_PAYLOAD'},
   ]
-  test.skip.each(invalidactions3)('Launch MANEUVERING with invalid actions', (testaction) => {
+  test.each(invalidactions3)('Launch MANEUVERING with invalid actions', (testaction) => {
     adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'LIFTOFF');
     updateLaunchState(missionLaunchAction.SKIP_WAITING, launchId);
     const launchDetails = adminMissionLaunchDetailsRequest(controlUserSessionId, missionId, launchId);
@@ -512,7 +511,7 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
     expect(statusupdateRes.body).toStrictEqual({ error: expect.any(String)});
   });
   //bad launch parameters
-    test.skip('A LIFTOFF action has been attempted with bad launch parameters ', () => {
+    test('A LIFTOFF action has been attempted with bad launch parameters ', () => {
       //problem: bad parameters
       const createRes=adminMissionLaunchOrganiseRequest(
         controlUserSessionId,
@@ -535,7 +534,8 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
       expect(statusupdateRes.statusCode).toBe(400);
       expect(statusupdateRes.body.error).toEqual(expect.any(String));
       const detail = adminMissionLaunchDetailsRequest(controlUserSessionId, missionId, badlaunchId);
-      expect(detail.body.state).toBe(missionLaunchState.ON_EARTH);
+      expect(detail.statusCode).toBe(400);
+      expect(detail.body).toStrictEqual({ error: expect.any(String) });
 });
     //invalid action
     test.skip('A CORRECTION action been attempted with insufficient fuel available ', () => {
