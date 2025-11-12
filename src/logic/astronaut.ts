@@ -121,8 +121,6 @@ export function adminAstronautCreate(
   }
 }
 
-
-
 export function adminAstronautInfo(controlUserSessionId: string, astronautId: number) {
   try {
     if (!controlUserSessionId || typeof controlUserSessionId !== 'string') {

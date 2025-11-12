@@ -11,7 +11,6 @@ import {
   LaunchCalcParameters,
   missionLaunchState,
   PayloadInput,
-  Mission,
   Launch,
   getData,
   missionLaunchAction,
@@ -163,7 +162,6 @@ export function adminMissionLaunchDetails(
   if (!launchIdCheck(launchId)) {
     throw HTTPError(400, 'launchid is invalid');
   }
-
 
   const data = getData();
   const launch = data.launches.find(l => l.launchId === launchId);
