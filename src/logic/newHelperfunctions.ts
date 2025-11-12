@@ -150,8 +150,8 @@ export function launchCalculationParameterCorrectnessCheck(launchVehicleId: numb
   // w = w_l + w_p + w_a
   const launchVehicle = getData().launchVehicles.find(l => l.launchVehicleId === launchVehicleId);
   const totleWeight = launchVehicle.launchVehicleWeight + payload.weight + AstronautWeight;
-  // t = totle/rate
-  const time = launchVehicle.maneuveringFuel / launchParams.fuelBurnRate;
+  // t = thrust fuel divided by burn rate
+  const time = launchParams.thrustFuel / launchParams.fuelBurnRate;
   // Fnet = T - w*g
   const Fnet = launchVehicle.thrustCapacity - totleWeight * launchParams.activeGravityForce;
   const accelerate = Fnet / totleWeight;

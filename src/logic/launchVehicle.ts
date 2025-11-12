@@ -85,7 +85,7 @@ export function adminLaunchVehicleCreate(
   data.launchVehicles.push(launchVehicle);
   setData(data);
 
-  return { launchVehicleId: data.nextLaunchVehicleId };
+  return { launchVehicleId: launchVehicle.launchVehicleId };
 }
 
 export function adminLaunchVehicleDetails(controlUserSessionId: string) {
@@ -98,23 +98,15 @@ export function adminLaunchVehicleDetails(controlUserSessionId: string) {
   // success
   const data = getData();
   const result: LaunchVehicleLaunchSummary[] = [];
-  const vehicleDetail: LaunchVehicleLaunchSummary = {
-    launchVehicleId: null,
-    name: null,
-    assigned: false
-  };
   for (const launchVehicle of data.launchVehicles) {
-    vehicleDetail.launchVehicleId = launchVehicle.launchVehicleId;
-    vehicleDetail.name = launchVehicle.name;
-    vehicleDetail.assigned = launchVehicle.assigned;
-    result.push(vehicleDetail);
+    result.push({
+      launchVehicleId: launchVehicle.launchVehicleId,
+      name: launchVehicle.name,
+      assigned: launchVehicle.assigned
+    });
   }
 
-  if (vehicleDetail.launchVehicleId !== null) {
-    return { launchVehicles: result };
-  } else {
-    return {};
-  }
+  return { launchVehicles: result };
 }
 
 export function adminLaunchVehicleInfo(
@@ -129,7 +121,7 @@ export function adminLaunchVehicleInfo(
   }
   // launchvehicleid
   if (!launchVehicleIdCheck(launchVehicleId)) {
-    throw HTTPError(401, 'controlUserSessionId is empty or invalid');
+    throw HTTPError(400, 'launchvehicleid is invalid');
   }
   // success
   const result = launchVehicleLaunchInfoHelper(launchVehicleId);
@@ -232,5 +224,6 @@ export function adminLaunchVehicleRetire(
   const launchVehicle = data.launchVehicles.find(l => l.launchVehicleId === launchVehicleId);
   launchVehicle.retired = true;
   launchVehicle.timeLastEdited = Math.floor(Date.now() / 1000);
+  setData(data);
   return {};
 }

@@ -7,11 +7,20 @@ import {
   launchVehicleIdCheck,
   launchCalculationParameterCorrectnessCheck
 } from './newHelperfunctions';
-import { LaunchCalcParameters, missionLaunchState, PayloadInput, Mission, Launch, getData, missionLaunchAction, Payload, setData } from '../dataStore';
-
-function notImplemented(): never {
-  throw HTTPError(501, 'Not implemented');
-}
+import {
+  LaunchCalcParameters,
+  missionLaunchState,
+  PayloadInput,
+  Launch,
+  getData,
+  missionLaunchAction,
+  Payload,
+  setData,
+  LaunchDetails,
+  LaunchDetailsVehicleSummary,
+  LaunchDetailsAstronautSummary
+} from '../dataStore';
+import { updateLaunchState } from './updateSessionState';
 
 export function adminLaunchList(controlUserSessionId: string) {
   // Throw Errors
@@ -43,22 +52,27 @@ export function adminMissionLaunchOrganise(
 ) {
   // Throw Errors
   // controlUserSessionId
-  const controlUserId = controlUserSessionIdCheck(controlUserSessionId);
-  if (!controlUserId) {
+  const session = controlUserSessionIdCheck(controlUserSessionId);
+  if (!session) {
     throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
   }
+  const data = getData();
   // missionId
-  if (!missionIdCheck(controlUserSessionId, missionId)) {
+  if (!Number.isInteger(missionId) || missionId <= 0) {
+    throw HTTPError(403, 'MissionId is empty, invalid or not associated with the current controlUser');
+  }
+  const missionRecord = data.spaceMissions.find(m => m.missionId === missionId && m.controlUserId === session.controlUserId);
+  if (!missionRecord) {
     throw HTTPError(403, 'MissionId is empty, invalid or not associated with the current controlUser');
   }
   // launchVehicleId
   if (!launchVehicleIdCheck(launchVehicleId)) {
     throw HTTPError(400, 'launchvehicleid is invalid');
   }
-  if (getData().launches.find(l => l.assignedLaunchVehicleId === launchVehicleId && l.state !== 'ON_EARTH')) {
+  if (data.launches.find(l => l.assignedLaunchVehicleId === launchVehicleId && l.state !== 'ON_EARTH')) {
     throw HTTPError(400, 'launchvehicleid is currently in another active launch');
   }
-  const launchVehicle = getData().launchVehicles.find(l => l.launchVehicleId === launchVehicleId);
+  const launchVehicle = data.launchVehicles.find(l => l.launchVehicleId === launchVehicleId);
   if (launchVehicle.retired === true) {
     throw HTTPError(400, 'launchvehicleid refers to a Launch Vehicle that is retired');
   }
@@ -81,23 +95,44 @@ export function adminMissionLaunchOrganise(
   if (launchParameters.maneuveringDelay < 1) {
     throw HTTPError(400, 'manueveringDelay is < 1');
   }
-  if (launchParameters.fuelBurnRate > launchParameters.thrustFuel) {
-    throw HTTPError(400, 'fuelBurnRate > thrustFuel');
-  }
   if (!launchCalculationParameterCorrectnessCheck(launchVehicleId, payload, 0, launchParameters)) {
     throw HTTPError(400, 'An initial calculation with these LaunchCalculationParameters are invalid');
   }
 
-  const data = getData();
   const currentTime = Math.floor(Date.now() / 1000);
+  const payloadRecord: Payload = {
+    payloadId: data.nextPayloadId,
+    description: payload.description,
+    weight: payload.weight,
+    deployed: false,
+    timeOfDeployment: 0,
+    deployedLaunchId: -1
+  };
+  data.nextPayloadId++;
+  data.payload.push(payloadRecord);
+
+  const existingLaunch = data.launches.find(l => l.missionCopy.missionId === missionId);
+  if (existingLaunch) {
+    existingLaunch.missionCopy = missionRecord;
+    existingLaunch.createdAt = currentTime;
+    existingLaunch.state = missionLaunchState.READY_TO_LAUNCH;
+    existingLaunch.assignedLaunchVehicleId = launchVehicleId;
+    existingLaunch.remainingLaunchVehicleManeuveringFuel = launchParameters.thrustFuel;
+    existingLaunch.payloadId = payloadRecord.payloadId;
+    existingLaunch.allocatedAstronauts = [];
+    existingLaunch.launchCalculationParameters = launchParameters;
+    setData(data);
+    return { launchId: existingLaunch.launchId };
+  }
+
   const launch: Launch = {
     launchId: data.newtLaunchId,
-    missionCopy: data.spaceMissions.find(m => m.missionId === missionId),
+    missionCopy: missionRecord,
     createdAt: currentTime,
     state: missionLaunchState.READY_TO_LAUNCH,
     assignedLaunchVehicleId: launchVehicleId,
-    remainingLaunchVehicleManeuveringFuel: data.launchVehicles.find(l => l.launchVehicleId === launchVehicleId).maneuveringFuel,
-    payloadId: data.payload.find(p => p.description === payload.description).payloadId,
+    remainingLaunchVehicleManeuveringFuel: launchParameters.thrustFuel,
+    payloadId: payloadRecord.payloadId,
     allocatedAstronauts: [],
     launchCalculationParameters: launchParameters
   };
@@ -112,7 +147,7 @@ export function adminMissionLaunchDetails(
   controlUserSessionId: string,
   missionId: number,
   launchId: number
-) {
+): LaunchDetails {
   // Throw Errors
   // controlUserSessionId
   const controlUserId = controlUserSessionIdCheck(controlUserSessionId);
@@ -128,62 +163,33 @@ export function adminMissionLaunchDetails(
     throw HTTPError(400, 'launchid is invalid');
   }
 
-  interface launchVehicle {
-    launchVehicleId: number,
-    name: string,
-    maneuveringFuelRemaining: number
-  }
-
-  interface allocatedAstronaut {
-    astronautId: number,
-    designation: string
-  }
-
-  interface launchDetails {
-    launchId: number,
-    missionCopy: Mission,
-    timeCreated: number,
-    state: missionLaunchState,
-    launchVehicle: launchVehicle,
-    payload: Payload,
-    allocatedAstronauts: allocatedAstronaut[],
-    launchCalculationParameters: LaunchCalcParameters
-  }
-
   const data = getData();
   const launch = data.launches.find(l => l.launchId === launchId);
   const Vehicle = data.launchVehicles.find(l => l.launchVehicleId === launch.assignedLaunchVehicleId);
-  const assignedVehicle: launchVehicle = {
+  const assignedVehicle: LaunchDetailsVehicleSummary = {
     launchVehicleId: Vehicle.launchVehicleId,
     name: Vehicle.name,
     maneuveringFuelRemaining: Vehicle.maneuveringFuel
   };
   const payload = data.payload.find(p => p.payloadId === launch.payloadId);
-  const Astronauts: allocatedAstronaut[] = [];
-  const Astronaut: allocatedAstronaut = {
-    astronautId: null,
-    designation: ''
-  };
-
-  for (const astronautId of launch.allocatedAstronauts) {
+  const allocatedAstronauts: LaunchDetailsAstronautSummary[] = launch.allocatedAstronauts.map(astronautId => {
     const astronaut = data.astronauts.find(a => a.astronautId === astronautId);
-    Astronaut.astronautId = astronautId;
-    Astronaut.designation = `${astronaut.rank} ${astronaut.nameFirst} ${astronaut.nameLast}`;
-    Astronauts.push(Astronaut);
-  }
+    return {
+      astronautId,
+      designation: `${astronaut.rank} ${astronaut.nameFirst} ${astronaut.nameLast}`
+    };
+  });
 
-  const result: launchDetails = {
-    launchId: launchId,
+  return {
+    launchId,
     missionCopy: data.spaceMissions.find(m => m.missionId === missionId),
     timeCreated: launch.createdAt,
     state: launch.state,
     launchVehicle: assignedVehicle,
-    payload: payload,
-    allocatedAstronauts: Astronauts,
+    payload,
+    allocatedAstronauts,
     launchCalculationParameters: launch.launchCalculationParameters
   };
-
-  return result;
 }
 
 export function adminMissionLaunchStatusUpdate(
@@ -192,7 +198,41 @@ export function adminMissionLaunchStatusUpdate(
   launchId: number,
   action: missionLaunchAction
 ) {
-  return notImplemented();
+  const controlUser = controlUserSessionIdCheck(controlUserSessionId);
+  if (!controlUser) {
+    throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
+  }
+
+  if (!missionIdCheck(controlUserSessionId, missionId)) {
+    throw HTTPError(403, 'MissionId is empty, invalid or not associated with the current controlUser');
+  }
+
+  if (!launchIdCheck(launchId)) {
+    throw HTTPError(400, 'launchid is invalid');
+  }
+
+  const data = getData();
+  const launch = data.launches.find(l => l.launchId === launchId);
+  if (!launch) {
+    throw HTTPError(400, 'launchid is invalid');
+  }
+
+  if (!launch.missionCopy || launch.missionCopy.missionId !== missionId) {
+    throw HTTPError(403, 'MissionId is empty, invalid or not associated with the current controlUser');
+  }
+
+  const normalizedAction = (typeof action === 'string' ? action.toUpperCase().trim() : action) as missionLaunchAction;
+  if (!Object.values(missionLaunchAction).includes(normalizedAction)) {
+    throw HTTPError(400, 'action is invalid');
+  }
+
+  if (normalizedAction === missionLaunchAction.SKIP_WAITING) {
+    throw HTTPError(400, 'action is invalid');
+  }
+
+  updateLaunchState(normalizedAction, launchId);
+
+  return {};
 }
 
 export function adminMissionLaunchAllocate(
@@ -219,19 +259,31 @@ export function adminMissionLaunchAllocate(
   if (!launchIdCheck(launchId)) {
     throw HTTPError(400, 'launchid is invalid');
   }
-  // weight
-  const launchVehicleId = getData().launches.find(l => l.launchId === launchId).assignedLaunchVehicleId;
-  const launchVehicle = getData().launchVehicles.find(l => l.launchVehicleId === launchVehicleId);
-  let totleWeight = 0;
-  for (const assignedAstronautId of getData().launches.find(l => l.launchId === launchId).allocatedAstronauts) {
-    totleWeight += getData().astronauts.find(a => a.astronautId === assignedAstronautId).weight;
+  const data = getData();
+  const launch = data.launches.find(l => l.launchId === launchId);
+  const launchVehicle = data.launchVehicles.find(l => l.launchVehicleId === launch.assignedLaunchVehicleId);
+  if (launch.allocatedAstronauts.includes(astronautId)) {
+    throw HTTPError(400, 'The astronaut is already allocated to this launch');
   }
+  const allocatedElsewhere = data.launches.find(l =>
+    l.launchId !== launchId &&
+    l.allocatedAstronauts.includes(astronautId) &&
+    l.state !== missionLaunchState.ON_EARTH
+  );
+  if (allocatedElsewhere) {
+    throw HTTPError(400, 'The astronaut is already allocated to another launch that has not ended');
+  }
+
+  let totleWeight = 0;
+  for (const assignedAstronautId of launch.allocatedAstronauts) {
+    totleWeight += data.astronauts.find(a => a.astronautId === assignedAstronautId).weight;
+  }
+
   if (totleWeight + getData().astronauts.find(a => a.astronautId === astronautId).weight > launchVehicle.maxCrewWeight) {
     throw HTTPError(400, 'The total weight including this astronaut would exceed the maxCrewWeight of the launchVehicle');
   }
 
-  const data = getData();
-  data.launches.find(l => l.launchId === launchId).allocatedAstronauts.push(astronautId);
+  launch.allocatedAstronauts.push(astronautId);
   setData(data);
 
   return {};

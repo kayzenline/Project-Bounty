@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 // Global data store
-interface MissionControlUser {
+export interface MissionControlUser {
   controlUserId: number,
   email: string,
   password: string,
@@ -14,6 +14,47 @@ interface MissionControlUser {
   passwordHistory: string[]
 }
 
+export interface LaunchDetailsVehicleSummary {
+  launchVehicleId: number,
+  name: string,
+  maneuveringFuelRemaining: number
+}
+
+export interface LaunchDetailsAstronautSummary {
+  astronautId: number,
+  designation: string
+}
+
+export interface LaunchDetails {
+  launchId: number,
+  missionCopy: Mission,
+  timeCreated: number,
+  state: missionLaunchState,
+  launchVehicle: LaunchDetailsVehicleSummary,
+  payload: Payload,
+  allocatedAstronauts: LaunchDetailsAstronautSummary[],
+  launchCalculationParameters: LaunchCalcParameters
+}
+export interface AstronautDetail {
+  astronautId: number,
+  designation: string,
+  assigned: boolean
+}
+
+export interface AssignedMission {
+  missionId: number;
+  objective: string;
+}
+export interface AstronautResponse {
+  astronautId: number;
+  designation: string;
+  timeAdded: number;
+  timeLastEdited: number;
+  age: number;
+  weight: number;
+  height: number;
+  assignedMission?: AssignedMission;
+}
 interface Mission {
   missionId: number,
   controlUserId: number,
@@ -167,6 +208,7 @@ interface DataStore {
   nextAstronautId: number,
   nextLaunchVehicleId: number,
   newtLaunchId: number,
+  nextPayloadId: number,
   sessions: Session[],
   astronauts: Astronaut[],
   launchVehicles: LaunchVehicle[],
@@ -183,6 +225,7 @@ let data: DataStore = {
   nextAstronautId: 1,
   nextLaunchVehicleId: 1,
   newtLaunchId: 1,
+  nextPayloadId: 1,
   sessions: [],
   astronauts: [],
   launchVehicles: [],
@@ -219,7 +262,6 @@ export function saveData() {
 
 export {
   Mission,
-  MissionControlUser,
   DataStore,
   Session,
   MessageLog,

@@ -4,7 +4,7 @@ import { clearRequest } from './requestHelpers';
 import { sampleUser1, sampleLaunchVehicle1, sampleLaunchVehicle2 } from './sampleTestData';
 import { generateSessionId } from '../../src/logic/helper';
 
-describe.skip('POST /v1/admin/launchvehicle', () => {
+describe('POST /v1/admin/launchvehicle', () => {
   let controlUserSessionId: string;
   let launchVehicleId: number;
   beforeEach(() => {
@@ -46,7 +46,7 @@ describe.skip('POST /v1/admin/launchvehicle', () => {
     
     const detailRes = adminLaunchVehicleDetailsRequest(controlUserSessionId);
     expect(detailRes.statusCode).toBe(200);
-    expect(detailRes).toStrictEqual({
+    expect(detailRes.body).toStrictEqual({
       launchVehicles: [
         {
           launchVehicleId: 1,

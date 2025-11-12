@@ -15,31 +15,13 @@ import {
 } from './sampleTestData';
 import { generateSessionId, missionIdCheck } from '../../src/logic/helper';
 
-describe.skip('POST /v1/admin/mission/{missionid}/launch', () => {
+describe('POST /v1/admin/mission/{missionid}/launch', () => {
   let controlUserSessionId: string;
   let controlUserSessionId2: string;
   let launchVehicleId: number;
   let launchVehicleId2: number;
   let missionId: number;
-  let missionId2: number;
-
-  const registerRes2 = adminAuthUserRegisterRequest(
-    sampleUser2.email,
-    sampleUser2.password,
-    sampleUser2.nameFirst,
-    sampleUser2.nameLast
-  );
-  expect(registerRes2.statusCode).toBe(200);
-  controlUserSessionId2 = registerRes2.body.controlUserSessionId;
-
-  const missionCreateRes2 = adminMissionCreateRequest(
-    controlUserSessionId2,
-    sampleMission2.name,
-    sampleMission2.description,
-    sampleMission2.target
-  );
-  expect(missionCreateRes2.statusCode).toBe(200);
-  missionId2 = missionCreateRes2.body.missionId;
+  let missionId2: number = 0;
 
   beforeEach(() => {
     // clear all the data
@@ -76,6 +58,24 @@ describe.skip('POST /v1/admin/mission/{missionid}/launch', () => {
     );
     expect(vehicleCreateRes.statusCode).toBe(200);
     launchVehicleId = vehicleCreateRes.body.launchVehicleId;
+
+    const registerRes2 = adminAuthUserRegisterRequest(
+      sampleUser2.email,
+      sampleUser2.password,
+      sampleUser2.nameFirst,
+      sampleUser2.nameLast
+    );
+    expect(registerRes2.statusCode).toBe(200);
+    controlUserSessionId2 = registerRes2.body.controlUserSessionId;
+
+    const missionCreateRes2 = adminMissionCreateRequest(
+      controlUserSessionId2,
+      sampleMission2.name,
+      sampleMission2.description,
+      sampleMission2.target
+    );
+    expect(missionCreateRes2.statusCode).toBe(200);
+    missionId2 = missionCreateRes2.body.missionId;
   });
 
   afterAll(() => {
@@ -371,7 +371,7 @@ describe.skip('POST /v1/admin/mission/{missionid}/launch', () => {
       samplePayload1,
       sampleLaunchParameters1
     );
-    expect(organiseRes.statusCode).toBe(401);
+    expect(organiseRes.statusCode).toBe(403);
     expect(organiseRes.body).toStrictEqual({ error: expect.any(String)});
   });
 });

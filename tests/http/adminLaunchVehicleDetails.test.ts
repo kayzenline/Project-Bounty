@@ -4,7 +4,7 @@ import { clearRequest } from './requestHelpers';
 import { sampleLaunchVehicle1, sampleLaunchVehicle2, sampleUser1 } from './sampleTestData';
 
 // Show all launch vehicles that are not retired currently in our system along with their assigned statuses
-describe.skip('GET /v1/admin/launchvehicle/list', () => {
+describe('GET /v1/admin/launchvehicle/list', () => {
   let controlUserSessionId: string;
   let firstLaunchVehicleId: number;
   let secondLaunchVehicleId: number;
