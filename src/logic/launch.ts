@@ -40,22 +40,27 @@ export function adminMissionLaunchOrganise(
 ) {
   // Throw Errors
   // controlUserSessionId
-  const controlUserId = controlUserSessionIdCheck(controlUserSessionId);
-  if (!controlUserId) {
+  const session = controlUserSessionIdCheck(controlUserSessionId);
+  if (!session) {
     throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
   }
+  const data = getData();
   // missionId
-  if (!missionIdCheck(controlUserSessionId, missionId)) {
+  if (!Number.isInteger(missionId) || missionId <= 0) {
+    throw HTTPError(403, 'MissionId is empty, invalid or not associated with the current controlUser');
+  }
+  const missionRecord = data.spaceMissions.find(m => m.missionId === missionId && m.controlUserId === session.controlUserId);
+  if (!missionRecord) {
     throw HTTPError(403, 'MissionId is empty, invalid or not associated with the current controlUser');
   }
   // launchVehicleId
   if (!launchVehicleIdCheck(launchVehicleId)) {
     throw HTTPError(400, 'launchvehicleid is invalid');
   }
-  if (getData().launches.find(l => l.assignedLaunchVehicleId === launchVehicleId && l.state !== 'ON_EARTH')) {
+  if (data.launches.find(l => l.assignedLaunchVehicleId === launchVehicleId && l.state !== 'ON_EARTH')) {
     throw HTTPError(400, 'launchvehicleid is currently in another active launch');
   }
-  const launchVehicle = getData().launchVehicles.find(l => l.launchVehicleId === launchVehicleId);
+  const launchVehicle = data.launchVehicles.find(l => l.launchVehicleId === launchVehicleId);
   if (launchVehicle.retired === true) {
     throw HTTPError(400, 'launchvehicleid refers to a Launch Vehicle that is retired');
   }
@@ -75,14 +80,13 @@ export function adminMissionLaunchOrganise(
   ) {
     throw HTTPError(400, 'Any LaunchCalculationParameters is < 0');
   }
-  if (launchParameters.maneuveringDelay < 0) {
-    throw HTTPError(400, 'manueveringDelay is < 0');
+  if (launchParameters.maneuveringDelay < 1) {
+    throw HTTPError(400, 'manueveringDelay is < 1');
   }
   if (!launchCalculationParameterCorrectnessCheck(launchVehicleId, payload, 0, launchParameters)) {
     throw HTTPError(400, 'An initial calculation with these LaunchCalculationParameters are invalid');
   }
 
-  const data = getData();
   const currentTime = Math.floor(Date.now() / 1000);
   const payloadRecord: Payload = {
     payloadId: data.nextPayloadId,
@@ -97,7 +101,7 @@ export function adminMissionLaunchOrganise(
 
   const existingLaunch = data.launches.find(l => l.missionCopy.missionId === missionId);
   if (existingLaunch) {
-    existingLaunch.missionCopy = data.spaceMissions.find(m => m.missionId === missionId);
+    existingLaunch.missionCopy = missionRecord;
     existingLaunch.createdAt = currentTime;
     existingLaunch.state = missionLaunchState.READY_TO_LAUNCH;
     existingLaunch.assignedLaunchVehicleId = launchVehicleId;
@@ -111,7 +115,7 @@ export function adminMissionLaunchOrganise(
 
   const launch: Launch = {
     launchId: data.newtLaunchId,
-    missionCopy: data.spaceMissions.find(m => m.missionId === missionId),
+    missionCopy: missionRecord,
     createdAt: currentTime,
     state: missionLaunchState.READY_TO_LAUNCH,
     assignedLaunchVehicleId: launchVehicleId,
