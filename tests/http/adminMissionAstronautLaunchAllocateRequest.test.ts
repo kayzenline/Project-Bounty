@@ -274,7 +274,7 @@ describe('POST /v1/admin/mission/{missionid}/launch', () => {
       controlUserSessionId,
       newAstronautId,
       missionId,
-      launchId
+      newLaunchId
     );
     expect(allocateRes2.statusCode).toBe(400);
     expect(allocateRes2.body).toStrictEqual({ error: expect.any(String) });
