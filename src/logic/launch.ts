@@ -79,8 +79,8 @@ export function adminMissionLaunchOrganise(
   ) {
     throw HTTPError(400, 'Any LaunchCalculationParameters is < 0');
   }
-  if (launchParameters.maneuveringDelay < 1) {
-    throw HTTPError(400, 'manueveringDelay is < 1');
+  if (launchParameters.maneuveringDelay < 0) {
+    throw HTTPError(400, 'manueveringDelay is < 0');
   }
   if (!launchCalculationParameterCorrectnessCheck(launchVehicleId, payload, 0, launchParameters)) {
     throw HTTPError(400, 'An initial calculation with these LaunchCalculationParameters are invalid');
@@ -243,10 +243,7 @@ export function adminMissionLaunchStatusUpdate(
     throw HTTPError(400, 'action is invalid');
   }
 
-  if (
-    normalizedAction === missionLaunchAction.SKIP_WAITING ||
-    (normalizedAction === missionLaunchAction.FAULT && launch.state === missionLaunchState.READY_TO_LAUNCH)
-  ) {
+  if (normalizedAction === missionLaunchAction.SKIP_WAITING) {
     throw HTTPError(400, 'action is invalid');
   }
 
