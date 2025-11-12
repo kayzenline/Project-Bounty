@@ -1,4 +1,4 @@
-import { getData, setData, Astronaut } from '../dataStore';
+import { getData, setData, Astronaut, AstronautDetail, AstronautResponse } from '../dataStore';
 import {
   findSessionFromSessionId,
   astronautIdCheck,
@@ -8,9 +8,9 @@ import {
   normalizeError,
   ServiceError,
   missionIdCheck,
-  throwErrorForFunction,
   buildError
 } from './helper';
+import { throwErrorForFunction } from './auth';
 import { errorCategories as EC } from '../testSamples';
 import HTTPError from 'http-errors';
 
@@ -29,11 +29,7 @@ export function adminAstronautPool(controlUserSessionId: string) {
     }
 
     const data = getData();
-    interface AstronautDetail {
-      astronautId: number,
-      designation: string,
-      assigned: boolean
-    }
+
     const astronauts: AstronautDetail[] = [];
 
     for (const astronaut of data.astronauts) {
@@ -123,20 +119,6 @@ export function adminAstronautCreate(
     const ne = normalizeError(e);
     throwErrorForFunction(ne.errorCategory, ne.error);
   }
-}
-export interface AstronautResponse {
-  astronautId: number;
-  designation: string;
-  timeAdded: number;
-  timeLastEdited: number;
-  age: number;
-  weight: number;
-  height: number;
-  assignedMission?: AssignedMission;
-}
-export interface AssignedMission {
-  missionId: number;
-  objective: string;
 }
 
 export function adminAstronautInfo(controlUserSessionId: string, astronautId: number) {
@@ -291,7 +273,8 @@ export function adminMissionAstronautAssign(
     };
     astronaut.timeLastEdited = Math.floor(Date.now() / 1000);
     setData(data);
-    return {};
+    const launch = data.launches.find(l => l.missionCopy.missionId === missionId);
+    return { launchId: launch ? launch.launchId : null };
   } catch (e) {
     const ne = normalizeError(e);
     throwErrorForFunction(ne.errorCategory, ne.error);
@@ -331,6 +314,11 @@ export function adminMissionAstronautUnassign(
     const astronaut = data.astronauts.find(a => a.astronautId === astronautId);
     if (!astronaut) {
       buildError('astronautId not found', EC.BAD_INPUT);
+    }
+
+    const allocatedLaunch = data.launches.find(l => l.allocatedAstronauts.includes(astronautId));
+    if (allocatedLaunch) {
+      buildError('Astronaut is allocated to an active launch', EC.BAD_INPUT);
     }
 
     mission.assignedAstronauts = mission.assignedAstronauts.filter(a => a.astronautId !== astronautId);

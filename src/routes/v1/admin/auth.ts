@@ -1,9 +1,9 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import { Router, Request, Response } from 'express';
 import { adminAuthRegister, adminAuthLogin, adminAuthLogout } from '../../../logic/auth';
 
 const router = Router();
 
-router.post('/register', (req: Request, res: Response, next: NextFunction) => {
+router.post('/register', (req: Request, res: Response) => {
   try {
     const { email, password, nameFirst, nameLast } = req.body || {};
 
@@ -13,7 +13,7 @@ router.post('/register', (req: Request, res: Response, next: NextFunction) => {
     return res.status(e.status).json({ error: e.message });
   }
 });
-router.post('/login', (req: Request, res: Response, next: NextFunction) => {
+router.post('/login', (req: Request, res: Response) => {
   try {
     const { email, password } = req.body || {};
 
@@ -23,7 +23,7 @@ router.post('/login', (req: Request, res: Response, next: NextFunction) => {
     return res.status(e.status).json({ error: e.message });
   }
 });
-router.post('/logout', (req: Request, res: Response, next: NextFunction) => {
+router.post('/logout', (req: Request, res: Response) => {
   try {
     // Header names are case-insensitive; Express normalizes internally
     const controlUserSessionId = req.header('controlUserSessionId');

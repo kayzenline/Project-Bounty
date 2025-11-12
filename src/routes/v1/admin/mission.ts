@@ -1,4 +1,4 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import { Router, Request, Response } from 'express';
 import { getData } from '../../../dataStore';
 import {
   adminMissionAstronautAssign,
@@ -17,10 +17,15 @@ import {
 import { adminMissionTransfer } from '../../../logic/missionTransferExample';
 import { findSessionFromSessionId } from '../../../logic/helper';
 import HTTPError from 'http-errors';
-import { adminMissionLaunchDetails, adminMissionLaunchStatusUpdate } from '../../../../src/logic/launch';
+import {
+  adminMissionLaunchDetails,
+  adminMissionLaunchStatusUpdate,
+  adminMissionLaunchOrganise,
+  adminMissionLaunchAllocate
+} from '../../../../src/logic/launch';
 const router = Router();
 
-router.get('/list', (req: Request, res: Response, next: NextFunction) => {
+router.get('/list', (req: Request, res: Response) => {
   const controlUserSessionId = req.header('controlUserSessionId');
   try {
     if (!controlUserSessionId) {
@@ -38,7 +43,7 @@ router.get('/list', (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.post('/', (req: Request, res: Response, next: NextFunction) => {
+router.post('/', (req: Request, res: Response) => {
   try {
     const controlUserSessionId = (req.header('controlUserSessionId'));
     const { name, description, target } = req.body;
@@ -58,7 +63,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.get('/:missionid', (req: Request, res: Response, next: NextFunction) => {
+router.get('/:missionid', (req: Request, res: Response) => {
   try {
     const controlUserSessionId = req.header('controlUserSessionId');
     const missionId = Number(req.params.missionid);
@@ -76,7 +81,7 @@ router.get('/:missionid', (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.delete('/:missionid', (req: Request, res: Response, next: NextFunction) => {
+router.delete('/:missionid', (req: Request, res: Response) => {
   try {
     const controlUserSessionId = req.header('controlUserSessionId');
     const missionId = Number(req.params.missionid);
@@ -94,7 +99,7 @@ router.delete('/:missionid', (req: Request, res: Response, next: NextFunction) =
   }
 });
 
-router.put('/:missionId/name', (req: Request, res: Response, next: NextFunction) => {
+router.put('/:missionId/name', (req: Request, res: Response) => {
   try {
     const controlUserSessionId = req.header('controlUserSessionId');
     const missionId = Number(req.params.missionId);
@@ -113,7 +118,7 @@ router.put('/:missionId/name', (req: Request, res: Response, next: NextFunction)
   }
 });
 
-router.put('/:missionId/description', (req: Request, res: Response, next: NextFunction) => {
+router.put('/:missionId/description', (req: Request, res: Response) => {
   try {
     const controlUserSessionId = req.header('controlUserSessionId');
     const missionId = Number(req.params.missionId);
@@ -132,7 +137,7 @@ router.put('/:missionId/description', (req: Request, res: Response, next: NextFu
   }
 });
 
-router.put('/:missionId/target', (req: Request, res: Response, next: NextFunction) => {
+router.put('/:missionId/target', (req: Request, res: Response) => {
   try {
     const controlUserSessionId = req.header('controlUserSessionId');
     const missionId = Number(req.params.missionId);
@@ -151,7 +156,7 @@ router.put('/:missionId/target', (req: Request, res: Response, next: NextFunctio
   }
 });
 
-router.post('/:missionId/transfer', (req: Request, res: Response, next: NextFunction) => {
+router.post('/:missionId/transfer', (req: Request, res: Response) => {
   try {
     const controlUserSessionId = req.header('controlUserSessionId');
     const missionId = Number(req.params.missionId);
@@ -169,7 +174,7 @@ router.post('/:missionId/transfer', (req: Request, res: Response, next: NextFunc
   }
 });
 
-router.post('/:missionid/assign/:astronautid', (req: Request, res: Response, next: NextFunction) => {
+router.post('/:missionid/assign/:astronautid', (req: Request, res: Response) => {
   try {
     const controlUserSessionId = req.headers.controlusersessionid as string;
     const missionId = Number(req.params.missionid);
@@ -185,7 +190,30 @@ router.post('/:missionid/assign/:astronautid', (req: Request, res: Response, nex
   }
 });
 
-router.delete('/:missionid/assign/:astronautid', (req: Request, res: Response, next: NextFunction) => {
+router.post('/:missionid/launch', (req: Request, res: Response) => {
+  try {
+    const controlUserSessionId = req.header('controlUserSessionId');
+    const missionId = Number(req.params.missionid);
+    const { launchVehicleId, payload, launchParameters } = req.body;
+
+    if (!controlUserSessionId) {
+      throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
+    }
+
+    const result = adminMissionLaunchOrganise(
+      controlUserSessionId,
+      missionId,
+      launchVehicleId,
+      payload,
+      launchParameters
+    );
+    return res.status(200).json(result);
+  } catch (e) {
+    return res.status(e.status).json({ error: e.message });
+  }
+});
+
+router.delete('/:missionid/assign/:astronautid', (req: Request, res: Response) => {
   try {
     const controlUserSessionId = req.header('controlUserSessionId');
     const missionId = Number(req.params.missionid);
@@ -202,7 +230,7 @@ router.delete('/:missionid/assign/:astronautid', (req: Request, res: Response, n
   }
 });
 
-router.get('/:missionid/launch/:launchid', (req: Request, res: Response, next: NextFunction) => {
+router.get('/:missionid/launch/:launchid', (req: Request, res: Response) => {
   try {
     const controlUserSessionId = req.header('controlUserSessionId');
     const missionId = Number(req.params.missionid);
@@ -218,12 +246,16 @@ router.get('/:missionid/launch/:launchid', (req: Request, res: Response, next: N
   }
 });
 
-router.put('/:missionid/launch/:launchid/status', (req: Request, res: Response, next: NextFunction) => {
+router.put('/:missionid/launch/:launchid/status', (req: Request, res: Response) => {
   try {
     const controlUserSessionId = req.header('controlUserSessionId');
     const missionId = Number(req.params.missionid);
     const launchId = Number(req.params.launchid);
     const { action } = req.body;
+    console.log(missionId, launchId);
+    if (!Number.isInteger(missionId)) {
+      throw HTTPError(403, 'MissionId is empty or invalid');
+    }
     if (!controlUserSessionId) {
       throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
     }
@@ -237,8 +269,31 @@ router.put('/:missionid/launch/:launchid/status', (req: Request, res: Response, 
   }
 });
 
+router.post('/:missionid/launch/:launchid/allocate/:astronautid', (req: Request, res: Response) => {
+  try {
+    const controlUserSessionId = req.header('controlUserSessionId');
+    const missionId = Number(req.params.missionid);
+    const launchId = Number(req.params.launchid);
+    const astronautId = Number(req.params.astronautid);
+
+    if (!controlUserSessionId) {
+      throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
+    }
+
+    const result = adminMissionLaunchAllocate(
+      controlUserSessionId,
+      missionId,
+      launchId,
+      astronautId
+    );
+    return res.status(200).json(result);
+  } catch (e) {
+    return res.status(e.status).json({ error: e.message });
+  }
+});
+
 router.delete('/:missionid/launch/:launchid/allocate/:astronautid',
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     try {
       const controlUserSessionId = req.header('controlUserSessionId');
       const missionId = Number(req.params.missionid);

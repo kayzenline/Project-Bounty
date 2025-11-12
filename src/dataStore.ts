@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 // Global data store
-interface MissionControlUser {
+export interface MissionControlUser {
   controlUserId: number,
   email: string,
   password: string,
@@ -14,6 +14,47 @@ interface MissionControlUser {
   passwordHistory: string[]
 }
 
+export interface LaunchDetailsVehicleSummary {
+  launchVehicleId: number,
+  name: string,
+  maneuveringFuelRemaining: number
+}
+
+export interface LaunchDetailsAstronautSummary {
+  astronautId: number,
+  designation: string
+}
+
+export interface LaunchDetails {
+  launchId: number,
+  missionCopy: Mission,
+  timeCreated: number,
+  state: missionLaunchState,
+  launchVehicle: LaunchDetailsVehicleSummary,
+  payload: Payload,
+  allocatedAstronauts: LaunchDetailsAstronautSummary[],
+  launchCalculationParameters: LaunchCalcParameters
+}
+export interface AstronautDetail {
+  astronautId: number,
+  designation: string,
+  assigned: boolean
+}
+
+export interface AssignedMission {
+  missionId: number;
+  objective: string;
+}
+export interface AstronautResponse {
+  astronautId: number;
+  designation: string;
+  timeAdded: number;
+  timeLastEdited: number;
+  age: number;
+  weight: number;
+  height: number;
+  assignedMission?: AssignedMission;
+}
 interface Mission {
   missionId: number,
   controlUserId: number,
@@ -25,19 +66,6 @@ interface Mission {
   assignedAstronauts: { astronautId: number, designation: string }[]
 }
 
-interface DataStore {
-  controlUsers: MissionControlUser[],
-  spaceMissions: Mission[],
-  nextControlUserId: number,
-  nextMissionId: number,
-  nextAstronautId: number
-  sessions: Session[],
-  astronauts: Astronaut[],
-  launchVehicles: LaunchVehicle[],
-  launches: Launch[],
-  payload: Payload[],
-  chatHistory: ChatHistory[]
-}
 interface ChatHistory {
   launchId: number
   astronautId: number
@@ -100,13 +128,13 @@ export interface LaunchVehicle {
   description: string, // a description for this launch vehicle
   maxCrewWeight: number, // maximum weight (kg) of astronauts this launch vehicle can carry
   maxPayloadWeight: number, // maximum weight (kg) of payload this launch vehicle can carry
-  launchVehicleWeight: number, // base weight of the launch vehicle
+  launchVehicleWeight: number, // weight (kg) of this launch vehicle
   thrustCapacity: number, // amount of force this launch vehicle generates when it burns thrustFuel
-  maneauveringFuel: number, // amount of maneuvering fuel (units) this launch vehicle has to start each launch
+  maneuveringFuel: number, // amount of maneuvering fuel (units) this launch vehicle has to start each launch
   timeAdded: number, // created time in seconds
   timeLastEdited: number, // last time a value was edited in seconds
-  retired: boolean // is this launch vehicle active or not
-  // launches?: LaunchSummary // this is computed value so it does not need to be stored
+  retired: boolean, // is this launch vehicle active or not
+  assigned: boolean // is this launch vehicle assigned
 }
 
 export interface LaunchVehicleHistoryEntry {
@@ -115,7 +143,7 @@ export interface LaunchVehicleHistoryEntry {
 }
 
 export interface LaunchVehicleInfo {
-  launchVehicleId?: number;
+  launchVehicleId: number;
   name: string;
   description: string;
   maxCrewWeight: number;
@@ -124,8 +152,8 @@ export interface LaunchVehicleInfo {
   thrustCapacity: number;
   startingManeuveringFuel: number;
   retired: boolean;
-  timeAdded?: number;
-  timeLastEdited?: number;
+  timeAdded: number;
+  timeLastEdited: number;
   launches: LaunchVehicleHistoryEntry[];
 }
 
@@ -172,12 +200,32 @@ export interface LaunchInput {
 
 const DB_PATH = path.join(__dirname, 'db.json');
 
+interface DataStore {
+  controlUsers: MissionControlUser[],
+  spaceMissions: Mission[],
+  nextControlUserId: number,
+  nextMissionId: number,
+  nextAstronautId: number,
+  nextLaunchVehicleId: number,
+  newtLaunchId: number,
+  nextPayloadId: number,
+  sessions: Session[],
+  astronauts: Astronaut[],
+  launchVehicles: LaunchVehicle[],
+  launches: Launch[],
+  payload: Payload[]
+  chatHistory: ChatHistory[]
+}
+
 let data: DataStore = {
   controlUsers: [],
   spaceMissions: [],
   nextControlUserId: 1,
   nextMissionId: 1,
   nextAstronautId: 1,
+  nextLaunchVehicleId: 1,
+  newtLaunchId: 1,
+  nextPayloadId: 1,
   sessions: [],
   astronauts: [],
   launchVehicles: [],
@@ -214,7 +262,6 @@ export function saveData() {
 
 export {
   Mission,
-  MissionControlUser,
   DataStore,
   Session,
   MessageLog,
