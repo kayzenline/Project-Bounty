@@ -21,7 +21,7 @@ describe.skip('POST /v1/admin/mission/{missionid}/launch', () => {
   let launchVehicleId: number;
   let launchVehicleId2: number;
   let missionId: number;
-  let missionId2: number;
+  let missionId2: number = 0;
 
   beforeEach(() => {
     // clear all the data
