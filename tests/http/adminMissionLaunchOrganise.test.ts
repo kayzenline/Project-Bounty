@@ -15,7 +15,7 @@ import {
 } from './sampleTestData';
 import { generateSessionId, missionIdCheck } from '../../src/logic/helper';
 
-describe.skip('POST /v1/admin/mission/{missionid}/launch', () => {
+describe('POST /v1/admin/mission/{missionid}/launch', () => {
   let controlUserSessionId: string;
   let controlUserSessionId2: string;
   let launchVehicleId: number;
@@ -371,7 +371,7 @@ describe.skip('POST /v1/admin/mission/{missionid}/launch', () => {
       samplePayload1,
       sampleLaunchParameters1
     );
-    expect(organiseRes.statusCode).toBe(401);
+    expect(organiseRes.statusCode).toBe(403);
     expect(organiseRes.body).toStrictEqual({ error: expect.any(String)});
   });
 });
