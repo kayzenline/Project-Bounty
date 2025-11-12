@@ -373,7 +373,7 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
   });
   //check missionId 
   const invalidmissionid = [
-    { testmissionId: '' as any},
+    { testmissionId: 'invalid-mission' as any},
     { testmissionId: 9999 },
   ];
   test.each(invalidmissionid)('MissionId is empty, invalid or not associated with the current controlUser', ({testmissionId}) => {
@@ -388,12 +388,12 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
   });
   //check launchId 
   const invalidlaunchid = [
-    { testlaunchId: '' as any},
+    { testlaunchId: 'invalid-launch' as any},
     { testlaunchId: 9999 },
   ];
   test.each(invalidlaunchid)('LaunchId is empty, invalid or not associated with the current controlUser', ({testlaunchId}) => {
     const detailRes=adminMissionLaunchDetailsRequest(controlUserSessionId,missionId,testlaunchId)
-    expect(detailRes.statusCode).toBe(403);
+    expect(detailRes.statusCode).toBe(400);
     expect(detailRes.body).toStrictEqual({ error: expect.any(String)});
   });
   

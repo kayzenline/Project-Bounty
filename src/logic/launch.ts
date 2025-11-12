@@ -82,9 +82,6 @@ export function adminMissionLaunchOrganise(
   if (launchParameters.maneuveringDelay < 1) {
     throw HTTPError(400, 'manueveringDelay is < 1');
   }
-  if (launchParameters.fuelBurnRate > launchParameters.thrustFuel) {
-    throw HTTPError(400, 'fuelBurnRate > thrustFuel');
-  }
   if (!launchCalculationParameterCorrectnessCheck(launchVehicleId, payload, 0, launchParameters)) {
     throw HTTPError(400, 'An initial calculation with these LaunchCalculationParameters are invalid');
   }
@@ -108,7 +105,7 @@ export function adminMissionLaunchOrganise(
     existingLaunch.createdAt = currentTime;
     existingLaunch.state = missionLaunchState.READY_TO_LAUNCH;
     existingLaunch.assignedLaunchVehicleId = launchVehicleId;
-    existingLaunch.remainingLaunchVehicleManeuveringFuel = launchVehicle.maneuveringFuel;
+    existingLaunch.remainingLaunchVehicleManeuveringFuel = launchParameters.thrustFuel;
     existingLaunch.payloadId = payloadRecord.payloadId;
     existingLaunch.allocatedAstronauts = [];
     existingLaunch.launchCalculationParameters = launchParameters;
@@ -122,7 +119,7 @@ export function adminMissionLaunchOrganise(
     createdAt: currentTime,
     state: missionLaunchState.READY_TO_LAUNCH,
     assignedLaunchVehicleId: launchVehicleId,
-    remainingLaunchVehicleManeuveringFuel: launchVehicle.maneuveringFuel,
+    remainingLaunchVehicleManeuveringFuel: launchParameters.thrustFuel,
     payloadId: payloadRecord.payloadId,
     allocatedAstronauts: [],
     launchCalculationParameters: launchParameters
@@ -243,6 +240,13 @@ export function adminMissionLaunchStatusUpdate(
 
   const normalizedAction = (typeof action === 'string' ? action.toUpperCase().trim() : action) as missionLaunchAction;
   if (!Object.values(missionLaunchAction).includes(normalizedAction)) {
+    throw HTTPError(400, 'action is invalid');
+  }
+
+  if (
+    normalizedAction === missionLaunchAction.SKIP_WAITING ||
+    (normalizedAction === missionLaunchAction.FAULT && launch.state === missionLaunchState.READY_TO_LAUNCH)
+  ) {
     throw HTTPError(400, 'action is invalid');
   }
 
