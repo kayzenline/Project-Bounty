@@ -120,7 +120,7 @@ describe('DELETE /v1/admin/mission/{missionid}/assign/{astronautid}', () => {
       missionId
     );
     expect(assignRes.statusCode).toBe(200);
-    const launchId = assignRes.body.launchId;
+    const launchId = organiseRes.body.launchId;
     const allocateRes = adminMissionAstronautLaunchAllocateRequest(
       controlUserSessionId,
       astronautId,
@@ -175,4 +175,3 @@ describe('DELETE /v1/admin/mission/{missionid}/assign/{astronautid}', () => {
     expect(missingMissionRes.body).toStrictEqual({ error: expect.any(String) });
   });
 })
-
