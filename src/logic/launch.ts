@@ -25,15 +25,17 @@ import { updateLaunchState } from './updateSessionState';
 export function adminLaunchList(controlUserSessionId: string) {
   // Throw Errors
   // controlUserSessionId
-  const controlUserId = controlUserSessionIdCheck(controlUserSessionId);
-  if (!controlUserId) {
+  const session = controlUserSessionIdCheck(controlUserSessionId);
+  if (!session) {
     throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
   }
+  const controlUserId = session.controlUserId;
 
   const activeLaunches: number[] = [];
   const completedLaunches: number[] = [];
   const data = getData();
-  for (const launch of data.launches) {
+  const launchesForUser = data.launches.filter(l => l.missionCopy && l.missionCopy.controlUserId === controlUserId);
+  for (const launch of launchesForUser) {
     if (launch.state === 'MISSION_COMPLETE') {
       completedLaunches.push(launch.launchId);
     } else {
@@ -111,9 +113,23 @@ export function adminMissionLaunchOrganise(
   data.nextPayloadId++;
   data.payload.push(payloadRecord);
 
+  const missionCopy = {
+    missionId: missionRecord.missionId,
+    controlUserId: missionRecord.controlUserId,
+    name: missionRecord.name,
+    description: missionRecord.description,
+    target: missionRecord.target,
+    timeCreated: missionRecord.timeCreated,
+    timeLastEdited: missionRecord.timeLastEdited,
+    assignedAstronauts: (missionRecord.assignedAstronauts ?? []).map(astronaut => ({
+      astronautId: astronaut.astronautId,
+      designation: astronaut.designation
+    }))
+  };
+
   const launch: Launch = {
     launchId: data.newtLaunchId,
-    missionCopy: missionRecord,
+    missionCopy,
     createdAt: currentTime,
     state: missionLaunchState.READY_TO_LAUNCH,
     assignedLaunchVehicleId: launchVehicleId,
@@ -155,7 +171,7 @@ export function adminMissionLaunchDetails(
   const assignedVehicle: LaunchDetailsVehicleSummary = {
     launchVehicleId: Vehicle.launchVehicleId,
     name: Vehicle.name,
-    maneuveringFuelRemaining: Vehicle.maneuveringFuel
+    maneuveringFuelRemaining: launch.remainingLaunchVehicleManeuveringFuel
   };
   const payload = data.payload.find(p => p.payloadId === launch.payloadId);
   const allocatedAstronauts: LaunchDetailsAstronautSummary[] = launch.allocatedAstronauts.map(astronautId => {
@@ -168,7 +184,7 @@ export function adminMissionLaunchDetails(
 
   return {
     launchId,
-    missionCopy: data.spaceMissions.find(m => m.missionId === missionId),
+    missionCopy: launch.missionCopy,
     timeCreated: launch.createdAt,
     state: launch.state,
     launchVehicle: assignedVehicle,
