@@ -97,22 +97,27 @@ export function getMessage(astronautId: number, messageContent: string) {
   if (!trimmedMessage) {
     throw HTTPError(400, 'messageRequest must be a non-empty string');
   }
-
   const data = getData();
-  const activeLaunch = requireActiveLaunch(data, astronautId);
-  const history = getChatHistoryEntry(data, activeLaunch.launchId, astronautId);
+  let llmResponse;
+  try {
 
-  const userTimestamp = Math.floor(Date.now() / 1000);
-  const llmResponse = llmchatRequestFormer(trimmedMessage);
-  const responseTimestamp = Math.floor(Date.now() / 1000);
+    const activeLaunch = requireActiveLaunch(data, astronautId);
+    const history = getChatHistoryEntry(data, activeLaunch.launchId, astronautId);
 
-  const userMessageId = history.messageLog.length + 1;
-  const responseMessageId = userMessageId + 1;
+    const userTimestamp = Math.floor(Date.now() / 1000);
+    llmResponse = llmchatRequestFormer(trimmedMessage);
+    const responseTimestamp = Math.floor(Date.now() / 1000);
 
-  history.messageLog.push(
-    buildMessageLog(astronautId, userMessageId, false, trimmedMessage, userTimestamp),
-    buildMessageLog(astronautId, responseMessageId, true, llmResponse, responseTimestamp)
-  );
+    const userMessageId = history.messageLog.length + 1;
+    const responseMessageId = userMessageId + 1;
+
+    history.messageLog.push(
+      buildMessageLog(astronautId, userMessageId, false, trimmedMessage, userTimestamp),
+      buildMessageLog(astronautId, responseMessageId, true, llmResponse, responseTimestamp)
+    );
+  } catch (e) {
+    console.error(e);
+  }
 
   setData(data);
   return { messageResponse: llmResponse };
@@ -121,18 +126,13 @@ export function getMessage(astronautId: number, messageContent: string) {
 export function chatHistory(astronautId: number) {
   const data = getData();
   const activeLaunch = requireActiveLaunch(data, astronautId);
-  const history = data.chatHistory.find(entry =>
-    entry.launchId === activeLaunch.launchId && entry.astronautId === astronautId
-  );
+  const history = data.chatHistory
+    .filter(entry => entry.astronautId === astronautId)
+    .map(entry => ({
+    launchId: entry.launchId,
+    messageLog: entry.messageLog
+  }));
 
-  const messageLog = history.messageLog;
+  return { chatHistory: history };
 
-  return {
-    chatHistory: [
-      {
-        launchId: activeLaunch.launchId,
-        messageLog: [...messageLog]
-      }
-    ]
-  };
 }
