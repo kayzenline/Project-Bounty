@@ -100,7 +100,6 @@ export function getMessage(astronautId: number, messageContent: string) {
   const data = getData();
   let llmResponse;
   try {
-
     const activeLaunch = requireActiveLaunch(data, astronautId);
     const history = getChatHistoryEntry(data, activeLaunch.launchId, astronautId);
 
@@ -125,14 +124,13 @@ export function getMessage(astronautId: number, messageContent: string) {
 
 export function chatHistory(astronautId: number) {
   const data = getData();
-  const activeLaunch = requireActiveLaunch(data, astronautId);
+  // const activeLaunch = requireActiveLaunch(data, astronautId);
   const history = data.chatHistory
     .filter(entry => entry.astronautId === astronautId)
     .map(entry => ({
-    launchId: entry.launchId,
-    messageLog: entry.messageLog
-  }));
+      launchId: entry.launchId,
+      messageLog: entry.messageLog
+    }));
 
   return { chatHistory: history };
-
 }
