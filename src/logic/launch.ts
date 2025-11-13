@@ -111,20 +111,6 @@ export function adminMissionLaunchOrganise(
   data.nextPayloadId++;
   data.payload.push(payloadRecord);
 
-  const existingLaunch = data.launches.find(l => l.missionCopy.missionId === missionId);
-  if (existingLaunch) {
-    existingLaunch.missionCopy = missionRecord;
-    existingLaunch.createdAt = currentTime;
-    existingLaunch.state = missionLaunchState.READY_TO_LAUNCH;
-    existingLaunch.assignedLaunchVehicleId = launchVehicleId;
-    existingLaunch.remainingLaunchVehicleManeuveringFuel = launchParameters.thrustFuel;
-    existingLaunch.payloadId = payloadRecord.payloadId;
-    existingLaunch.allocatedAstronauts = [];
-    existingLaunch.launchCalculationParameters = launchParameters;
-    setData(data);
-    return { launchId: existingLaunch.launchId };
-  }
-
   const launch: Launch = {
     launchId: data.newtLaunchId,
     missionCopy: missionRecord,
