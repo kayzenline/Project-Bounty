@@ -6,5 +6,11 @@
   "sessions": [],
   "astronauts": [],
   "nextAstronautId": 1,
-  "launchVehicles": []
+  "launchVehicles": [],
+  "nextLaunchVehicleId": 1,
+  "newtLaunchId": 1,
+  "launches": [],
+  "payload": [],
+  "chatHistory": [],
+  "nextPayloadId": 1
 }

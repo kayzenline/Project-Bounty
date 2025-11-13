@@ -18,7 +18,7 @@ import {
 } from './sampleTestData';
 import { generateSessionId } from '../../src/logic/helper';
 
-describe.skip('POST /v1/admin/mission/{missionid}/launch', () => {
+describe('POST /v1/admin/mission/{missionid}/launch', () => {
   let controlUserSessionId: string;
   let launchVehicleId: number;
   let astronautId: number;
@@ -296,30 +296,11 @@ describe.skip('POST /v1/admin/mission/{missionid}/launch', () => {
     expect(organiseRes.body).toStrictEqual({ error: expect.any(String)});
   });
 
-  const registerRes2 = adminAuthUserRegisterRequest(
-    sampleUser2.email,
-    sampleUser2.password,
-    sampleUser2.nameFirst,
-    sampleUser2.nameLast
-  );
-  expect(registerRes2.statusCode).toBe(200);
-  const controlUserSessionId2 = registerRes2.body.controlUserSessionId;
-
-  const missionCreateRes2 = adminMissionCreateRequest(
-    controlUserSessionId2,
-    sampleMission2.name,
-    sampleMission2.description,
-    sampleMission2.target
-  );
-  expect(missionCreateRes2.statusCode).toBe(200);
-  const missionId2 = missionCreateRes2.body.missionId;
-  
-  const invalidmissionId = [
+  const invalidMissionIdCases = [
     { missionId: null },
-    { missionId: missionId2 },
     { missionId: -1 }
   ];
-  test.each(invalidmissionId)('MissionId is empty invalid or not associated with the current controlUser', ({ missionId }) => {
+  test.each(invalidMissionIdCases)('MissionId is empty or invalid', ({ missionId }) => {
     const organiseRes = adminMissionLaunchOrganiseRequest(
       controlUserSessionId,
       missionId,
@@ -327,7 +308,37 @@ describe.skip('POST /v1/admin/mission/{missionid}/launch', () => {
       samplePayload1,
       sampleLaunchParameters1
     );
-    expect(organiseRes.statusCode).toBe(401);
-    expect(organiseRes.body).toStrictEqual({ error: expect.any(String)});
+    expect(organiseRes.statusCode).toBe(403);
+    expect(organiseRes.body).toStrictEqual({ error: expect.any(String) });
+  });
+
+  test('MissionId is not associated with the current controlUser', () => {
+    const registerRes2 = adminAuthUserRegisterRequest(
+      sampleUser2.email,
+      sampleUser2.password,
+      sampleUser2.nameFirst,
+      sampleUser2.nameLast
+    );
+    expect(registerRes2.statusCode).toBe(200);
+    const controlUserSessionId2 = registerRes2.body.controlUserSessionId;
+
+    const missionCreateRes2 = adminMissionCreateRequest(
+      controlUserSessionId2,
+      sampleMission2.name,
+      sampleMission2.description,
+      sampleMission2.target
+    );
+    expect(missionCreateRes2.statusCode).toBe(200);
+    const missionId2 = missionCreateRes2.body.missionId;
+
+    const organiseRes = adminMissionLaunchOrganiseRequest(
+      controlUserSessionId,
+      missionId2,
+      launchVehicleId,
+      samplePayload1,
+      sampleLaunchParameters1
+    );
+    expect(organiseRes.statusCode).toBe(403);
+    expect(organiseRes.body).toStrictEqual({ error: expect.any(String) });
   });
 });
