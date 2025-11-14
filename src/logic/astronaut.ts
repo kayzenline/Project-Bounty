@@ -269,7 +269,7 @@ export function adminMissionAstronautAssign(
     const objective = '[' + mission.target + ']' + ' ' + mission.name;
     astronaut.assignedMission = {
       missionId,
-      objective: objective,
+      objective: objective
     };
     astronaut.timeLastEdited = Math.floor(Date.now() / 1000);
     setData(data);
@@ -315,7 +315,7 @@ export function adminMissionAstronautUnassign(
       buildError('astronautId not found', EC.BAD_INPUT);
     }
 
-    const allocatedLaunch = data.launches.find(l => l.allocatedAstronauts.includes(astronautId));
+    const allocatedLaunch = data.launches.some(l => l.allocatedAstronauts.includes(astronautId));
     if (allocatedLaunch) {
       buildError('Astronaut is allocated to an active launch', EC.BAD_INPUT);
     }
@@ -336,23 +336,6 @@ export function adminMissionAstronautUnassign(
     const ne = normalizeError(e);
     throwErrorForFunction(ne.errorCategory, ne.error);
   }
-}
-
-export function adminLaunchAstronautUnallocate(
-  controlUserSessionId: string,
-  astronautId: number,
-  missionId: number,
-  launchId: number
-) {
-  return notImplemented();
-}
-
-export function adminMissionAstronautUnassignV2(
-  controlUserSessionId: string,
-  astronautId: number,
-  missionId: number
-) {
-  return notImplemented();
 }
 
 export function adminAstronautLlmChatSend(

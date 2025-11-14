@@ -99,11 +99,13 @@ export function adminLaunchVehicleDetails(controlUserSessionId: string) {
   const data = getData();
   const result: LaunchVehicleLaunchSummary[] = [];
   for (const launchVehicle of data.launchVehicles) {
-    result.push({
-      launchVehicleId: launchVehicle.launchVehicleId,
-      name: launchVehicle.name,
-      assigned: launchVehicle.assigned
-    });
+    if (launchVehicle.retired === false) {
+      result.push({
+        launchVehicleId: launchVehicle.launchVehicleId,
+        name: launchVehicle.name,
+        assigned: launchVehicle.assigned
+      });
+    }
   }
 
   return { launchVehicles: result };

@@ -112,7 +112,7 @@ export function adminMissionInfo(controlUserId: number, missionId: number) {
       timeLastEdited: mission.timeLastEdited,
       description: mission.description,
       target: mission.target,
-      assignedAstronauts: mission.assignedAstronauts ?? []
+      assignedAstronauts: mission.assignedAstronauts
     };
   } catch (e) {
     const ne = normalizeError(e);
