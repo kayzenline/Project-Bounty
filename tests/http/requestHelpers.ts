@@ -311,7 +311,7 @@ export function adminAstronautUnassignRequest(
   astronautid: number,
   missionid: number
 ) {
-  const response = request('DELETE', `${SERVER_URL}/v1/admin/mission/${missionid}/assign/${astronautid}`, {
+  const response = request('DELETE', `${SERVER_URL}/v2/admin/mission/${missionid}/assign/${astronautid}`, {
     headers: { controlUserSessionId: controlUserSessionId }
   });
   return {

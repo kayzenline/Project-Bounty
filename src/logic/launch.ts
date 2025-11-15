@@ -36,10 +36,12 @@ export function adminLaunchList(controlUserSessionId: string) {
   const data = getData();
   const launchesForUser = data.launches.filter(l => l.missionCopy && l.missionCopy.controlUserId === controlUserId);
   for (const launch of launchesForUser) {
-    if (launch.state === 'MISSION_COMPLETE') {
-      completedLaunches.push(launch.launchId);
-    } else {
-      activeLaunches.push(launch.launchId);
+    if (launch.state !== 'ON_EARTH') {
+      if (launch.state === 'MISSION_COMPLETE') {
+        completedLaunches.push(launch.launchId);
+      } else {
+        activeLaunches.push(launch.launchId);
+      }
     }
   }
   return { activeLaunches: activeLaunches, completedLaunches: completedLaunches };
@@ -112,24 +114,11 @@ export function adminMissionLaunchOrganise(
   };
   data.nextPayloadId++;
   data.payload.push(payloadRecord);
-
-  const missionCopy = {
-    missionId: missionRecord.missionId,
-    controlUserId: missionRecord.controlUserId,
-    name: missionRecord.name,
-    description: missionRecord.description,
-    target: missionRecord.target,
-    timeCreated: missionRecord.timeCreated,
-    timeLastEdited: missionRecord.timeLastEdited,
-    assignedAstronauts: (missionRecord.assignedAstronauts ?? []).map(astronaut => ({
-      astronautId: astronaut.astronautId,
-      designation: astronaut.designation
-    }))
-  };
+  data.launchVehicles.find(l => l.launchVehicleId === launchVehicleId).assigned = true;
 
   const launch: Launch = {
     launchId: data.newtLaunchId,
-    missionCopy,
+    missionCopy: missionRecord,
     createdAt: currentTime,
     state: missionLaunchState.READY_TO_LAUNCH,
     assignedLaunchVehicleId: launchVehicleId,
