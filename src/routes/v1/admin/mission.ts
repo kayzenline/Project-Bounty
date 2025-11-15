@@ -1,9 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { getData } from '../../../dataStore';
-import {
-  adminMissionAstronautAssign,
-  adminLaunchAstronautUnallocate
-} from '../../../logic/astronaut';
+import { adminMissionAstronautAssign } from '../../../logic/astronaut';
+import { adminMissionLaunchRemove } from '../../../logic/launch';
 import {
   adminMissionNameUpdate,
   adminMissionTargetUpdate,
@@ -286,7 +284,7 @@ router.delete('/:missionid/launch/:launchid/allocate/:astronautid',
         throw HTTPError(401, 'ControlUserSessionId is empty or invalid');
       }
 
-      const result = await adminLaunchAstronautUnallocate(
+      const result = await adminMissionLaunchRemove(
         controlUserSessionId,
         astronautId,
         missionId,
