@@ -315,7 +315,7 @@ export function adminMissionAstronautUnassign(
       buildError('astronautId not found', EC.BAD_INPUT);
     }
 
-    const allocatedLaunch = data.launches.some(l => l.allocatedAstronauts.includes(astronautId));
+    const allocatedLaunch = data.launches.find(l => l.allocatedAstronauts.includes(astronautId));
     if (allocatedLaunch) {
       buildError('Astronaut is allocated to an active launch', EC.BAD_INPUT);
     }
