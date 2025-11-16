@@ -122,7 +122,7 @@ export function adminMissionLaunchOrganise(
     createdAt: currentTime,
     state: missionLaunchState.READY_TO_LAUNCH,
     assignedLaunchVehicleId: launchVehicleId,
-    remainingLaunchVehicleManeuveringFuel: launchParameters.thrustFuel,
+    remainingLaunchVehicleManeuveringFuel: data.launchVehicles.find(l => l.launchVehicleId === launchVehicleId).maneuveringFuel,
     payloadId: payloadRecord.payloadId,
     allocatedAstronauts: [],
     launchCalculationParameters: launchParameters
