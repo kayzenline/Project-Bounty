@@ -505,7 +505,7 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
     adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'DEPLOY_PAYLOAD');
     adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'GO_HOME');
     const launchDetails = adminMissionLaunchDetailsRequest(controlUserSessionId, missionId, launchId);
-    expect(launchDetails.body.state).toBe(missionLaunchState.REENTRY);
+    expect(launchDetails.body.state).toBe(missionLaunchState.RE_ENTRY);
     const statusupdateRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,launchId,testaction.testaction)
     expect(statusupdateRes.statusCode).toBe(400);
     expect(statusupdateRes.body).toStrictEqual({ error: expect.any(String)});
@@ -563,7 +563,7 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
       expect(statusupdateRes.statusCode).toBe(400);
       expect(statusupdateRes.body.error).toEqual(expect.any(String));
       const detail = adminMissionLaunchDetailsRequest(controlUserSessionId, missionId, badlaunchId);
-      expect(detail.body.state).toBe(missionLaunchState.REENTRY);
+      expect(detail.body.state).toBe(missionLaunchState.RE_ENTRY);
   });
   test.skip('A FIRE_THRUSTERS action been attempted with insufficient fuel available ', () => {
     //insufficient fuel available
@@ -590,7 +590,7 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
     expect(statusupdateRes.statusCode).toBe(400);
     expect(statusupdateRes.body.error).toEqual(expect.any(String));
     const detail = adminMissionLaunchDetailsRequest(controlUserSessionId, missionId, badlaunchId);
-    expect(detail.body.state).toBe(missionLaunchState.REENTRY);
+    expect(detail.body.state).toBe(missionLaunchState.RE_ENTRY);
 });
   
 })
