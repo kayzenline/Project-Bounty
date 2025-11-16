@@ -263,7 +263,7 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
         { action: 'WAIT_3', expectedState: 'MANEUVERING' },
         { action: 'FIRE_THRUSTERS', expectedState: 'COASTING' },
         { action: 'DEPLOY_PAYLOAD', expectedState: 'MISSION_COMPLETE' },
-        { action: 'GO_HOME', expectedState: 'REENTRY' }
+        { action: 'GO_HOME', expectedState: 'RE_ENTRY' }
       ]; 
       for (const step of actionChain) {
         if (step.action.startsWith('WAIT')) {
@@ -283,7 +283,7 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
         { action: 'WAIT_3', expectedState: 'MANEUVERING' },
         { action: 'FIRE_THRUSTERS', expectedState: 'COASTING' },
         { action: 'DEPLOY_PAYLOAD', expectedState: 'MISSION_COMPLETE' },
-        { action: 'GO_HOME', expectedState: 'REENTRY' },
+        { action: 'GO_HOME', expectedState: 'RE_ENTRY' },
         { action: 'RETURN', expectedState: 'ON_EARTH' }
       ]; 
       for (const step of actionChain) {
@@ -311,7 +311,7 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
   test('Launch READY_TO_LAUNCH with action chain LIFTOFF, FAULT, RETURN; expect ON_EARTH', () => {
     const actionChain = [
       { action: 'LIFTOFF', expectedState: 'LAUNCHING' },
-      { action: 'FAULT', expectedState: 'REENTRY' },//problem
+      { action: 'FAULT', expectedState: 'RE_ENTRY' },//problem
       { action: 'RETURN', expectedState: 'ON_EARTH' }
     ]; 
     for (const step of actionChain) {
@@ -326,7 +326,7 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
     const actionChain = [
       { action: 'LIFTOFF', expectedState: 'LAUNCHING' },
       { action: 'WAIT_3', expectedState: 'MANEUVERING' },
-      { action: 'FAULT', expectedState: 'REENTRY' },//problem
+      { action: 'FAULT', expectedState: 'RE_ENTRY' },//problem
       { action: 'RETURN', expectedState: 'ON_EARTH' }
     ]; 
     for (const step of actionChain) {
@@ -346,7 +346,7 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
       { action: 'LIFTOFF', expectedState: 'LAUNCHING' },
       { action: 'WAIT_3', expectedState: 'MANEUVERING' },
       { action: 'FIRE_THRUSTERS', expectedState: 'COASTING' },
-      { action: 'FAULT', expectedState: 'REENTRY' },//problem
+      { action: 'FAULT', expectedState: 'RE_ENTRY' },//problem
       { action: 'RETURN', expectedState: 'ON_EARTH' }
     ]; 
     for (const step of actionChain) {
