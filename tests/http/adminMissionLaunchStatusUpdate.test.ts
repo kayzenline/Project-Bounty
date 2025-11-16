@@ -263,7 +263,7 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
         { action: 'WAIT_3', expectedState: 'MANEUVERING' },
         { action: 'FIRE_THRUSTERS', expectedState: 'COASTING' },
         { action: 'DEPLOY_PAYLOAD', expectedState: 'MISSION_COMPLETE' },
-        { action: 'GO_HOME', expectedState: 'REENTRY' }
+        { action: 'GO_HOME', expectedState: 'RE_ENTRY' }
       ]; 
       for (const step of actionChain) {
         if (step.action.startsWith('WAIT')) {
@@ -283,7 +283,7 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
         { action: 'WAIT_3', expectedState: 'MANEUVERING' },
         { action: 'FIRE_THRUSTERS', expectedState: 'COASTING' },
         { action: 'DEPLOY_PAYLOAD', expectedState: 'MISSION_COMPLETE' },
-        { action: 'GO_HOME', expectedState: 'REENTRY' },
+        { action: 'GO_HOME', expectedState: 'RE_ENTRY' },
         { action: 'RETURN', expectedState: 'ON_EARTH' }
       ]; 
       for (const step of actionChain) {
@@ -311,7 +311,7 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
   test('Launch READY_TO_LAUNCH with action chain LIFTOFF, FAULT, RETURN; expect ON_EARTH', () => {
     const actionChain = [
       { action: 'LIFTOFF', expectedState: 'LAUNCHING' },
-      { action: 'FAULT', expectedState: 'REENTRY' },//problem
+      { action: 'FAULT', expectedState: 'RE_ENTRY' },//problem
       { action: 'RETURN', expectedState: 'ON_EARTH' }
     ]; 
     for (const step of actionChain) {
@@ -326,7 +326,7 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
     const actionChain = [
       { action: 'LIFTOFF', expectedState: 'LAUNCHING' },
       { action: 'WAIT_3', expectedState: 'MANEUVERING' },
-      { action: 'FAULT', expectedState: 'REENTRY' },//problem
+      { action: 'FAULT', expectedState: 'RE_ENTRY' },//problem
       { action: 'RETURN', expectedState: 'ON_EARTH' }
     ]; 
     for (const step of actionChain) {
@@ -346,7 +346,7 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
       { action: 'LIFTOFF', expectedState: 'LAUNCHING' },
       { action: 'WAIT_3', expectedState: 'MANEUVERING' },
       { action: 'FIRE_THRUSTERS', expectedState: 'COASTING' },
-      { action: 'FAULT', expectedState: 'REENTRY' },//problem
+      { action: 'FAULT', expectedState: 'RE_ENTRY' },//problem
       { action: 'RETURN', expectedState: 'ON_EARTH' }
     ]; 
     for (const step of actionChain) {
@@ -505,7 +505,7 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
     adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'DEPLOY_PAYLOAD');
     adminMissionLaunchStatusUpdateRequest(controlUserSessionId, missionId, launchId, 'GO_HOME');
     const launchDetails = adminMissionLaunchDetailsRequest(controlUserSessionId, missionId, launchId);
-    expect(launchDetails.body.state).toBe(missionLaunchState.REENTRY);
+    expect(launchDetails.body.state).toBe(missionLaunchState.RE_ENTRY);
     const statusupdateRes=adminMissionLaunchStatusUpdateRequest(controlUserSessionId,missionId,launchId,testaction.testaction)
     expect(statusupdateRes.statusCode).toBe(400);
     expect(statusupdateRes.body).toStrictEqual({ error: expect.any(String)});
@@ -563,7 +563,7 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
       expect(statusupdateRes.statusCode).toBe(400);
       expect(statusupdateRes.body.error).toEqual(expect.any(String));
       const detail = adminMissionLaunchDetailsRequest(controlUserSessionId, missionId, badlaunchId);
-      expect(detail.body.state).toBe(missionLaunchState.REENTRY);
+      expect(detail.body.state).toBe(missionLaunchState.RE_ENTRY);
   });
   test.skip('A FIRE_THRUSTERS action been attempted with insufficient fuel available ', () => {
     //insufficient fuel available
@@ -590,7 +590,7 @@ describe('/v1/admin/mission/{missionid}/launch/{launchid}/status', () => {
     expect(statusupdateRes.statusCode).toBe(400);
     expect(statusupdateRes.body.error).toEqual(expect.any(String));
     const detail = adminMissionLaunchDetailsRequest(controlUserSessionId, missionId, badlaunchId);
-    expect(detail.body.state).toBe(missionLaunchState.REENTRY);
+    expect(detail.body.state).toBe(missionLaunchState.RE_ENTRY);
 });
   
 })
