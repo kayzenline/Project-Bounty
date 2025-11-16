@@ -17,6 +17,7 @@ function setLaunchTimer(callback: (launchId: number) => void, launchId: number, 
 }
 
 function checkManeuveringFuel(launchId: number): boolean {
+  clearLaunchTimer();
   const data = getData();
   const launch: Launch = data.launches.find(singleLaunch => singleLaunch.launchId === launchId);
   if (!launch) {
@@ -85,7 +86,7 @@ function initializeRentry(launchId: number) {
   // assumes launch is part the datastore as a property called "launches" which is an array of the Launch type and that it has a property called 'state'
   const data = getData();
   const launch: Launch = data.launches.find(singleLaunch => singleLaunch.launchId === launchId);
-  launch.state = missionLaunchState.REENTRY;
+  launch.state = missionLaunchState.RE_ENTRY;
   clearLaunchTimer();
 
   setData(data);
@@ -213,7 +214,7 @@ export function updateLaunchState(newAction: missionLaunchAction, launchId: numb
       }
       break;
     case missionLaunchAction.RETURN:
-      if (launch.state === missionLaunchState.REENTRY) {
+      if (launch.state === missionLaunchState.RE_ENTRY) {
         // this is ok, lets proceed with the actions
         initializeOnEarth(launchId);
       } else {
@@ -221,7 +222,7 @@ export function updateLaunchState(newAction: missionLaunchAction, launchId: numb
       }
       break;
     case missionLaunchAction.FAULT:
-      if (launch.state === missionLaunchState.REENTRY || launch.state === missionLaunchState.MISSION_COMPLETE) {
+      if (launch.state === missionLaunchState.RE_ENTRY || launch.state === missionLaunchState.MISSION_COMPLETE) {
         // this is an unpermitted action in this state.
         badActionForStateError(newAction, launch.state);
       } else if (launch.state === missionLaunchState.READY_TO_LAUNCH) {
