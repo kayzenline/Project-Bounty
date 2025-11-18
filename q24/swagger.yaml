@@ -1,0 +1,301 @@
+openapi: 3.0.0
+info:
+  title: Broom API
+  version: 1.0.0
+  description: API for sending, editing, and retrieving messages in a single-room virtual messaging system.
+
+servers:
+  - url: "{protocol}://{host}:{port}"
+    variables:
+      protocol:
+        default: http
+      host:
+        default: '127.0.0.1'
+      port:
+        default: '49152'
+        
+tags:
+  - name: Broom/Room
+
+paths:
+  /clear:
+    delete:
+      summary: Clears all users and messages from the room
+      description: Clears all users and messages from the room
+      tags:
+        - Broom/Room
+      responses:
+        '200':
+          description: Room cleared
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {}
+                
+  /user:
+    post:
+      summary: Add a new user to the room
+      description: Adds a new user to the room. Must be done by a moderator.
+      tags:
+        - Broom/Room
+      parameters:
+        - in: header
+          name: role
+          required: true
+          schema:
+            type: string
+          description: Role
+          example: moderator
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+              properties:
+                username:
+                  type: string
+                  minLength: 2
+                  maxLength: 15
+      responses:
+        '200':
+          description: User successfully created, userIds increment (i.e., the last added user has the largest Id)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: number
+        '400':
+          description: |
+            If any of the following are true:
+              - **INVALID_USERNAME**
+                - Username is less than 2 characters
+                - Username is greater than 15 characters
+                - Username already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: ERROR_TYPE
+                  message:
+                    type: string
+                    example: Descriptive error message here
+        '401':
+          description: |
+            If any of the following are true:
+              - **UNAUTHORIZED**
+                - Role is not 'moderator'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: ERROR_TYPE
+                  message:
+                    type: string
+                    example: Descriptive error message here
+
+  /message:
+    post:
+      summary: Send a message
+      description: Sends a message using a JSON string
+      tags:
+        - Broom/Room
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                messageDetails:
+                  type: string
+                  example: '{"from": 1, "to": 2, "message": "Hello"}'
+      responses:
+        '200':
+          description: Message sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - messageId
+                properties:
+                  messageId:
+                    type: number
+        '400':
+          description: |
+            If any of the following are true:
+              - **INVALID_USERNAME**
+                - from and to are the same userIds
+              - **INVALID_SENDER**
+                - from does not refer to a valid userId
+              - **INVALID_RECEIVER**
+                - to does not refer to a valid userId
+              - **INVALID_MESSAGE**
+                - Message is empty or longer than 100 characters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: ERROR_TYPE
+                  message:
+                    type: string
+                    example: Descriptive error message here
+              
+  /message/{from}/{to}:
+    get:
+      summary: Get messages between two users
+      description: Get messages sent from 'from' userId to 'to' userId
+      tags:
+        - Broom/Room
+      parameters:
+        - in: path
+          name: from
+          description: the userId of message sender
+          required: true
+          schema:
+            type: number
+            example: 1
+        - in: path
+          name: to
+          description: the userId of message receiver
+          required: true
+          schema:
+            type: number
+            example: 2
+        - in: query
+          name: messageLimit
+          description: the number of messages to be returned
+          required: true
+          schema:
+            type: number
+            example: 3
+            minimum: 1
+            maximum: 5
+      responses:
+        '200':
+          description: Messages sent from 'from' userId to 'to' userId. Messages are returned in reverse order (i.e., last message is the first one in the return list.)
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - messages
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: string
+                      example: "hi"
+        '400':
+          description: |
+            If any of the following are true:
+              - **INVALID_MESSAGE_LIMIT**
+                - messageLimit is less than 1
+                - messageLimit is greater than 5
+              - **INVALID_SENDER**
+                - from does not refer to a valid userId
+              - **INVALID_RECEIVER**
+                - to does not refer to a valid userId
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: ERROR_TYPE
+                  message:
+                    type: string
+                    example: Descriptive error message here
+
+  /message/{messageid}:
+    put:
+      summary: Edit a message
+      description: Edit the message that 'from' userId has sent
+      tags:
+        - Broom/Room
+      parameters:
+        - in: path
+          name: messageid
+          required: true
+          schema:
+            type: number
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - from
+                - message
+              properties:
+                from:
+                  type: number
+                  example: 1
+                message:
+                  type: string
+                  example: hello
+      responses:
+        '200':
+          description: Message edited successfully, return the updated message
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                properties:
+                  message:
+                    type: string
+                    example: hello
+        '400':
+          description: |
+            If any of the following are true:
+              - **INVALID_SENDER**
+                - from does not refer to a valid userId
+              - **INVALID_MESSAGE**
+                - Message is empty or longer than 100 characters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: ERROR_TYPE
+                  message:
+                    type: string
+                    example: Descriptive error message here
+        '403':
+          description: |
+              If any of the following are true:
+                - **FORBIDDEN**
+                  - 'from' userId does not own the message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: ERROR_TYPE
+                  message:
+                    type: string
+                    example: Descriptive error message here

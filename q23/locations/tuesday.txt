@@ -1,0 +1,4 @@
+backyard
+kitchen
+bedroom
+attic

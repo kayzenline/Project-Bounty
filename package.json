@@ -1,0 +1,35 @@
+{
+    "name": "cs1531-exam",
+    "private": true,
+    "workspaces": [
+        "q*"
+    ],
+    "devDependencies": {
+        "@babel/preset-env": "^7.22.5",
+        "@eslint/js": "^9.30.1",
+        "@types/cors": "^2.8.19",
+        "@types/express": "^4.17.21",
+        "@types/jest": "^30.0.0",
+        "@types/morgan": "^1.9.10",
+        "eslint": "^9.30.1",
+        "eslint-plugin-jest": "^29.0.1",
+        "globals": "^16.3.0",
+        "jest": "^30.0.5",
+        "jest-mock-random": "^1.1.1",
+        "nyc": "^17.1.0",
+        "sync-request-curl": "^3.3.3",
+        "ts-jest": "^29.4.0",
+        "ts-node-dev": "^2.0.0",
+        "tsx": "^4.20.3",
+        "typescript": "^5.8.3",
+        "typescript-eslint": "^8.36.0"
+    },
+    "engines": {
+        "node": "^20"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^5.1.0",
+        "morgan": "^1.10.0"
+    }
+}

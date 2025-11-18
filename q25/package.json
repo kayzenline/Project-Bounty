@@ -1,0 +1,15 @@
+{
+  "name": "q25",
+  "scripts": {
+    "tsx": "tsx",
+    "test-thiscord": "jest --coverage thiscord.test.ts",
+    "start": "tsx server.ts",
+    "start-coverage": "nyc --reporter=text --reporter=lcov tsx server.ts",
+    "test-server": "jest server.test.ts",
+    "dev": "tsx watch --clear-screen=false --include 'config.json' server.ts"
+  },
+  "jest": {
+    "maxWorkers": 1,
+    "preset": "ts-jest"
+  }
+}

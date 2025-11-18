@@ -1,0 +1,21 @@
+{
+  "name": "q22",
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "maxWorkers": 1
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ]
+  }
+}

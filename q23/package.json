@@ -1,0 +1,14 @@
+{
+  "name": "q23",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint",
+    "tsc": "tsc --noEmit --project tsconfig.json",
+    "tsx": "tsx"
+  },
+  "jest": {
+    "maxWorkers": 1,
+    "preset": "ts-jest",
+    "testEnvironment": "node"
+  }
+}

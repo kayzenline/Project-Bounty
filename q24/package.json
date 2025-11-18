@@ -1,0 +1,18 @@
+{
+  "name": "q24",
+  "scripts": {
+    "test": "jest",
+    "tsc": "tsc --noEmit",
+    "tsx": "tsx",
+    "start": "tsx server.ts",
+    "dev": "tsx watch --clear-screen=false --include 'config.json' server.ts"
+  },
+  "jest": {
+    "maxWorkers": 1,
+    "preset": "ts-jest",
+    "testEnvironment": "node"
+  },
+  "dependencies": {
+    "20": "^3.1.9"
+  }
+}
